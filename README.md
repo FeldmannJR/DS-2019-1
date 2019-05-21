@@ -22,3 +22,29 @@ docker run --name HE-pgadmin \
            -d dpage/pgadmin4
 
 ```
+# Docker Compose
+Com o docker compose fica mais facil de criar multiplos containers e conectar todos com uma network, para isso é criado o docker-compose.yml com instruções de criação dos containers
+
+Para executar os comandos é necessário estar no diretorio do arquivo
+
+## Comandos 
+
+``` bash
+# Para criar os containers/networks/volumes e startar eles, -d de detached
+docker-compose up -d
+# Para iniciar os serviços dos containers
+docker-compose start
+# Para 'desligar' os containers
+docker-compose stop
+# Para remover os containers
+docker-compose rm
+```
+
+## Acesso
+### Pg Admin
+Para acessar o pgadmin é só acessar o localhost:8080
+### Postgre
+Porta 5432 aberta para o host
+
+# To-Do
+- Criar outro container para o Laravel/WebServer

@@ -1,0 +1,36 @@
+version: '3'
+services:
+  #Postgres
+  postgres:
+    image: postgres:11
+    container_name: he-datamart
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "54320:5432"
+    volumes:
+      - he-db-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: "EsuezebiQuoh8"
+    networks:
+      - HE-network
+  # Pgadmin
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: he-pgadmin
+    ports:
+      - "8080:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "foo@bar.com"
+      PGADMIN_DEFAULT_PASSWORD: "IopoonuN2ooli"
+    volumes:
+    - he-db-data:/root/.pgadmin
+    networks:
+      - HE-network
+  
+#Docker Networks
+networks:
+  HE-network:
+    driver: bridge
+volumes:
+  he-db-data:
