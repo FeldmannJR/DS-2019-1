@@ -38,13 +38,23 @@ docker-compose start
 docker-compose stop
 # Para remover os containers
 docker-compose rm
+# Para entrar em um terminal dentro do container com o php
+docker exec -it he-apache bash
+
 ```
+# Artisan
+
+Linha de comandos do laravel, é preciso executar as migrações do banco de dados com o comando  
+``` bash
+    # Cria a tabela de migrações no banco de dados
+    php artisan migrate:install
+    # Cria as tabelas de migração
+    php artisan migrate
+```
+Ler mais em https://laravel.com/docs/5.8/migrations
 
 ## Acesso
 ### Pg Admin
-Para acessar o pgadmin é só acessar o localhost:8080
+Para acessar o pgadmin é só acessar o localhost:8081
 ### Postgre
-Porta 5432 aberta para o host
-
-# To-Do
-- Criar outro container para o Laravel/WebServer
+Porta 54320 aberta para o host
