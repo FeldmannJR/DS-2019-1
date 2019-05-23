@@ -15,4 +15,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get("/addunits", "Indicators\IndicatorsController@addUnits");
+Route::get("/teste", "Indicators\IndicatorsController@calculateIndicador");
 Route::get("/units", "Indicators\IndicatorsController@showUnits");
