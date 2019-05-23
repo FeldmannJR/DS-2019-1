@@ -15,6 +15,12 @@ RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-di
 
 COPY default.conf /etc/apache2/sites-enabled/000-default.conf
 
+RUN addgroup --gid 1024 sharevolume
+RUN usermod -a -G sharevolume www-data
+
+
+RUN chgrp -R sharevolume /var/www/
+
 WORKDIR /var/www/app
 
 RUN chown -R $USER:www-data /var/www/

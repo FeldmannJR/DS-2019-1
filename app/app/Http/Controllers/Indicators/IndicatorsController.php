@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Indicators;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Enums\UpdateType;
+use App\Unit;
 
 class IndicatorsController extends Controller
 {
@@ -16,12 +17,20 @@ class IndicatorsController extends Controller
 
 
     }
+    public function addUnits(){
+        $unit = new Unit;
+        $unit->name = "Centro";
+        $unit->code = "CNT";
+        $unit->save();
 
+    }
 
     public function showUnits(){
-      $units=  App\Unit::all();
-      echo var_dump($units);
-    }
+      $units= Unit::all();
+      foreach($units as $unit){
+        echo $unit->code." ".$unit->name."<br/>";
+      }
+     }
 
 
     public function updateAll($updateType){

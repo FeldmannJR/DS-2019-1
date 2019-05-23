@@ -40,8 +40,19 @@ docker-compose stop
 docker-compose rm
 # Para entrar em um terminal dentro do container com o php
 docker exec -it he-apache bash
-
 ```
+## Permissões
+
+Criar um grupo no host com o id 1024 e adicionar o seu usuario a ele
+
+``` bash
+# Tanto faz o nome o que importa é o id
+# Criando o grupo
+addgroup --gid 1024 sharevolume
+# Adicionando user ao grupo
+usermod -a -G sharevolume $USER
+```
+
 # Artisan
 
 Linha de comandos do laravel, é preciso executar as migrações do banco de dados com o comando  
