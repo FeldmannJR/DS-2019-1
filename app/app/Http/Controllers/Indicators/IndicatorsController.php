@@ -34,7 +34,7 @@ class IndicatorsController extends Controller
         where int.ind_paciente_internado='S' and unidade.seq in (4,3,9,7,11,8,15,19,20,14);
         ";
         $rs = DB::connection("pgsql_agh")->selectOne($query);
-        echo $rs->count;
+        echo(reset($rs));
     }
 
 

@@ -15,15 +15,14 @@ RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-di
 
 COPY default.conf /etc/apache2/sites-enabled/000-default.conf
 
-RUN addgroup --gid 1024 sharevolume
-RUN usermod -a -G sharevolume www-data
 
+ARG uid
+RUN useradd -G www-data,root -u $uid -d /home/devuser devuser
+RUN mkdir -p /home/devuser/.composer && \
+    chown -R devuser:devuser /home/devuser
 
-RUN chgrp -R sharevolume /var/www/
 
 WORKDIR /var/www/app
-
-RUN chown -R $USER:www-data /var/www/
 
 CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
 
