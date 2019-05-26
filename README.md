@@ -21,9 +21,19 @@ docker-compose rm
 docker exec -u devuser -it he-apache bash
 ```
 
+# Configurações Iniciais
+## Dentro do container
+- Baixar dependencias  
+``composer install``
+- Executar migrações do banco de dados  
+``php artisan migrate``
+## PgAdmin
+- Importar dump do HE, instruções no ava
+
 # Artisan
 
 Linha de comandos do laravel, é preciso executar as migrações do banco de dados com o comando  
+
 ``` bash
     # Cria a tabela de migrações no banco de dados
     php artisan migrate:install
