@@ -26,6 +26,7 @@ class CreateIndicatorsTable extends Migration
             $table->integer('indicator_id');
             $table->double('value');
             $table->primary(["id","indicator_id"]);
+            $table->timestamp('created_at')->default(now());
             // Adicionado relações
             $table->foreign('indicator_id')
                 ->references('id')
@@ -60,9 +61,9 @@ class CreateIndicatorsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('indicators');
-        Schema::dropIfExists('indicators_history');
         Schema::dropIfExists('indicators_history_unit');
+        Schema::dropIfExists('indicators_history');
+        Schema::dropIfExists('indicators');
 
 
     }

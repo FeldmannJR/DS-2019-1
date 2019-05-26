@@ -1,8 +1,9 @@
 <?php
 
-namespace App;
+namespace App\Indicators;
 
 use App\Enums\UpdateType;
+use App\Indicators\Indicator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 

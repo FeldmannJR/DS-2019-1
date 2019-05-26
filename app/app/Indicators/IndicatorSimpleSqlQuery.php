@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Indicators;
 
 use App\Enums\UpdateType;
 use Illuminate\Database\Eloquent\Model;
