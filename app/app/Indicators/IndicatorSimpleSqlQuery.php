@@ -3,6 +3,7 @@
 namespace App\Indicators;
 
 use App\Enums\UpdateType;
+use App\Unit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -14,12 +15,17 @@ class IndicatorSimpleSqlQuery extends IndicatorSql
 
     /**
      * IndicatorSimpleSqlQuery constructor.
-     * @param $sqlQueryString a query que irá executar para calcular o resultado
+     * @param int|null $id
+     * @param string $name
+     * @param UpdateType $update_frequency
+     * @param string $sqlQueryString a query que irá executar para calcular o resultado
      */
-    public function __construct($sqlQueryString)
+    public function __construct(?int $id, string $name, UpdateType $update_frequency,string $sqlQueryString)
     {
+        parent::__construct($id, $name, $update_frequency);
         $this->sqlQueryString = $sqlQueryString;
     }
+
 
 
     /**

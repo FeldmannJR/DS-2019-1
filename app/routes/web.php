@@ -12,7 +12,8 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $indicators = \App\Indicators\ModelIndicators::loadIndicators();
+    return view('showindicators',compact("indicators"));
 });
 Route::get("/addunits", "Indicators\IndicatorsController@addUnits");
 Route::get("/teste", "Indicators\IndicatorsController@calculateIndicador");
