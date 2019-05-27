@@ -40,6 +40,14 @@
             top: 18px;
         }
 
+        table tr:nth-child(odd) td {
+            background-color: #8080805e;
+        }
+
+        table th {
+            background-color: #1b1b1b75;
+            color: black;
+        }
 
         .content {
             text-align: center;
@@ -60,7 +68,7 @@
         }
 
         .m-b-md {
-            margin-bottom: 160px;
+            margin-bottom: 100px;
         }
     </style>
 </head>
@@ -68,7 +76,9 @@
 <?php
 /**
  * @var \App\Indicators\Indicator[] $indicators
+ * @var \App\Unit[] $display_units
  */
+
 
 ?>
 <div class="flex-center position-ref full-height">
@@ -87,8 +97,16 @@
                 <tr>
                     <td>{{$indicador->getName()}}</td>
                     <td>{{$indicador->getUpdateFrequency()->key}}</td>
-                    <td>{{$indicador->getLastValue()}}</td>
-
+                    <td>
+                        @if($indicador->isPerUnit())
+                            @foreach($display_units as $unit)
+                                {{$unit->id}}. {{$unit->name}} - {{number_format($indicador->getLastValue($unit),2)}}
+                                <br>
+                            @endforeach
+                        @else
+                            {{number_format($indicador->getLastValue(),2)}}
+                        @endif
+                    </td>
                 </tr>
             @endforeach
         </table>

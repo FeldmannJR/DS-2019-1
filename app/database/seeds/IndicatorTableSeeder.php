@@ -1,6 +1,10 @@
 <?php
 
 use App\Enums\UpdateType;
+use App\Indicators\Custom\IndicatorMediaPermanenciaGeral;
+use App\Indicators\Custom\IndicatorOcupacaoPorUnidade;
+use App\Indicators\Custom\IndicatorRotatividadeLeitos;
+use App\Indicators\Indicator;
 use App\Indicators\ModelIndicators;
 use App\Unit;
 use Illuminate\Database\Seeder;
@@ -16,6 +20,9 @@ class IndicatorTableSeeder extends Seeder
      */
     public function run()
     {
+        $this->populateUnits();
+
+
         $this->addSimple('Número de pacientes internados', UpdateType::RealTime(),
             "select count(*) 
             from agh.v_ain_internacao int inner join agh.agh_unidades_funcionais unidade on unidade.seq = int.unidade_funcional 
@@ -71,8 +78,37 @@ class IndicatorTableSeeder extends Seeder
              from agh.v_ain_internacao int inner join agh.ain_internacoes int_t on int_t.seq = int.nro_internacao
             inner join agh.agh_unidades_funcionais unidade  on unidade.seq = int.unidade_funcional
             where dt_saida_paciente >= NOW() - INTERVAL '24 HOURS' and unidade_funcional in (4,3,9,7,11,8,15,19,20,14) ;");
+
+        $this->addSimple("Taxa de Mortalidade Geral", UpdateType::RealTime(),
+            "select count(*)
+            from agh.v_ain_internacao int inner join agh.ain_internacoes int_t on int_t.seq = int.nro_internacao 
+            inner join agh.v_ain_internacao_paciente pac on int.nro_internacao = pac.seq 
+            inner join agh.agh_unidades_funcionais unidade on unidade.seq = int.unidade_funcional 
+            inner join agh.ain_leitos leito on leito.qrt_numero = int.qrt_numero and leito.leito = int.leito 
+            inner join agh.ain_tipos_alta_medica motivo on motivo.codigo = int_t.tam_codigo 
+            where motivo.codigo in ('C', 'D', 'O') and unidade.seq in (4,3,9,7,11,8,15,19,20,14)
+            and int_t.dthr_alta_medica>= NOW() - INTERVAL '24 HOURS';");
+
+        $this->addIndicator(new IndicatorMediaPermanenciaGeral(null, 'Media de permanência geral', UpdateType::Monthly()));
+        $this->addIndicator(new IndicatorOcupacaoPorUnidade(null, "Ocupação por Unidade", UpdateType::RealTime()));
+        $this->addIndicator(new IndicatorRotatividadeLeitos(null, "Rotatividade de Leitos", UpdateType::Monthly()));
+
     }
 
+    /**
+    * Copia as unidades do banco do HE para a nossa tabela no datamart
+    */
+    private function populateUnits()
+    {
+        $units = ModelIndicators::getHeConnection()->table("agh.agh_unidades_funcionais")->get();
+        foreach ($units as $unit) {
+            $newUnit = new Unit();
+            $newUnit->id = $unit->seq;
+            $newUnit->code = $unit->sigla;
+            $newUnit->name = $unit->descricao;
+            $newUnit->save();
+        }
+    }
 
     /**
      * @param $name
@@ -82,13 +118,37 @@ class IndicatorTableSeeder extends Seeder
     private function addSimple($name, UpdateType $updateType, string $query)
     {
         $indicador = ModelIndicators::addSimpleQueryIndicator($name, $updateType, $query);
+        $this->addExampleData($indicador);
+    }
+
+    /**
+     * Adicionado um indicador ao banco, e cria valores aleatorios para ele
+     * @param Indicator $indicator
+     */
+    private function addIndicator(Indicator $indicator)
+    {
+        $id = ModelIndicators::addIndicator($indicator);
+        if ($id !== null) {
+            $this->addExampleData($indicator);
+        }
+    }
+
+    /**
+     * @param Indicator $indicator
+     */
+    private function addExampleData(Indicator $indicator)
+    {
 
         // Inserting sample data
-        $rnd = rand(30, 500);
+        $rnd = rand(30, 100);
         for ($i = 0; $i < $rnd; $i++) {
             $value = $this->random_float(0, 500000);
             $timestamp = Carbon::now()->subMinutes(rand(1, 60 * 24 * 30 * 12 * 3));
-            ModelIndicators::addIndicatorHistoryValue($indicador->getId(), $value, null, $timestamp);
+            $unit = null;
+            if ($indicator->isPerUnit()) {
+                $unit = Unit::getById(Unit::$displayUnits[array_rand(Unit::$displayUnits)]);
+            }
+            ModelIndicators::addIndicatorHistoryValue($indicator->getId(), $value, $unit, $timestamp);
         }
     }
 

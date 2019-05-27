@@ -20,21 +20,19 @@ class IndicatorSimpleSqlQuery extends IndicatorSql
      * @param UpdateType $update_frequency
      * @param string $sqlQueryString a query que irá executar para calcular o resultado
      */
-    public function __construct(?int $id, string $name, UpdateType $update_frequency,string $sqlQueryString)
+    public function __construct(?int $id, string $name, UpdateType $update_frequency, string $sqlQueryString)
     {
         parent::__construct($id, $name, $update_frequency);
         $this->sqlQueryString = $sqlQueryString;
     }
 
 
-
     /**
      * Calcula o indicador de uma unidade especifica se a unidade for null
      * ele calcula o geral
-     * @param Unit $unit
      * @return double valor do indicador calculado
      */
-    public function calculateIndicator(Unit $unit = null)
+    public function calculateIndicator()
     {
         $rs = $this->getHeConnection()->selectOne($this->sqlQueryString);
         // Retorna o primeiro elemento do objeto

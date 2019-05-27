@@ -11,6 +11,6 @@ class IndicatorHistory extends Model
 
     public function unit()
     {
-        return $this->hasOne('App\IndicatorHistoryUnit','indicator_id');
+        return $this->hasOne('App\IndicatorHistoryUnit','indicator_history_id');
     }
 }

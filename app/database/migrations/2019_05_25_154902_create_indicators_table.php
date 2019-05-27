@@ -17,15 +17,16 @@ class CreateIndicatorsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->integer('update_type');
+            $table->boolean('per_unit')->default(false);
+            $table->string('class')->nullable(false);
             $table->unique('name');
             $table->timestamps();
         });
         // Criando Tabela indicators_history
         Schema::create('indicators_history', function (Blueprint $table) {
-            $table->unsignedBigInteger('id');
+            $table->bigIncrements('id');
             $table->integer('indicator_id');
             $table->double('value');
-            $table->primary(["id","indicator_id"]);
             $table->timestamp('created_at')->default(now());
             // Adicionado relações
             $table->foreign('indicator_id')
@@ -33,21 +34,14 @@ class CreateIndicatorsTable extends Migration
                 ->on('indicators');
 
         });
-        /* Adicionado o auto increment
-         * Unico jeito que achei na net
-         * https://github.com/laravel/framework/issues/17204
-         */
-        Schema::table('indicators_history',function (Blueprint $table){
-            $table->integer('id',true,true)->change();
-        });
+
 
         Schema::create('indicators_history_unit', function (Blueprint $table) {
             $table->bigInteger('indicator_history_id');
-            $table->integer('indicator_id');
             $table->integer('unit_id');
             // Adicionado relações
-            $table->foreign(['indicator_history_id','indicator_id'])
-                ->references(['id','indicator_id'])
+            $table->foreign(['indicator_history_id'])
+                ->references(['id'])
                 ->on('indicators_history');
         });
 

@@ -11,7 +11,7 @@ abstract  class IndicatorSql extends Indicator
 {
 
     protected function getHeConnection(){
-        return DB::connection("pgsql_agh");
+        return ModelIndicators::getHeConnection();
     }
 
 }

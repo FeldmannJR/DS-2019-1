@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Indicators\custom;
+namespace App\Indicators\Custom;
 
 
 use App\Enums\UpdateType;
@@ -21,15 +21,13 @@ class IndicatorMediaPermanenciaGeral extends IndicatorSql
     /**
      * Calcula o indicador de uma unidade especifica se a unidade for null
      * ele calcula o geral
-     * @param Unit $unit
      * @return double valor do indicador calculado
      */
-    public function calculateIndicator(Unit $unit = null)
+    public function calculateIndicator()
     {
         $data = Carbon::now();
-        $comecoMes = $data->startOfMonth()->toString();
-        $fimMes = $data->endOfMonth()->toString();
-
+        $comecoMes = $data->copy()->startOfMonth();
+        $fimMes = $data->copy()->endOfMonth();
 
         $pacientes_dia = $this->getHeConnection()->selectOne("select extract(epoch from sum(
                    (case when dt_saida_paciente > '$fimMes' then '$fimMes'
@@ -51,6 +49,7 @@ class IndicatorMediaPermanenciaGeral extends IndicatorSql
 
         $pacientes_dia = reset($pacientes_dia);
         $numeros_saida = reset($numeros_saida);
+
         return $pacientes_dia / max($numeros_saida, 1);
 
     }

@@ -6,5 +6,31 @@ use Illuminate\Database\Eloquent\Model;
 
 class Unit extends Model
 {
-    
+
+
+    public $timestamps = false;
+
+    private static $allUnits = null;
+
+    public static $displayUnits = [4, 3, 9, 7, 11, 8, 15, 19, 20, 14];
+
+    /**
+     * @return array retorna uma array com todas as unidades, sendo a chave da array o id da unidade
+     */
+    public static function getAllUnits()
+    {
+        if (self::$allUnits === null) {
+            self::$allUnits = [];
+            $units = Unit::all();
+            foreach ($units as $unit) {
+                self::$allUnits[$unit->id] = $unit;
+            }
+        }
+        return self::$allUnits;
+    }
+
+    public static function getById(int $id): Unit
+    {
+        return self::getAllUnits()[$id];
+    }
 }

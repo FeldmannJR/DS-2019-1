@@ -6,7 +6,7 @@ Com o docker compose fica mais facil de criar multiplos containers e conectar to
 
 Para executar os comandos é necessário estar no diretorio do arquivo
 
-## Comandos 
+## Comandos
 
 ``` bash
 # Para criar os containers/networks/volumes e startar eles, -d de detached
@@ -23,16 +23,16 @@ docker exec -u devuser -it he-apache bash
 
 # Configurações Iniciais
 ## Dentro do container
-- Baixar dependencias  
+- Baixar dependencias
 ``composer install``
-- Executar migrações do banco de dados  
+- Executar migrações do banco de dados
 ``php artisan migrate``
 ## PgAdmin
 - Importar dump do HE, instruções no ava
 
 # Artisan
 
-Linha de comandos do laravel, é preciso executar as migrações do banco de dados com o comando  
+Linha de comandos do laravel, é preciso executar as migrações do banco de dados com o comando
 
 ``` bash
     # Cria a tabela de migrações no banco de dados
@@ -45,7 +45,7 @@ Ler mais em https://laravel.com/docs/5.8/migrations
 ## Acesso
 ### Laravel
 
-http://localhost:80 
+http://localhost:80
 
 ### Pg Admin
 Para acessar o pgadmin é só acessar o http://localhost:8081
