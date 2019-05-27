@@ -70,6 +70,9 @@
         .m-b-md {
             margin-bottom: 100px;
         }
+        table{
+            margin-bottom: 50px;
+        }
     </style>
 </head>
 <body>
@@ -110,7 +113,7 @@
                 </tr>
             @endforeach
         </table>
-
+        Não foi possível calcular o Número de leitos desocupados: <code>ERROR: relation "agh.v_ain_leitos_indisp" does not exist</code>
     </div>
 </div>
 </body>
