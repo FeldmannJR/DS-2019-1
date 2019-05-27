@@ -70,7 +70,8 @@
         .m-b-md {
             margin-bottom: 100px;
         }
-        table{
+
+        table {
             margin-bottom: 50px;
         }
     </style>
@@ -103,17 +104,18 @@
                     <td>
                         @if($indicador->isPerUnit())
                             @foreach($display_units as $unit)
-                                {{$unit->id}}. {{$unit->name}} - {{number_format($indicador->getLastValue($unit),2)}}
+                                {{$unit->id}}. {{$unit->name}} - {{$indicador->getDisplayLastValue($unit)}}
                                 <br>
                             @endforeach
                         @else
-                            {{number_format($indicador->getLastValue(),2)}}
+                            {{$indicador->getDisplayLastValue()}}
                         @endif
                     </td>
                 </tr>
             @endforeach
         </table>
-        Não foi possível calcular o Número de leitos desocupados: <code>ERROR: relation "agh.v_ain_leitos_indisp" does not exist</code>
+        Não foi possível calcular o Número de leitos desocupados: <code>ERROR: relation "agh.v_ain_leitos_indisp" does
+            not exist</code>
     </div>
 </div>
 </body>

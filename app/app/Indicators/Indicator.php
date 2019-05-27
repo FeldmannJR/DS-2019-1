@@ -36,7 +36,7 @@ abstract class Indicator
      * @param UpdateType $update_frequency
      * @param bool $per_unit
      */
-    public function __construct(?int $id, string $name, UpdateType $update_frequency, bool $per_unit = false)
+    public function __construct(?int $id, string $name, UpdateType $update_frequency, bool $per_unit = False)
     {
         $this->id = $id;
         $this->name = $name;
@@ -102,6 +102,22 @@ abstract class Indicator
     public function getLastValue(Unit $unit = null): ?float
     {
         return ModelIndicators::getLastValue($this, $unit);
+    }
+
+    /**
+     * @param Unit|null $unit unidade para ser calculado o valor
+     * @return string|null valor a ser mostrado na view
+     */
+    public function getDisplayLastValue(Unit $unit = null): ?string
+    {
+        $value = $this->getLastValue($unit);
+        if ($value === null) {
+            return 'Sem entrada';
+        } else {
+            return number_format($value, 2);
+        }
+
+
     }
 
     /**

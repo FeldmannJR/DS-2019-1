@@ -118,7 +118,7 @@ class IndicatorTableSeeder extends Seeder
     private function addSimple($name, UpdateType $updateType, string $query)
     {
         $indicador = ModelIndicators::addSimpleQueryIndicator($name, $updateType, $query);
-        $this->addExampleData($indicador);
+        //$this->addExampleData($indicador);
     }
 
     /**
@@ -129,7 +129,7 @@ class IndicatorTableSeeder extends Seeder
     {
         $id = ModelIndicators::addIndicator($indicator);
         if ($id !== null) {
-            $this->addExampleData($indicator);
+            //$this->addExampleData($indicator);
         }
     }
 
