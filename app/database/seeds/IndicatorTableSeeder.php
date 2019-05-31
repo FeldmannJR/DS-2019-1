@@ -93,13 +93,19 @@ class IndicatorTableSeeder extends Seeder
         $this->addIndicator(new IndicatorOcupacaoPorUnidade(null, "Ocupação por Unidade", UpdateType::RealTime()));
         $this->addIndicator(new IndicatorRotatividadeLeitos(null, "Rotatividade de Leitos", UpdateType::Monthly()));
 
+        if ($this->command->confirm('Você deseja popular o historico com valores aleatorios?', false)) {
+            foreach (ModelIndicators::loadIndicators() as $indicator) {
+                $this->addExampleData($indicator);
+            }
+        }
     }
 
     /**
-    * Copia as unidades do banco do HE para a nossa tabela no datamart
-    */
+     * Copia as unidades do banco do HE para a nossa tabela no datamart
+     */
     private function populateUnits()
     {
+        Unit::truncate();
         $units = ModelIndicators::getHeConnection()->table("agh.agh_unidades_funcionais")->get();
         foreach ($units as $unit) {
             $newUnit = new Unit();
@@ -118,7 +124,7 @@ class IndicatorTableSeeder extends Seeder
     private function addSimple($name, UpdateType $updateType, string $query)
     {
         $indicador = ModelIndicators::addSimpleQueryIndicator($name, $updateType, $query);
-        //$this->addExampleData($indicador);
+
     }
 
     /**
@@ -128,9 +134,6 @@ class IndicatorTableSeeder extends Seeder
     private function addIndicator(Indicator $indicator)
     {
         $id = ModelIndicators::addIndicator($indicator);
-        if ($id !== null) {
-            //$this->addExampleData($indicator);
-        }
     }
 
     /**

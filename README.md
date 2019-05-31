@@ -27,6 +27,9 @@ docker exec -u devuser -it he-apache bash
 ``composer install``
 - Executar migrações do banco de dados
 ``php artisan migrate``
+- Inserir Indicadores no banco
+``php artisan db:seed``
+
 ## PgAdmin
 - Importar dump do HE, instruções no ava
 

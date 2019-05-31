@@ -9,7 +9,10 @@ use App\IndicatorHistory;
 use App\Indicators\Indicator;
 use App\Unit;
 use Exception;
+use function foo\func;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
+use RuntimeException;
 
 /* Peço perdão antecipadamente pelo vacilo feito nestá classe
  * Devido ao projeto proposto não é possível utilizar 100% da estrutura do eloquent,
@@ -68,7 +71,6 @@ class ModelIndicators
         return $returnIndicators;
     }
 
-
     /**
      * @param Indicator $indicator de qual indicator vai pegar o ultimo valor
      * @param Unit|null $unit de qual unidade irá buscar o valor, caso seja null vai pegar o geral
@@ -77,24 +79,27 @@ class ModelIndicators
     public static function getLastValue(Indicator $indicator, Unit $unit = null)
     {
         $rs = null;
+        $cl = function ($q) {
+            $q->on('indicators_history.id', '=', 'indicators_history_unit.history_id')
+                ->on('indicators_history.indicator_id', '=', 'indicators_history_unit.indicator_id');
+        };
         // Será que essa merda vai funcionar?
         if ($unit !== null) {
             // Caso precise pegar o de uma unidade especifica, ele verifica procura pela tabela pivo
             $unit_id = $unit->id;
             $rs = DB::table('indicators_history')
-                ->join('indicators_history_unit', 'indicators_history.id', '=', 'indicators_history_unit.indicator_history_id')
+                ->join('indicators_history_unit', $cl)
                 ->where('unit_id', $unit_id);
 
         } else {
             $rs = DB::table('indicators_history')
-                ->leftJoin('indicators_history_unit', 'indicators_history.id', '=', 'indicators_history_unit.indicator_history_id')
+                ->leftJoin('indicators_history_unit', $cl)
                 ->where('unit_id', null);
         }
 
-        $rs = $rs->where('indicator_id', $indicator->getId())
+        $rs = $rs->where('indicators_history.indicator_id', $indicator->getId())
             ->orderByDesc('created_at')
             ->limit(1);
-        //Pega o unico valor que ele retornou
         $values = $rs->first();
 
         if ($values != null) {
@@ -122,11 +127,14 @@ class ModelIndicators
             'created_at' => $whenAdded
         ]);
         if ($unit !== null) {
+
             DB::table('indicators_history_unit')->insert([
-                    'indicator_history_id' => $id,
+                    'history_id' => $id,
+                    'indicator_id' => $indicatorId,
                     'unit_id' => $unit->id
                 ]
             );
+
         }
     }
 
