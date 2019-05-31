@@ -21,9 +21,10 @@ class IndicatorsController extends Controller
 
     public function calculateAndSaveAll()
     {
+        $data = Carbon::create(2019, 3, 15);
         $indicators = \App\Indicators\ModelIndicators::loadIndicators();
         foreach ($indicators as $indicator) {
-            $indicator->calculateAndSave();
+            $indicator->calculateAndSave($data);
         }
     }
 
@@ -51,9 +52,7 @@ class IndicatorsController extends Controller
         $unit->save();
     }
 
-    public function calculateIndicador()
-    {
-        dd(Unit::getAllUnits());
+    public function calculateIndicador(){
     }
 
 

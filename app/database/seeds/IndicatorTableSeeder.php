@@ -71,13 +71,13 @@ class IndicatorTableSeeder extends Seeder
             "select count(*) as qtd_nova_internacao
                 from agh.v_ain_internacao int inner join agh.ain_internacoes int_t on int_t.seq = int.nro_internacao
                 inner join agh.agh_unidades_funcionais unidade  on unidade.seq = int.unidade_funcional
-                where dthr_internacao >= NOW() - INTERVAL '24 HOURS'   and unidade_funcional in (4,3,9,7,11,8,15,19,20,14) ;");
+                where dthr_internacao >= '{LAST_24H}'   and unidade_funcional in (4,3,9,7,11,8,15,19,20,14) ;");
 
         $this->addSimple('Número de altas', UpdateType::Daily(),
             "select count(*) as qtd_alta_medica
              from agh.v_ain_internacao int inner join agh.ain_internacoes int_t on int_t.seq = int.nro_internacao
             inner join agh.agh_unidades_funcionais unidade  on unidade.seq = int.unidade_funcional
-            where dt_saida_paciente >= NOW() - INTERVAL '24 HOURS' and unidade_funcional in (4,3,9,7,11,8,15,19,20,14) ;");
+            where dt_saida_paciente >= '{LAST_24H}' and unidade_funcional in (4,3,9,7,11,8,15,19,20,14) ;");
 
         $this->addSimple("Taxa de Mortalidade Geral", UpdateType::RealTime(),
             "select count(*)
@@ -87,7 +87,12 @@ class IndicatorTableSeeder extends Seeder
             inner join agh.ain_leitos leito on leito.qrt_numero = int.qrt_numero and leito.leito = int.leito 
             inner join agh.ain_tipos_alta_medica motivo on motivo.codigo = int_t.tam_codigo 
             where motivo.codigo in ('C', 'D', 'O') and unidade.seq in (4,3,9,7,11,8,15,19,20,14)
-            and int_t.dthr_alta_medica>= NOW() - INTERVAL '24 HOURS';");
+            and int_t.dthr_alta_medica>= '{LAST_24H}';");
+
+        $this->addSimple('Número de leitos desocupados', UpdateType::RealTime(),
+            "select (select count(*) from agh.ain_leitos leitos where ind_situacao='A' and lto_id not in ('01-0121-A', '01-0121-B')) - (select count(distinct trim(int_t.lto_lto_id)) from agh.ain_internacoes int_t inner join agh.v_ain_internacao int
+            on int_t.seq = int.nro_internacao where int.ind_paciente_internado='S' and lto_lto_id is not null) - (select sum(leitos_indisp) as total
+            from agh.v_ain_leitos_indisp) ;");
 
         $this->addIndicator(new IndicatorMediaPermanenciaGeral(null, 'Media de permanência geral', UpdateType::Monthly()));
         $this->addIndicator(new IndicatorOcupacaoPorUnidade(null, "Ocupação por Unidade", UpdateType::RealTime()));
@@ -141,9 +146,9 @@ class IndicatorTableSeeder extends Seeder
      */
     private function addExampleData(Indicator $indicator)
     {
-
         // Inserting sample data
         $rnd = rand(30, 100);
+        $this->command->info("Inserting $rnd values into indicator " . $indicator->getName());
         for ($i = 0; $i < $rnd; $i++) {
             $value = $this->random_float(0, 500000);
             $timestamp = Carbon::now()->subMinutes(rand(1, 60 * 24 * 30 * 12 * 3));

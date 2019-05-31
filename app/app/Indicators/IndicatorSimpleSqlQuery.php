@@ -4,6 +4,7 @@ namespace App\Indicators;
 
 use App\Enums\UpdateType;
 use App\Unit;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -30,13 +31,17 @@ class IndicatorSimpleSqlQuery extends IndicatorSql
     /**
      * Calcula o indicador de uma unidade especifica se a unidade for null
      * ele calcula o geral
+     * @param Carbon|null $data
      * @return double valor do indicador calculado
      */
-    public function calculateIndicator()
+    public function calculateIndicator(Carbon $data = null)
     {
-        $rs = $this->getHeConnection()->selectOne($this->sqlQueryString);
-        // Retorna o primeiro elemento do objeto
-        return reset($rs);
-
+        if (!$this->isPerUnit()) {
+            $rs = $this->getHeConnection()->selectOne($this->replaceDates($this->sqlQueryString, $data));
+            // Retorna o primeiro elemento do objeto
+            return reset($rs);
+        } else {
+            
+        }
     }
 }

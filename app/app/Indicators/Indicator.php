@@ -5,6 +5,7 @@ namespace App\Indicators;
 use App\Enums\UpdateType;
 use App\IndicatorHistory;
 use App\Unit;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use ReflectionClass;
 
@@ -48,9 +49,10 @@ abstract class Indicator
     /**
      * Calcula o indicador de uma unidade especifica se a unidade for null
      * ele calcula o geral
+     * @param Carbon $timeToCalculate
      * @return double|double[] valor do indicador calculado ou map por unidade onde a key é o id da unidade e o valor é o numero calculado
      */
-    abstract public function calculateIndicator();
+    abstract public function calculateIndicator(Carbon $timeToCalculate = null);
 
 
     /**
@@ -122,12 +124,13 @@ abstract class Indicator
 
     /**
      * Calcula o valor do indicador e salva no banco este valor
+     * @param Carbon|null $data em qual data será calculado os indicadors
      * @return void
      */
-    public function calculateAndSave()
+    public function calculateAndSave(Carbon $data = null)
     {
         // Chama a  função nas subclasses
-        $value = $this->calculateIndicator();
+        $value = $this->calculateIndicator($data);
         if ($value === null) {
             return;
         }
@@ -152,12 +155,39 @@ abstract class Indicator
         }
     }
 
+    /**
+     * @return string the class path\name of this class
+     * @throws \ReflectionException
+     */
     public function getClassName()
     {
         $ref = new ReflectionClass($this);
         return $ref->getName();
+    }
+
+    /**
+     * @param string $query
+     * @param Carbon $data to replace values
+     * @return string the modified query
+     */
+    public function replaceDates(string $query, Carbon $data = null)
+    {
+        $data = $data ?? Carbon::now();
+        $comecoMes = $data->copy()->startOfMonth()->toDateString();
+        $fimMes = $data->copy()->endOfMonth()->toDateString();
+        $last24h = $data->copy()->subDay();
+        $variables = [
+            "FIRST_DAY_MONTH" => "$comecoMes",
+            "LAST_DAY_MONTH" => "$fimMes",
+            "DATA" => "$data",
+            "LAST_24H" => $last24h];
+        foreach ($variables as $key => $value) {
+            $query = str_replace('{' . strtoupper($key) . '}', $value, $query);
+        }
+        return $query;
 
     }
+
 }
 
 ?>
