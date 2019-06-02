@@ -18,11 +18,22 @@ docker-compose stop
 # Para remover os containers
 docker-compose rm
 # Para entrar em um terminal dentro do container com o php
-docker exec -u devuser -it he-apache bash
+./container
 ```
 
 # Configurações Iniciais
+## Permissões
+É necessário criar um grupo na sua maquina com o ID 33 e adicionar seu usuario a ele, pois todos os arquivos do dentro do app/ estão com permissões para este grupo.
+Você pode fazer isto com os seguintes comandos:
+```bash
+# Provavelmente se você já instalou o apache na sua maquina(não no docker), você já tem este grupo
+groupadd --gid 33 www-data
+# Adicionando seu usuario ao grupo
+usermod -a -G www-data $USER
+```
+
 ## Dentro do container
+- Para entrar na linha de comando do container basta executar o ``./container``
 - Baixar dependencias
 ``composer install``
 - Executar migrações do banco de dados

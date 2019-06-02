@@ -1,1 +1,1 @@
-docker exec -u www-data -it he-apache bash
+docker exec -u www-data -it he-apache bash -c 'umask 2; bash'

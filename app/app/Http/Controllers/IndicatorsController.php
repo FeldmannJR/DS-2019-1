@@ -44,15 +44,10 @@ class IndicatorsController extends Controller
             ->with('display_units', $display_units);
     }
 
-    public function addUnits()
-    {
-        $unit = new Unit;
-        $unit->name = "Centro";
-        $unit->code = "CNT";
-        $unit->save();
-    }
 
-    public function calculateIndicador(){
+    public function calculateIndicador()
+    {
+
     }
 
 

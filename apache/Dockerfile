@@ -11,15 +11,26 @@ RUN apt-get update -yqq && \
     docker-php-ext-install zip && \
     rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update && \
+apt-get install -y --no-install-recommends \
+    curl \
+    libmemcached-dev \
+    libz-dev \
+    libpq-dev \
+    libjpeg-dev \
+    libpng-dev \
+    libfreetype6-dev \
+    libssl-dev \
+    libmcrypt-dev
+
 RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer
 
 COPY default.conf /etc/apache2/sites-enabled/000-default.conf
 
+RUN docker-php-ext-install gd
 
-ARG uid
-RUN useradd -G www-data,root -u $uid -d /home/devuser devuser
-RUN mkdir -p /home/devuser/.composer && \
-    chown -R devuser:devuser /home/devuser
+RUN chown www-data:www-data /var/www/
+RUN echo 'umask 2' >> '/etc/apache2/envvars'
 
 
 WORKDIR /var/www/app

@@ -11,6 +11,12 @@
 |
 */
 
+# Spreadsheets
+Route::get('/uploadTabela', "SpreadsheetController@showUploadForm");
+Route::post('/uploadTabela', "SpreadsheetController@uploadSpreadsheet");
+Route::get('/downloadTabela', "SpreadsheetController@downloadLast");
+
+
 Route::get('/', "Indicators\IndicatorsController@index");
 Route::get('/calculateAll', "Indicators\IndicatorsController@calculateAndSaveAll");
 Route::get("/addunits", "Indicators\IndicatorsController@addUnits");
