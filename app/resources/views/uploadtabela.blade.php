@@ -10,6 +10,11 @@
         <code>Erro: {{$message}}</code>
     @enderror
 
+    <div>
+        <a style="font-size: 36px;" href="{{action('SpreadsheetController@downloadLast')}}">Download Ultima Tabela</a><br/>
+        <a>Teste Value {{$teste}}</a>
+    </div>
+
     <form enctype="multipart/form-data" method="POST" action="{{action('SpreadsheetController@uploadSpreadsheet')}}">
         @csrf
         <label for="tabela">Arquivo:</label>

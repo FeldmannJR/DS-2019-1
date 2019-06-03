@@ -16,8 +16,8 @@ class SpreadsheetController extends Controller
 
     function showUploadForm()
     {
-        # echo $this->testeLast();
-        return view('uploadtabela');
+
+        return view('uploadtabela', ['teste' => $this->testeLast()]);
     }
 
     function uploadSpreadsheet(SpreadsheetRequest $request)

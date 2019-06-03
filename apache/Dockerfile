@@ -23,6 +23,9 @@ apt-get install -y --no-install-recommends \
     libssl-dev \
     libmcrypt-dev
 
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && apt-get install -y nodejs
+
+
 RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer
 
 COPY default.conf /etc/apache2/sites-enabled/000-default.conf
