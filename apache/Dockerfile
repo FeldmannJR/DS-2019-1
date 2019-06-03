@@ -35,9 +35,10 @@ RUN docker-php-ext-install gd
 RUN chown www-data:www-data /var/www/
 RUN echo 'umask 2' >> '/etc/apache2/envvars'
 
-
 WORKDIR /var/www/app
 
-CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
+
+COPY cmdscript.sh /var/www
+CMD "/var/www/cmdscript.sh"
 
 EXPOSE 80
