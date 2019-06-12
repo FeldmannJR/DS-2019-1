@@ -15,6 +15,7 @@
 Route::get('/uploadTabela', "SpreadsheetController@showUploadForm");
 Route::post('/uploadTabela', "SpreadsheetController@uploadSpreadsheet");
 Route::get('/downloadTabela', "SpreadsheetController@downloadLast");
+Route::get('/drive', "SpreadsheetController@testeDrive");
 
 
 Route::get('/', "Indicators\IndicatorsController@index");

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SpreadsheetRequest;
 use App\SpreadsheetFile;
+use Google_Service_Docs;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -30,6 +31,36 @@ class SpreadsheetController extends Controller
             ]);
         }
     }
+
+    function testeDrive()
+    {
+
+        $drive = $this->getDriveService();
+        $id = env('GOOGLE_SPREADSHEET_ID');
+        $mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+        $file = $drive->files->get($id, ['alt' => 'media']);
+        $extension = $file->getFileExtension();
+        $req = $file->getBody();
+        $name = date('mdYHis' . uniqid() . $extension);
+        Storage::disk()->put('spreadsheets/' . $name, $req->getContents());
+    }
+
+    private function addSpreadSheetfile($file_name, $stream = null)
+    {
+        SpreadsheetFile::create([
+            'file_name' => $file_name
+        ]);
+
+    }
+
+    private function getDriveService()
+    {
+        $client = new \Google_Client();
+        $client->setAuthConfig(base_path(env('GOOGLE_APPLICATION_CREDENTIALS')));
+        $client->addScope([Google_Service_Docs::DRIVE, \Google_Service_Docs::DOCUMENTS]);
+        return new \Google_Service_Drive($client);
+    }
+
 
     function testeLast()
     {
