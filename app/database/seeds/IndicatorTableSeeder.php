@@ -20,8 +20,8 @@ class IndicatorTableSeeder extends Seeder
      */
     public function run()
     {
+        ModelIndicators::truncate();
         $this->populateUnits();
-
 
         $this->addSimple('Número de pacientes internados', UpdateType::RealTime(),
             "select count(*) 

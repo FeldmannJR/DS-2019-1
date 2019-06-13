@@ -6,6 +6,7 @@ namespace App\Indicators;
 
 use App\Enums\UpdateType;
 use App\IndicatorHistory;
+use App\IndicatorHistoryUnit;
 use App\Indicators\Indicator;
 use App\Unit;
 use Exception;
@@ -22,6 +23,15 @@ use RuntimeException;
 
 class ModelIndicators
 {
+
+
+    public static function truncate()
+    {
+        IndicatorHistoryUnit::truncate();
+        IndicatorHistory::truncate();
+        DB::table('indicators_simple_sql')->truncate();
+        DB::table('indicators')->truncate();
+    }
 
     /**
      * Carrega os indicadores do banco, caso $updateType tenha um valor será filtrado por ele

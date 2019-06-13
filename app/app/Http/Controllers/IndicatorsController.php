@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Indicators;
 
+use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\IndicatorHistory;
 use App\Indicators\Custom\IndicatorMediaPermanenciaGeral;
@@ -18,6 +19,14 @@ use ReflectionClass;
 class IndicatorsController extends Controller
 {
 
+
+    /**
+     * IndicatorsController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('role:' . UserRole::Root);
+    }
 
     public function calculateAndSaveAll()
     {

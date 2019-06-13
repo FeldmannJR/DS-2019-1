@@ -1,18 +1,23 @@
-@extends ('layouts.basic')
+@extends ('layouts.app')
 
-@section('content-title', 'Indicadores');
 
 @section('content')
 
-    <table>
+    <table class="table">
+        <thead class="thead-dark">
         <tr>
-            <th>Nome Indicador</th>
-            <th>Frequencia</th>
-            <th>Ultimo Valor</th>
-
+            <th scope="col">ID</th>
+            <th scope="col">Nome Indicador</th>
+            <th scope="col">Frequencia</th>
+            <th scope="col">Ultimo Valor</th>
+            <th scope="col">Ultimo Update</th>
         </tr>
+        </thead>
+        <tbody>
+
         @foreach($indicators as $indicador)
             <tr>
+                <th scope="row">{{$indicador->getId()}}</th>
                 <td>{{$indicador->getName()}}</td>
                 <td>{{$indicador->getUpdateFrequency()->key}}</td>
                 <td>
@@ -25,7 +30,9 @@
                         {{$indicador->getDisplayLastValue()}}
                     @endif
                 </td>
+                <td>????</td>
             </tr>
         @endforeach
+        </tbody>
     </table>
 @endsection

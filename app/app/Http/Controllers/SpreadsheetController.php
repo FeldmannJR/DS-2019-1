@@ -2,12 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserRole;
 use App\Http\Requests\SpreadsheetRequest;
+use App\Setting;
 use App\SpreadsheetFile;
+use App\User;
 use Google_Service_Docs;
+use Google_Service_Drive;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
@@ -15,63 +22,223 @@ class SpreadsheetController extends Controller
 {
 
 
-    function showUploadForm()
+    /**
+     * SpreadsheetController constructor.
+     */
+    public function __construct()
     {
-
-        return view('uploadtabela', ['teste' => $this->testeLast()]);
+        $this->middleware('role:' . UserRole::Admin);
     }
 
-    function uploadSpreadsheet(SpreadsheetRequest $request)
+
+    private function checkUserToken($user)
     {
-        $file = $request->file('tabela');
-        $file_name = $file->store('spreadsheets');
-        if ($file_name) {
-            SpreadsheetFile::create([
-                'file_name' => $file_name
-            ]);
+        if ($user->google_token == null) {
+            return false;
+        }
+        return true;
+    }
+
+
+    function index(Request $req)
+    {
+
+
+        dd($this->getSelectedMeta());
+        $user = $req->user();
+
+        if (!$this->checkUserToken($user)) {
+            return redirect(action('SpreadsheetController@googleLogin'));
+        }
+
+
+        $client = $this->getGoogleClient();
+        $client->setAccessToken($user->google_token);
+        $client_id = $client->getClientId();
+        $browser_developer_key = 'AIzaSyDVxAwmIgsap8-vJvAREOyX5bbbjL0gBBE';
+        $token = $client->getAccessToken()['access_token'];
+        $app_id = '90617204341';
+        $scope = 'https://www.googleapis.com/auth/drive.file';
+        $redirect_url = action('SpreadsheetController@pickFile');
+
+        $metadata = $this->getSelectedMeta();
+
+        return view('planilhas.choosefile', compact('scope', 'client_id', 'browser_developer_key', 'token', 'redirect_url', 'app_id', 'metadata'));
+    }
+
+    public function fileExists(User $user, $fileId)
+    {
+        if ($this->checkUserToken($user)) {
+            $client = $this->getGoogleClient();
+            $client->setAccessToken($user->google_token);
+            $drive = new Google_Service_Drive($client);
+            try {
+
+                $f = $drive->files->get($fileId);
+                if ($f) {
+                    return true;
+                }
+            } catch (\Google_Service_Exception $e) {
+                return false;
+            }
+        }
+        return false;
+    }
+
+
+    public function getSelectedMeta()
+    {
+        if ($this->isSelectedValid()) {
+            $fileId = $this->getFileId();
+            $drive = $this->getSelectedDrive();
+            return $drive->files->get($fileId);
         }
     }
 
-    function testeDrive()
+    public function getFileId()
     {
-
-        $drive = $this->getDriveService();
-        $id = env('GOOGLE_SPREADSHEET_ID');
-        $mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        $file = $drive->files->get($id, ['alt' => 'media']);
-        $extension = $file->getFileExtension();
-        $req = $file->getBody();
-        $name = date('mdYHis' . uniqid() . $extension);
-        Storage::disk()->put('spreadsheets/' . $name, $req->getContents());
+        return Setting::get('fileId');
     }
 
-    private function addSpreadSheetfile($file_name, $stream = null)
+    public function getSelectedUser()
     {
-        SpreadsheetFile::create([
-            'file_name' => $file_name
+        $user_id = Setting::get('planilha_user');
+        $user = User::find($user_id);
+        if ($user !== null) {
+            return $user;
+        }
+    }
+
+    public function isSelectedValid()
+    {
+        $user_id = Setting::get('planilha_user');
+        $fileId = $this->getFileId();
+
+        if ($fileId !== null && $user_id !== null) {
+            $user = User::find($user_id);
+            if ($user !== null) {
+                if ($user->google_token !== null && $this->checkUserToken($user)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public
+    function getSelectedDrive()
+    {
+        $user = $this->getSelectedUser();
+        $client = $this->getGoogleClient();
+        $client->setAccessToken($user->google_token);
+        return new Google_Service_Drive($client);
+    }
+
+    public
+    function downloadSelected(Request $req)
+    {
+        $user = $req->user();
+        if ($this->checkUserToken($user)) {
+            $fileId = $this->getFileId();
+            $drive = $this->getSelectedDrive();
+            $meta = $drive->files->get($fileId);
+            $media = $drive->files->get($fileId, ['alt' => 'media']);
+
+
+            $this->saveSpreadsheet($media->getBody()->getContents(), $meta);
+        }
+        return null;
+    }
+
+
+    public
+    function pickFile(Request $req)
+    {
+        $validator = Validator::make($req->all(), [
+            'fileId' => 'required|min:10|max:100'
         ]);
+        $user = $req->user();
+        $validator->after(function ($v) use ($user) {
+            if (!$this->fileExists($user, $v->validated()['fileId'])) {
+                $v->errors()->add('fileId', 'Arquivo não encontrado!');
+            }
+        });
+        if ($validator->fails()) {
+            return \redirect('planilhas')
+                ->withErrors($validator)
+                ->withInput();
+        }
+        $input = $validator->validated();
+        Setting::set('planilha_user', $user->id);
+        Setting::set('fileId', $input['fileId']);
+
 
     }
 
-    private function getDriveService()
+    function googleLogin()
+    {
+        $client = $this->getGoogleClient();
+        $url = $client->createAuthUrl();
+        echo "redirecting to $url";
+        return \redirect()->away($url);
+
+    }
+
+    function googleCallback(Request $request)
+    {
+        if (!$request->has('code')) {
+            echo "Invalid";
+            return;
+        }
+        $client = $this->getGoogleClient();
+        $code = $request->input('code');
+        $client->fetchAccessTokenWithAuthCode($code);
+        // Conseguiu pegar o token
+
+        $token = $client->getAccessToken();
+        if ($token) {
+            dump($code);
+            dump($token);
+            $user = $request->user();
+            $user->google_code = $code;
+            $user->google_token = $token;
+            $user->save();
+        } else {
+            return "Error";
+        }
+    }
+
+
+    private
+    function getGoogleClient()
     {
         $client = new \Google_Client();
-        $client->setAuthConfig(base_path(env('GOOGLE_APPLICATION_CREDENTIALS')));
-        $client->addScope([Google_Service_Docs::DRIVE, \Google_Service_Docs::DOCUMENTS]);
-        return new \Google_Service_Drive($client);
+        $client->setAuthConfig(base_path(env('GOOGLE_CLIENT_CREDENTIALS')));
+        $client->addScope(Google_Service_Drive::DRIVE_FILE);
+        $client->setPrompt('select_account consent');
+        $client->setRedirectUri(action('SpreadsheetController@googleCallback'));
+        $client->setIncludeGrantedScopes(true);
+        $client->setAccessType('offline');
+
+        return $client;
     }
 
 
-    function testeLast()
+    private
+    function saveSpreadsheet($stream, $metadata)
     {
-        $fileName = $this->getLastFile();
-        $reader = IOFactory::createReaderForFile($fileName);
-        $reader->setReadDataOnly(true);
-        $spreadsheet = $reader->load($fileName);
-        $last = $spreadsheet->getActiveSheet()->getCell('B5');
-        return $last;
-    }
+        $ext = pathinfo($metadata->getName(), PATHINFO_EXTENSION);
+        # Gera um nome com a hora atual + id unico
+        $name = date('d.m.Y-H:i:s-') . uniqid() . '.' . $ext;
+        # Salva no storage
+        if (Storage::disk()->put('spreadsheets/' . $name, $stream)) {
+            SpreadsheetFile::create([
+                'file_name' => $name
+            ]);
+            echo "Salvou com o nome $name";
+        }
 
+    }
 
     function downloadLast()
     {
@@ -88,4 +255,32 @@ class SpreadsheetController extends Controller
         $last = SpreadsheetFile::orderBy('created_at', 'desc')->limit(1)->first();
         return $last === null ? null : $prefix . $last->file_name;
     }
+
+
+    // Não é mais usado
+    private
+    function getDriveService()
+    {
+        $client = new \Google_Client();
+        $client->setAuthConfig(base_path(env('GOOGLE_APPLICATION_CREDENTIALS')));
+        $client->addScope([Google_Service_Docs::DRIVE]);
+        return new \Google_Service_Drive($client);
+    }
+
+    // Não é mais usado
+    function downloadPlanilha()
+    {
+        $drive = $this->getDriveService();
+        $id = env('GOOGLE_SPREADSHEET_ID');
+        # Pega Metadata do arquivo, nome e etc
+        $metadata = $drive->files->get($id);
+
+        # Pega a stream do arquivo
+        $file = $drive->files->get($id, ['alt' => 'media']);
+        $contents = $file->getBody()->getContents();
+
+        $this->saveSpreadsheet($contents, $metadata);
+    }
+
+
 }
