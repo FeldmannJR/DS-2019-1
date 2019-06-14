@@ -8,12 +8,14 @@ use App\Enums\UpdateType;
 use App\IndicatorHistory;
 use App\IndicatorHistoryUnit;
 use App\Indicators\Indicator;
+use App\SpreadsheetFile;
 use App\Unit;
 use Exception;
 use function foo\func;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use RuntimeException;
 
 /* Peço perdão antecipadamente pelo vacilo feito nestá classe
@@ -198,8 +200,22 @@ class ModelIndicators
     {
         $data = Carbon::create(2019, 2, 20);
         $indicators = \App\Indicators\ModelIndicators::loadIndicators();
+
+        // Instanciando uma vez somente pra não usar memoria desnecessária
+        $spreadsheet = self::getSpreadsheetReader();
+        $success = true;
         foreach ($indicators as $indicator) {
-            $success = $indicator->calculateAndSave($data);
+            // Se for que usa planilhas ele verifica se a planilha é valida
+            if ($indicator instanceof IndicatorSpreadsheet) {
+                if ($spreadsheet === null) {
+                    $success = false;
+                } else {
+                    $indicator->spreadsheetReader = $spreadsheet;
+                }
+            }
+            if ($success)
+                $success = $indicator->calculateAndSave($data);
+
             if (!$success) {
                 dump("Não consegui calcular " . $indicator->getName());
             } else {
@@ -207,6 +223,20 @@ class ModelIndicators
                 DB::table('indicators')->where('id', $indicator->getId())->update(['last_update' => 'NOW()']);
 
             }
+        }
+    }
+
+    private static function getSpreadsheetReader()
+    {
+        $lastFile = SpreadsheetFile::getLastPath();
+        if ($lastFile === null) return null;
+        $reader = new Xlsx();
+        $reader->setReadDataOnly(true);
+        try {
+            $spreadsheet = $reader->load($lastFile);
+            return $spreadsheet;
+        } catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e) {
+            return null;
         }
     }
 

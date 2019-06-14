@@ -16,6 +16,8 @@ abstract class IndicatorSpreadsheet extends Indicator
 {
 
 
+    public $spreadsheetReader = null;
+
     public function canCalculate(): bool
     {
         $lastFile = SpreadsheetFile::getLastPath();
@@ -27,15 +29,7 @@ abstract class IndicatorSpreadsheet extends Indicator
 
     protected function getSpreadsheet()
     {
-        $lastFile = SpreadsheetFile::getLastPath();
-        $reader = new Xlsx();
-        $reader->setReadDataOnly(true);
-        try {
-            $spreadsheet = $reader->load($lastFile);
-            return $spreadsheet;
-        } catch (Exception $e) {
-            return null;
-        }
+        return $this->spreadsheetReader;
 
     }
 
