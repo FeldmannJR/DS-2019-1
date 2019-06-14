@@ -30,33 +30,37 @@ Você pode fazer isto com os seguintes comandos:
 groupadd --gid 33 www-data
 # Adicionando seu usuario ao grupo
 usermod -a -G www-data $USER
+# Setar a permissão dos arquivos dentro do app para o www-data
+chown -R www-data:www-data app/
 ```
+Você reiniciar sua sessão para ter acesso aos arquivos!
+
+
 
 ## Dentro do container
 - Para entrar na linha de comando do container basta executar o ``./container``
 - Baixar dependencias
 ``composer install``
-- Executar migrações do banco de dados
+- Executar migrações do banco de dados (https://laravel.com/docs/5.8/migrations)
 ``php artisan migrate``
-- Inserir Indicadores no banco
+- Inserir Indicadores no banco, irá pedir confirmação para adicionar dados aleatórias para testar
 ``php artisan db:seed``
 
 ## PgAdmin
 - Importar dump do HE, instruções no ava
+
+Caso alguém queira, da para automatizar este processo, não fiz pois não senti necessidade!
 
 # Artisan
 
 Linha de comandos do laravel, é preciso executar as migrações do banco de dados com o comando
 
 ``` bash
-    # Cria a tabela de migrações no banco de dados
-    php artisan migrate:install
-    # Cria as tabelas de migração
-    php artisan migrate
+    # Entra em um terminal interativo com o laravel onde é possivel testar instruções
+    php artisan tinker
 ```
 Ler mais em https://laravel.com/docs/5.8/migrations
 
-## Acesso
 ### Laravel
 
 http://localhost:80
@@ -65,3 +69,25 @@ http://localhost:80
 Para acessar o pgadmin é só acessar o http://localhost:8081
 ### Postgre
 Porta 54320 aberta para o host
+
+### Onde estão as coisas?
+
+#### Rotas
+As rotas basicamente dizem qual url chama qual função, para as nossas rotas estamos utilizando o arquivo `routes/web.php` para definir quais funções chamar!
+
+
+#### Indicadores
+A estrutura do banco dos indicadores se encontra nos arquivos dentro da pasta app/Indicators 
+- `ModelIndicators` logica de pegar/salvar do banco os indicadores
+- `Indicator` classe pai de todos os indicadores, contem todos os atributos base do indicador(nome,id,update_type...) e a lógica para salvar e pegar o ultimo valor
+- `IndicatorSpreadsheet` classe pai de todos os indicadores que usam planilhas, contendo lógica para pegar as informações necessárias
+- `IndicatorSql` classe pai de todos os indicadores que usam o banco de dados, ela fornece uma conexão para o banco de dados!
+- `IndicatorSimpleSql` Indicadores que são resolvidos com uma query
+
+Os indicadores são criados no seeder(`database/seeders/IndicatorTableSeeder`), quando é executa o comando ``db:seed`` são adicionados todos os indicadores no banco.
+
+O `IndicatorsController` chama as views com os indicadores puxados do banco!
+
+#### Views
+As views estão localizadas dentro de `resources/views/`
+
