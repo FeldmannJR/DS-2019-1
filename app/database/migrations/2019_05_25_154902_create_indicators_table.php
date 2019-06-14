@@ -19,6 +19,7 @@ class CreateIndicatorsTable extends Migration
             $table->string('name');
             $table->integer('update_type');
             $table->boolean('per_unit')->default(false);
+            $table->timestamp('last_update')->nullable()->default(null);
             $table->string('class')->nullable(false);
             $table->unique('name');
             $table->timestamps();

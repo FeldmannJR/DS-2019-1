@@ -16,6 +16,9 @@ class CreateSpreadSheetFilesTable extends Migration
         Schema::create('spreadsheet_files', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('file_name')->unique();
+            $table->string('original_file_name');
+            $table->string('full_path');
+            $table->bigInteger('file_size');
             $table->timestamps();
         });
     }

@@ -16,20 +16,14 @@ use App\Enums\UserRole;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/uploadTabela', "SpreadsheetController@showUploadForm");
-Route::post('/uploadTabela', "SpreadsheetController@uploadSpreadsheet");
-Route::get('/downloadTabela', "SpreadsheetController@downloadLast");
-Route::get('/drive', "SpreadsheetController@downloadPlanilha");
-Route::get('/docs', "SpreadsheetController@testeDocs");
-
 
 Route::get('/planilhas/', 'SpreadsheetController@index');
 Route::get('/planilhas/gcallback', 'SpreadsheetController@googleCallback');
-Route::get('/planilhas/gcallback', 'SpreadsheetController@googleCallback');
-Route::get('/planilhas/glogin', 'SpreadsheetController@googleLogin');
+Route::get('/planilhas/login', 'SpreadsheetController@googleLogin');
+Route::get('/planilhas/logout', 'SpreadsheetController@googleLogout');
 Route::post('/planilhas/pickFile', 'SpreadsheetController@pickFile');
-Route::get('/planilhas/download', 'SpreadsheetController@downloadSelected');
-
+Route::get('/planilhas/downloadFromDrive', 'SpreadsheetController@downloadFromDriveWithRedirects');
+Route::get('/planilhas/download', 'SpreadsheetController@downloadLast');
 
 
 Route::get('/', "Indicators\IndicatorsController@index");

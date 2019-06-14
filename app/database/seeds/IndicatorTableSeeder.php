@@ -2,8 +2,12 @@
 
 use App\Enums\UpdateType;
 use App\Indicators\Custom\IndicatorMediaPermanenciaGeral;
+use App\Indicators\Custom\IndicatorNumeroCirurgiasRealizadas;
+use App\Indicators\Custom\IndicatorNumeroPartosCesareos;
+use App\Indicators\Custom\IndicatorNumeroPartosNaturais;
 use App\Indicators\Custom\IndicatorOcupacaoPorUnidade;
 use App\Indicators\Custom\IndicatorRotatividadeLeitos;
+use App\Indicators\Custom\IndicatorTaxaDeSuspensaoDeCirurgias;
 use App\Indicators\Indicator;
 use App\Indicators\ModelIndicators;
 use App\Unit;
@@ -20,7 +24,9 @@ class IndicatorTableSeeder extends Seeder
      */
     public function run()
     {
+        // Remove os indicadores antigos pra não dar conflito
         ModelIndicators::truncate();
+        // Copia as unidades para a nossa tabela
         $this->populateUnits();
 
         $this->addSimple('Número de pacientes internados', UpdateType::RealTime(),
@@ -97,6 +103,13 @@ class IndicatorTableSeeder extends Seeder
         $this->addIndicator(new IndicatorMediaPermanenciaGeral(null, 'Media de permanência geral', UpdateType::Monthly()));
         $this->addIndicator(new IndicatorOcupacaoPorUnidade(null, "Ocupação por Unidade", UpdateType::RealTime()));
         $this->addIndicator(new IndicatorRotatividadeLeitos(null, "Rotatividade de Leitos", UpdateType::Monthly()));
+
+        // Planilhas
+        $this->addIndicator(new IndicatorNumeroCirurgiasRealizadas(null, "Número de Cirurgias realizadas", UpdateType::Daily()));
+        $this->addIndicator(new IndicatorTaxaDeSuspensaoDeCirurgias(null, "Taxa de suspensão de cirurgias", UpdateType::Daily()));
+        $this->addIndicator(new IndicatorNumeroPartosNaturais(null, "Número de partos naturais", UpdateType::Daily()));
+        $this->addIndicator(new IndicatorNumeroPartosCesareos(null, "Número de partos cesáreos", UpdateType::Daily()));
+
 
         if ($this->command->confirm('Você deseja popular o historico com valores aleatorios?', false)) {
             foreach (ModelIndicators::loadIndicators() as $indicator) {

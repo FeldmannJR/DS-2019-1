@@ -52,6 +52,12 @@
                             </li>
                         @endif
                     @else
+                        <li class="naf-item">
+                            <a class="nav-link" href="{{action("Indicators\IndicatorsController@index")}}">Ver Indicadores</a>
+                        </li>
+                        <li class="naf-item">
+                            <a class="nav-link" href="{{action("SpreadsheetController@index")}}">Planilhas</a>
+                        </li>
                         <li class="nav-item dropdown">
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>

@@ -16,8 +16,7 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('username');
-            $table->string('google_code')->nullable();
-            $table->json('google_token')->nullable();
+            $table->integer('google_account')->nullable()->unique();
             $table->string('password');
             $table->integer('user_role');
             $table->rememberToken();

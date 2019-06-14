@@ -33,6 +33,7 @@ COPY default.conf /etc/apache2/sites-enabled/000-default.conf
 RUN docker-php-ext-install gd
 
 RUN chown www-data:www-data /var/www/
+
 RUN echo 'umask 2' >> '/etc/apache2/envvars'
 
 WORKDIR /var/www/app

@@ -12,6 +12,7 @@ use App\Unit;
 use Exception;
 use function foo\func;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use RuntimeException;
 
@@ -73,6 +74,8 @@ class ModelIndicators
                 }
                 // Se ele instanciou a classe joga na lista
                 if ($newInstance !== null) {
+                    if ($ind->last_update !== null)
+                        $newInstance->setLastUpdate(Carbon::createFromFormat('Y-m-d H:i:s', $ind->last_update));
                     $returnIndicators[] = $newInstance;
                 }
             }
@@ -191,6 +194,21 @@ class ModelIndicators
 
     }
 
+    public static function calculateAndSaveAll()
+    {
+        $data = Carbon::create(2019, 2, 20);
+        $indicators = \App\Indicators\ModelIndicators::loadIndicators();
+        foreach ($indicators as $indicator) {
+            $success = $indicator->calculateAndSave($data);
+            if (!$success) {
+                dump("Não consegui calcular " . $indicator->getName());
+            } else {
+                $indicator->setLastUpdate(now());
+                DB::table('indicators')->where('id', $indicator->getId())->update(['last_update' => 'NOW()']);
+
+            }
+        }
+    }
 
     /**
      * @return \Illuminate\Database\ConnectionInterface

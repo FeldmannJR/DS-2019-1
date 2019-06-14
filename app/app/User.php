@@ -25,9 +25,7 @@ class User extends Authenticatable
     protected $enumCasts = [
         'user_role' => UserRole::class,
     ];
-    protected $casts = [
-        'google_token' => 'json'
-    ];
+    protected $with = 'googleAccount';
 
     /**
      * The attributes that are mass assignable.
@@ -35,7 +33,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'username', 'password', 'user_role'
+        'username', 'password'
     ];
 
     /**
@@ -47,5 +45,9 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function googleAccount()
+    {
+        return $this->belongsTo(GoogleAccount::class, 'google_account');
+    }
 
 }

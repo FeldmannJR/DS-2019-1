@@ -31,6 +31,11 @@ abstract class Indicator
     private $per_unit = false;
 
     /**
+     * @var Carbon|null
+     */
+    private $last_update = null;
+
+    /**
      * Indicator constructor.
      * @param int|null $id
      * @param string $name
@@ -88,6 +93,13 @@ abstract class Indicator
         return $this->per_unit;
     }
 
+    /**
+     * @param null $last_update
+     */
+    public function setLastUpdate($last_update): void
+    {
+        $this->last_update = $last_update;
+    }
 
     /**
      * @return UpdateType
@@ -118,21 +130,36 @@ abstract class Indicator
         } else {
             return number_format($value, 2);
         }
+    }
 
+    /**
+     * @param Unit|null $unit unidade para ser calculado o valor
+     * @return string|null valor a ser mostrado na view
+     */
+    public function getDisplayLastUpdate(): ?string
+    {
 
+        if ($this->last_update === null) {
+            return 'Nunca';
+        } else {
+            return $this->last_update->format('m/d/Y h:i:s');
+        }
     }
 
     /**
      * Calcula o valor do indicador e salva no banco este valor
      * @param Carbon|null $data em qual data será calculado os indicadors
-     * @return void
+     * @return bool
      */
     public function calculateAndSave(Carbon $data = null)
     {
+        if (!$this->canCalculate()) {
+            return null;
+        }
         // Chama a  função nas subclasses
         $value = $this->calculateIndicator($data);
         if ($value === null) {
-            return;
+            return null;
         }
         // Verifica se esse indicador possui valores por unidade
         if ($this->per_unit) {
@@ -146,13 +173,15 @@ abstract class Indicator
                     ModelIndicators::addIndicatorHistoryValue($this->getId(), $unit_value, $allUnits[$unit_id]);
                 }
             }
-
+            return true;
         } else {
             if (is_numeric($value)) {
                 echo "Calculated $this->name to $value<br>";
                 ModelIndicators::addIndicatorHistoryValue($this->getId(), $value);
+                return true;
             }
         }
+        return null;
     }
 
     /**
@@ -188,6 +217,10 @@ abstract class Indicator
 
     }
 
+    public function canCalculate(): bool
+    {
+        return true;
+    }
 }
 
 ?>
