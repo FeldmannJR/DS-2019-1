@@ -149,13 +149,20 @@ abstract class Indicator
     /**
      * Calcula o valor do indicador e salva no banco este valor
      * @param Carbon|null $data em qual data será calculado os indicadors
+     * @param $output
      * @return bool
      */
-    public function calculateAndSave(Carbon $data = null)
+    public function calculateAndSave(Carbon $data = null, $output = null)
     {
         if (!$this->canCalculate()) {
             return null;
         }
+        if ($output == null) {
+            $output = function ($strg) {
+                echo $strg.'<br/>';
+            };
+        }
+
         // Chama a  função nas subclasses
         $value = $this->calculateIndicator($data);
         if ($value === null) {
@@ -168,7 +175,8 @@ abstract class Indicator
             foreach ($value as $unit_id => $unit_value) {
                 // Verifica se a chave é um inteiro e o valor um numerico, e verifica se a unidade existe no nosso banco
                 if (is_int($unit_id) && is_numeric($unit_value) && array_key_exists($unit_id, $allUnits)) {
-                    echo "Calculated $this->name in unit $unit_id to $unit_value<br>";
+
+                    $output("Calculated $this->name in unit $unit_id to $unit_value");
                     // Adiciona o valor ao banco
                     ModelIndicators::addIndicatorHistoryValue($this->getId(), $unit_value, $allUnits[$unit_id]);
                 }
@@ -176,7 +184,7 @@ abstract class Indicator
             return true;
         } else {
             if (is_numeric($value)) {
-                echo "Calculated $this->name to $value<br>";
+                $output("Calculated $this->name to $value");
                 ModelIndicators::addIndicatorHistoryValue($this->getId(), $value);
                 return true;
             }

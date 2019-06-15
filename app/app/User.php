@@ -50,4 +50,15 @@ class User extends Authenticatable
         return $this->belongsTo(GoogleAccount::class, 'google_account');
     }
 
+    /**
+     * Verifica se o usuario tem uma conta do google linkada
+     * @param User $user user to verify
+     * @return bool if user has account linked
+     */
+
+    public function hasGoogleAccount()
+    {
+        return $this->googleAccount !== null;
+    }
+
 }

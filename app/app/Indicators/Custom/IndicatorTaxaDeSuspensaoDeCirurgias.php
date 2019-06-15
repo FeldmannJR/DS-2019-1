@@ -33,7 +33,7 @@ class IndicatorTaxaDeSuspensaoDeCirurgias extends IndicatorSpreadsheet
             }
         });
         if ($executed) {
-            return $suspensas / $cirurgias;
+            return $suspensas / max($cirurgias, 1);
         } else {
             return null;
         }

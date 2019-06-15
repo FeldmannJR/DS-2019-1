@@ -76,6 +76,7 @@ return [
             'prefix_indexes' => true,
             'schema' => 'public',
             'sslmode' => 'prefer',
+            'timezone' => 'America/Sao_Paulo'
         ],
         'pgsql_agh' => [
             'driver' => 'pgsql',
@@ -90,6 +91,7 @@ return [
             'prefix_indexes' => true,
             'schema' => 'agh',
             'sslmode' => 'prefer',
+            'timezone' => 'America/Sao_Paulo'
         ],
 
         'sqlsrv' => [

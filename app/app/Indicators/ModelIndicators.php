@@ -4,6 +4,7 @@
 namespace App\Indicators;
 
 
+use App\Console\Commands\UpdateIndicators;
 use App\Enums\UpdateType;
 use App\IndicatorHistory;
 use App\IndicatorHistoryUnit;
@@ -196,10 +197,11 @@ class ModelIndicators
 
     }
 
-    public static function calculateAndSaveAll()
+    public static function calculateAndSaveAll(UpdateType $updateType = null, Carbon $data = null, UpdateIndicators $command = null)
     {
-        $data = Carbon::create(2019, 2, 20);
-        $indicators = \App\Indicators\ModelIndicators::loadIndicators();
+        if ($data === null)
+            $data = Carbon::create(2019, 2, 20);
+        $indicators = \App\Indicators\ModelIndicators::loadIndicators($updateType);
 
         // Instanciando uma vez somente pra não usar memoria desnecessária
         $spreadsheet = self::getSpreadsheetReader();
@@ -214,10 +216,15 @@ class ModelIndicators
                 }
             }
             if ($success)
-                $success = $indicator->calculateAndSave($data);
+                $success = $indicator->calculateAndSave($data, $command !== null ? array($command, 'info') : null);
 
             if (!$success) {
-                dump("Não consegui calcular " . $indicator->getName());
+                $msg = 'Não consegui calcular ' . $indicator->getName();
+                if ($command !== null) {
+                    $command->error($msg);
+                } else {
+                    echo($msg . '<br>');
+                }
             } else {
                 $indicator->setLastUpdate(now());
                 DB::table('indicators')->where('id', $indicator->getId())->update(['last_update' => 'NOW()']);
