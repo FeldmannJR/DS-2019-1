@@ -3,6 +3,7 @@
 namespace App\Indicators;
 
 use App\Enums\UpdateType;
+use App\Events\UpdateIndicatorEvent;
 use App\IndicatorHistory;
 use App\Unit;
 use Carbon\Carbon;
@@ -159,7 +160,7 @@ abstract class Indicator
         }
         if ($output == null) {
             $output = function ($strg) {
-                echo $strg.'<br/>';
+                echo $strg . '<br/>';
             };
         }
 
@@ -181,11 +182,13 @@ abstract class Indicator
                     ModelIndicators::addIndicatorHistoryValue($this->getId(), $unit_value, $allUnits[$unit_id]);
                 }
             }
+            event(new UpdateIndicatorEvent($this, $value));
             return true;
         } else {
             if (is_numeric($value)) {
                 $output("Calculated $this->name to $value");
                 ModelIndicators::addIndicatorHistoryValue($this->getId(), $value);
+                event(new UpdateIndicatorEvent($this, $value));
                 return true;
             }
         }

@@ -9,10 +9,7 @@ RUN apt-get update -yqq && \
     docker-php-ext-install pgsql && \
     docker-php-ext-configure zip --with-libzip && \
     docker-php-ext-install zip && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN apt-get update && \
-apt-get install -y --no-install-recommends \
+    apt-get install -y --no-install-recommends \
     curl \
     libmemcached-dev \
     libz-dev \
@@ -23,7 +20,9 @@ apt-get install -y --no-install-recommends \
     libssl-dev \
     libmcrypt-dev \
     tzdata \
-    cron
+    supervisor \ 
+    cron && \
+    rm -rf /var/lib/apt/lists/*
 
 # Instalando o node
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && apt-get install -y nodejs
@@ -47,11 +46,18 @@ RUN crontab -u www-data /etc/cron.d/www-data
 
 # Gambiarra pro apache criar arquivos com permissão para o grupo
 RUN echo 'umask 2' >> '/etc/apache2/envvars'
+
+# Setando a timezone do container
 ENV TZ=America/Sao_Paulo
 
+# Inicializando os processos com o supervisord
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+CMD "/usr/bin/supervisord"
+
+# Quando der attach já está na pasta certa
 WORKDIR /var/www/app
 
-COPY cmdscript.sh /var/www
-CMD "/var/www/cmdscript.sh"
-
+# Porta do apache
 EXPOSE 80
+# Porta do websockets
+EXPOSE 6001

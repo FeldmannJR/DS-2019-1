@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\UpdateIndicators;
 use App\Enums\UpdateType;
 use function foo\func;
 use Illuminate\Console\Scheduling\Schedule;
@@ -28,11 +29,11 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
-        $schedule->command('indicators:update', ['RealTime'])
+        $schedule->command(UpdateIndicators::class, ['RealTime'])
             ->everyFiveMinutes();
-        $schedule->command('indicators:update', ['Daily'])
+        $schedule->command(UpdateIndicators::class, ['Daily'])
             ->dailyAt('00:10');
-        $schedule->command('indicators:update', ['Monthly'])
+        $schedule->command(UpdateIndicators::class, ['Monthly'])
             ->monthlyOn(1, '00:10');
 
     }

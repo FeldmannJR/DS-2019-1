@@ -1,10 +1,19 @@
 @extends ('layouts.app')
 
+@push('scripts')
+    <script defer>
+       Echo
+            .channel('indicators')
+            .listen('UpdateIndicatorEvent', (e) => {
+                console.log(e);
+            });
 
+    </script>
+@endpush
 @section('content')
 
     <div class="container">
-
+        <h-indicator name="Batatinhas">Eae meu consagrado</h-indicator>
         <table class="table table-striped table-bordered table-hover">
             <thead class="thead-dark">
             <tr>
@@ -16,7 +25,6 @@
             </tr>
             </thead>
             <tbody>
-
             @foreach($indicators as $indicador)
                 <tr>
                     <th scope="row">{{$indicador->getId()}}</th>

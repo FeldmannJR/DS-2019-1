@@ -8,6 +8,7 @@ services:
     tty: true
     ports:
       - "80:80"
+      - "6001:6001"
       - "443:443"
     networks:
       - HE-network
