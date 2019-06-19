@@ -10712,3 +10712,27 @@ a.text-dark:focus {
   color: #d9534f;
 }
 
+.navbar-nav {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-nav .nav-link {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-nav .nav-link i {
+  padding: 1vh;
+  font-size: 2.5vh;
+}
+
+.navbar-nav .nav-item.dropdown {
+  margin-left: 4vh;
+}
+
+.navbar-nav .nav-item.dropdown .dropdown-menu {
+  width: 15vw;
+  padding: 1vh;
+}
+

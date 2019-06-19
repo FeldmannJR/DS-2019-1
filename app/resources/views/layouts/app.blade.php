@@ -15,6 +15,7 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -52,22 +53,30 @@
                             </li>
                         @endif
                     @else
-                        <li class="naf-item">
-                            <a class="nav-link" href="{{action("Indicators\IndicatorsController@index")}}">Ver Indicadores</a>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{action("PanelController@index")}}"><i class="material-icons">airplay</i>Painel</a>
                         </li>
-                        <li class="naf-item">
-                            <a class="nav-link" href="{{action("SpreadsheetController@index")}}">Planilhas</a>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{action("Indicators\IndicatorsController@index")}}"><i class="material-icons">show_chart</i>Indicadores</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{action("SpreadsheetController@index")}}"><i class="material-icons">library_books</i>Planilhas</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                {{ Auth::user()->name }} <span class="caret"></span>
+                                {{ Auth::user()->name }}Menu
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                <a class="nav-link" href="{{action("SliderController@index")}}"><i class="material-icons">view_carousel</i>Controle de apresentação</a>
+                                <a class="nav-link" href="{{action("SettingsController@index")}}"><i class="material-icons">view_quilt</i>Configuração de layout</a>
+                                <a class="nav-link" href="{{action("ReportController@index")}}"><i class="material-icons">receipt</i>Gerar relatório</a>
+                                <a class="nav-link" href="{{action("MaintenanceController@index")}}"><i class="material-icons">build</i>Manutenção</a>
+                                <a class="nav-link dropdown-item" href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
+                                    <i class="material-icons">subdirectory_arrow_right</i>
                                     {{ __('Logout') }}
                                 </a>
 

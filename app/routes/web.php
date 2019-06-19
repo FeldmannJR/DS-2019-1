@@ -36,3 +36,10 @@ Route::get("/units", "Indicators\IndicatorsController@showUnits");
 Auth::routes(['register' => false, 'reset' => false, 'verify' => false]);
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+// Front
+Route::get('panel', ['as' => 'panel.index', 'uses' => 'PanelController@index']);
+Route::get('slider', ['as' => 'slider.index', 'uses' => 'SliderController@index']);
+Route::get('settings', ['as' => 'settings.index', 'uses' => 'SettingsController@index']);
+Route::get('report', ['as' => 'report.index', 'uses' => 'ReportController@index']);
+Route::get('maintenance', ['as' => 'maintenance.index', 'uses' => 'MaintenanceController@index']);
