@@ -1,0 +1,24 @@
+.panel {
+    background-color: white;
+    margin: .5vh .5vw;
+    display: grid;
+    grid-gap: .5vh;
+    height: 99vh;
+    width: 99vw;
+
+    .row {
+        display: grid;
+        grid-gap: .5vh;
+        grid-auto-flow: column;
+
+        .frame {
+            min-height: 49vh;
+            min-width: 49vw;
+            background-color: white;
+            box-shadow: 0 .5vh 1vh rgba(0, 0, 0, 0.75);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+}

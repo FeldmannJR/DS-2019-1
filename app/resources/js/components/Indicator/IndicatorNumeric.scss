@@ -1,0 +1,24 @@
+@import "../../../sass/variables";
+
+.indicatorNumeric {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    position: relative;
+
+    [icon] {
+        width: 35%;
+        fill: $he-green;
+    }
+
+    .text {
+
+        h1,
+        h2 {
+            margin: 0;
+            color: $he-blue;
+        }
+    }
+}
