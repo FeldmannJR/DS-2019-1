@@ -13,9 +13,10 @@ class PanelController extends Controller
         $indicators = '[';
         $indicators .=      '[';
         $indicators .=          '{ type: "numeric", title: "Texto Indicador", symbol: "'.Symbols::QUIT.'", value: "50%" },';
-        $indicators .=          '{ type: "statistic", title: "C", graph: "bar", datasets: [{ label: "Texto indicador", data: [30]}]}';
-        $indicators .=      '],[';
-        $indicators .=          '{ type: "statistic", title: "B", graph: "bar", datasets: [{ label: "Texto indicador", data: [10]},{ label: "Texto indicador", data: [20]},{ label: "Texto indicador", data: [30]},{ label: "Texto indicador", data: [25]},{ label: "Texto indicador", data: [5]},{ label: "Texto indicador", data: [15]},]}';
+        $indicators .=          '{ type: "statistic", title: "C", graph: "bar", data: [30], labels: ["A"]}';
+        $indicators .=      '],';
+        $indicators .=      '[';
+        $indicators .=          '{ type: "statistic", title: "B", graph: "doughnut", data: [10, 20, 30], labels: ["Red", "Yellow", "Blue"] }';
         $indicators .=      ']';
         $indicators .= ']';
         return view('panel.index', ['indicators' => $indicators]);

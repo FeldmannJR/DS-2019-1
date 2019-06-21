@@ -17,6 +17,7 @@
 require("./Panel.scss");
 import IndicatorNumeric from "../../components/Indicator/IndicatorNumeric";
 import IndicatorStatistic from "../../components/Indicator/IndicatorStatistic";
+Chart.defaults.global.legend.display = false;
 
 export default {
   components: {

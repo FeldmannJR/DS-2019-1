@@ -1882,12 +1882,20 @@ __webpack_require__(/*! ./IndicatorNumeric.scss */ "./resources/js/components/In
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _helpers_Chart__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../helpers/Chart */ "./resources/js/components/helpers/Chart.vue");
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
 //
 //
 //
 //
 //
-__webpack_require__(/*! ./IndicatorNumeric.scss */ "./resources/js/components/Indicator/IndicatorNumeric.scss");
+__webpack_require__(/*! ./IndicatorStatistic.scss */ "./resources/js/components/Indicator/IndicatorStatistic.scss");
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -1896,33 +1904,48 @@ __webpack_require__(/*! ./IndicatorNumeric.scss */ "./resources/js/components/In
   },
   props: ["indicator", "multiple"],
   data: function data() {
-    var i = this.indicator,
+    var size = this.multiple ? 0.5 : 1,
+        i = this.indicator,
         colors = ["#344669", "#3C8376", "#58B6C0", "#7F8FA9", "#84ACB6", "#75BDA7"],
-        datasets = i.datasets.map(function (dataset, i) {
-      return {
-        label: dataset.label,
-        data: dataset.data,
-        backgroundColor: colors[i]
-      };
-    });
+        datasets = [{
+      data: i.data,
+      backgroundColor: i.data.map(function (d, i) {
+        return colors[i];
+      })
+    }];
+    var options = {
+      legend: {
+        display: false
+      },
+      plugins: {
+        datalabels: {
+          color: "white",
+          textShadowColor: "black",
+          textShadowBlur: 10,
+          font: {
+            size: window.innerWidth / 25
+          }
+        }
+      },
+      scales: {}
+    };
+
+    if (i.graph === "bar" || i.graph === "line") {
+      var maxValue = Math.max.apply(Math, _toConsumableArray(i.data));
+      options.scales.yAxes = [{
+        ticks: {
+          suggestedMin: 0,
+          max: maxValue * 1.5
+        }
+      }];
+    }
+
     return {
       title: i.title,
       graph: i.graph,
       labels: i.labels,
       datasets: datasets,
-      options: {
-        legend: {
-          position: "bottom"
-        },
-        scales: {
-          yAxes: [{
-            display: true,
-            ticks: {
-              suggestedMin: 0
-            }
-          }]
-        }
-      }
+      options: options
     };
   }
 });
@@ -2011,6 +2034,7 @@ __webpack_require__(/*! ./Panel.scss */ "./resources/js/containers/Panel/Panel.s
 
 
 
+Chart.defaults.global.legend.display = false;
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     IndicatorNumeric: _components_Indicator_IndicatorNumeric__WEBPACK_IMPORTED_MODULE_0__["default"],
@@ -6484,6 +6508,25 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 // module
 exports.push([module.i, ".indicatorNumeric {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 100%;\n  height: 100%;\n  position: relative;\n}\n.indicatorNumeric [icon] {\n  width: 35%;\n  fill: #3C8376;\n}\n.indicatorNumeric .text h1,\n.indicatorNumeric .text h2 {\n  margin: 0;\n  color: #344669;\n}", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./resources/js/components/Indicator/IndicatorStatistic.scss":
+/*!********************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/lib/loader.js??ref--7-3!./resources/js/components/Indicator/IndicatorStatistic.scss ***!
+  \********************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, ".indicatorStatistic {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 50%;\n}", ""]);
 
 // exports
 
@@ -50453,6 +50496,36 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_IndicatorNumeric_vue_vue_type_template_id_246bf46e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
+
+/***/ }),
+
+/***/ "./resources/js/components/Indicator/IndicatorStatistic.scss":
+/*!*******************************************************************!*\
+  !*** ./resources/js/components/Indicator/IndicatorStatistic.scss ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../node_modules/css-loader!../../../../node_modules/postcss-loader/src??ref--7-2!../../../../node_modules/sass-loader/lib/loader.js??ref--7-3!./IndicatorStatistic.scss */ "./node_modules/css-loader/index.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./resources/js/components/Indicator/IndicatorStatistic.scss");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
 
 /***/ }),
 
