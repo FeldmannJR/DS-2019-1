@@ -5,10 +5,6 @@
 </template>
 <script>
 export default {
-  props: ["className", "viewBox", "icon"],
-
-  mounted() {
-    console.log(this.icon);
-  }
+  props: ["className", "viewBox", "icon"]
 };
 </script>

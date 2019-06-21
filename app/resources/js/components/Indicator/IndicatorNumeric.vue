@@ -10,7 +10,6 @@
 <script>
 require("./IndicatorNumeric.scss");
 import Icon from "../helpers/Icon";
-import { ICONS } from "../../constants";
 
 export default {
   components: {
@@ -18,12 +17,13 @@ export default {
   },
   props: ["indicator", "multiple"],
   data() {
-    const size = this.multiple ? 0.5 : 1;
+    const size = this.multiple ? 0.5 : 1,
+      i = this.indicator;
 
     return {
-      title: this.indicator.title,
-      symbol: ICONS[this.indicator.symbol],
-      value: this.indicator.value,
+      title: i.title,
+      symbol: i.symbol,
+      value: i.value,
       h1Size: 35 * size,
       h2Size: 11 * size,
       offset: 5 * size

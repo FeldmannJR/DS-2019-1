@@ -30,3 +30,6 @@ Vue.component("Panel", require("./containers/Panel/Panel.vue").default);
 const app = new Vue({
     el: "#app"
 });
+
+Chart.defaults.global.defaultFontColor = "#636b6f";
+Chart.defaults.global.defaultFontFamily = "'Nunito', sans-serif";

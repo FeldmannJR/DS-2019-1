@@ -7,7 +7,7 @@
           :indicator="indicator"
           :multiple="multiple"
         />
-        <IndicatorStatistic v-else :title="indicator.title"/>
+        <IndicatorStatistic v-else :indicator="indicator" :multiple="multiple"/>
       </div>
     </div>
   </div>
