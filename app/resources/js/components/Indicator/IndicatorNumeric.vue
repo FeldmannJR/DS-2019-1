@@ -8,7 +8,6 @@
   </div>
 </template>
 <script>
-require("./IndicatorNumeric.scss");
 import Icon from "../helpers/Icon";
 
 export default {

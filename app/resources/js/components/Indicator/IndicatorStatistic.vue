@@ -7,7 +7,6 @@
   </div>
 </template>
 <script>
-require("./IndicatorStatistic.scss");
 import Chart from "../helpers/Chart";
 
 export default {
@@ -16,23 +15,7 @@ export default {
   },
   props: ["indicator", "stretched"],
   data() {
-    const i = this.indicator,
-      colors = [
-        "#344669",
-        "#3C8376",
-        "#58B6C0",
-        "#7F8FA9",
-        "#84ACB6",
-        "#75BDA7"
-      ],
-      datasets = [
-        {
-          data: i.data,
-          backgroundColor: i.data.map((d, i) => {
-            return colors[i];
-          })
-        }
-      ];
+    const i = this.indicator;
 
     var options = {
       legend: {
@@ -44,8 +27,13 @@ export default {
           textShadowColor: "black",
           textShadowBlur: 10,
           font: {
-            size: window.innerWidth / 25
+            size: window.innerWidth / 30
           }
+        }
+      },
+      elements: {
+        arc: {
+          borderWidth: 0
         }
       },
       scales: {}
@@ -68,9 +56,22 @@ export default {
       title: i.title,
       graph: i.graph,
       labels: i.labels,
-      datasets: datasets,
-      options: options
+      options: options,
+      colors: ["#344669", "#3C8376", "#58B6C0", "#7F8FA9", "#84ACB6", "#75BDA7"]
     };
+  },
+  computed: {
+    datasets() {
+      const data = this.indicator.data;
+      return [
+        {
+          data: data,
+          backgroundColor: data.map((d, i) => {
+            return this.colors[i];
+          })
+        }
+      ];
+    }
   }
 };
 </script>

@@ -1848,8 +1848,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-__webpack_require__(/*! ./IndicatorNumeric.scss */ "./resources/js/components/Indicator/IndicatorNumeric.scss");
-
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -1894,8 +1892,6 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 //
 //
 //
-__webpack_require__(/*! ./IndicatorStatistic.scss */ "./resources/js/components/Indicator/IndicatorStatistic.scss");
-
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -1903,14 +1899,7 @@ __webpack_require__(/*! ./IndicatorStatistic.scss */ "./resources/js/components/
   },
   props: ["indicator", "stretched"],
   data: function data() {
-    var i = this.indicator,
-        colors = ["#344669", "#3C8376", "#58B6C0", "#7F8FA9", "#84ACB6", "#75BDA7"],
-        datasets = [{
-      data: i.data,
-      backgroundColor: i.data.map(function (d, i) {
-        return colors[i];
-      })
-    }];
+    var i = this.indicator;
     var options = {
       legend: {
         display: false
@@ -1921,8 +1910,13 @@ __webpack_require__(/*! ./IndicatorStatistic.scss */ "./resources/js/components/
           textShadowColor: "black",
           textShadowBlur: 10,
           font: {
-            size: window.innerWidth / 25
+            size: window.innerWidth / 30
           }
+        }
+      },
+      elements: {
+        arc: {
+          borderWidth: 0
         }
       },
       scales: {}
@@ -1942,9 +1936,22 @@ __webpack_require__(/*! ./IndicatorStatistic.scss */ "./resources/js/components/
       title: i.title,
       graph: i.graph,
       labels: i.labels,
-      datasets: datasets,
-      options: options
+      options: options,
+      colors: ["#344669", "#3C8376", "#58B6C0", "#7F8FA9", "#84ACB6", "#75BDA7"]
     };
+  },
+  computed: {
+    datasets: function datasets() {
+      var _this = this;
+
+      var data = this.indicator.data;
+      return [{
+        data: data,
+        backgroundColor: data.map(function (d, i) {
+          return _this.colors[i];
+        })
+      }];
+    }
   }
 });
 
@@ -6508,44 +6515,6 @@ Chart.defaults.global.legend.display = false;
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/index.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./resources/js/components/Indicator/IndicatorNumeric.scss":
-/*!******************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/lib/loader.js??ref--7-3!./resources/js/components/Indicator/IndicatorNumeric.scss ***!
-  \******************************************************************************************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
-// imports
-
-
-// module
-exports.push([module.i, ".indicatorNumeric {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 100%;\n  height: 100%;\n  position: relative;\n}\n.indicatorNumeric [icon] {\n  width: 35%;\n  fill: #3C8376;\n}\n.indicatorNumeric .text h1,\n.indicatorNumeric .text h2 {\n  margin: 0;\n  color: #344669;\n}", ""]);
-
-// exports
-
-
-/***/ }),
-
-/***/ "./node_modules/css-loader/index.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./resources/js/components/Indicator/IndicatorStatistic.scss":
-/*!********************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/lib/loader.js??ref--7-3!./resources/js/components/Indicator/IndicatorStatistic.scss ***!
-  \********************************************************************************************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
-// imports
-
-
-// module
-exports.push([module.i, ".indicatorStatistic {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  display: flex;\n  width: 100%;\n  height: 100%;\n  flex-direction: column;\n  justify-content: space-evenly;\n}\n.indicatorStatistic .chart {\n  width: 60%;\n}\n.indicatorStatistic[stretched=true] {\n  flex-direction: row;\n}\n.indicatorStatistic[stretched=true] .chart {\n  width: 45%;\n}", ""]);
-
-// exports
-
-
-/***/ }),
-
 /***/ "./node_modules/css-loader/index.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./resources/js/containers/Panel/Panel.scss":
 /*!***************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/lib/loader.js??ref--7-3!./resources/js/containers/Panel/Panel.scss ***!
@@ -6558,7 +6527,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, ".panel {\n  background-color: white;\n  margin: 0.5vh 0.5vw;\n  display: grid;\n  grid-gap: 0.5vh;\n  height: 99vh;\n  width: 99vw;\n}\n.panel .row {\n  display: grid;\n  grid-gap: 0.5vh;\n  grid-auto-flow: column;\n}\n.panel .row .frame {\n  min-height: 49vh;\n  min-width: 49vw;\n  background-color: white;\n  box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.75);\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  border: 1px solid rgba(0, 0, 0, 0.25);\n}", ""]);
+exports.push([module.i, ".panel {\n  background-color: white;\n  margin: 0.5vh 0.5vw;\n  display: grid;\n  grid-gap: 0.5vh;\n  height: 99vh;\n  width: 99vw;\n}\n.panel .row {\n  display: grid;\n  grid-gap: 0.5vh;\n  grid-auto-flow: column;\n}\n.panel .row .frame {\n  min-height: 49vh;\n  min-width: 49vw;\n  background-color: white;\n  box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.75);\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  border: 1px solid rgba(0, 0, 0, 0.25);\n}\n.panel .row .frame .indicatorNumeric,\n.panel .row .frame .indicatorStatistic {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 100%;\n  height: 100%;\n}\n.panel .row .frame .indicatorNumeric h1,\n.panel .row .frame .indicatorNumeric h2,\n.panel .row .frame .indicatorStatistic h1,\n.panel .row .frame .indicatorStatistic h2 {\n  margin: 0;\n  color: #344669;\n  text-shadow: 0.2vh 0.2vh 0.2vh rgba(0, 0, 0, 0.75);\n}\n.panel .row .frame .indicatorNumeric [icon],\n.panel .row .frame .indicatorNumeric .chart,\n.panel .row .frame .indicatorStatistic [icon],\n.panel .row .frame .indicatorStatistic .chart {\n  -webkit-filter: drop-shadow(0 0 0.2vh black);\n          filter: drop-shadow(0 0 0.2vh black);\n}\n.panel .row .frame .indicatorNumeric {\n  position: relative;\n}\n.panel .row .frame .indicatorNumeric [icon] {\n  width: 35%;\n  fill: #3C8376;\n}\n.panel .row .frame .indicatorStatistic {\n  flex-direction: column;\n  justify-content: space-evenly;\n}\n.panel .row .frame .indicatorStatistic .chart {\n  width: 60%;\n}\n.panel .row .frame .indicatorStatistic[stretched=true] {\n  flex-direction: row;\n}\n.panel .row .frame .indicatorStatistic[stretched=true] .chart {\n  width: 45%;\n}", ""]);
 
 // exports
 
@@ -50415,36 +50384,6 @@ if (token) {
 
 /***/ }),
 
-/***/ "./resources/js/components/Indicator/IndicatorNumeric.scss":
-/*!*****************************************************************!*\
-  !*** ./resources/js/components/Indicator/IndicatorNumeric.scss ***!
-  \*****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-
-var content = __webpack_require__(/*! !../../../../node_modules/css-loader!../../../../node_modules/postcss-loader/src??ref--7-2!../../../../node_modules/sass-loader/lib/loader.js??ref--7-3!./IndicatorNumeric.scss */ "./node_modules/css-loader/index.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./resources/js/components/Indicator/IndicatorNumeric.scss");
-
-if(typeof content === 'string') content = [[module.i, content, '']];
-
-var transform;
-var insertInto;
-
-
-
-var options = {"hmr":true}
-
-options.transform = transform
-options.insertInto = undefined;
-
-var update = __webpack_require__(/*! ../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
-
-if(content.locals) module.exports = content.locals;
-
-if(false) {}
-
-/***/ }),
-
 /***/ "./resources/js/components/Indicator/IndicatorNumeric.vue":
 /*!****************************************************************!*\
   !*** ./resources/js/components/Indicator/IndicatorNumeric.vue ***!
@@ -50511,36 +50450,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_IndicatorNumeric_vue_vue_type_template_id_246bf46e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
-
-/***/ }),
-
-/***/ "./resources/js/components/Indicator/IndicatorStatistic.scss":
-/*!*******************************************************************!*\
-  !*** ./resources/js/components/Indicator/IndicatorStatistic.scss ***!
-  \*******************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-
-var content = __webpack_require__(/*! !../../../../node_modules/css-loader!../../../../node_modules/postcss-loader/src??ref--7-2!../../../../node_modules/sass-loader/lib/loader.js??ref--7-3!./IndicatorStatistic.scss */ "./node_modules/css-loader/index.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/lib/loader.js?!./resources/js/components/Indicator/IndicatorStatistic.scss");
-
-if(typeof content === 'string') content = [[module.i, content, '']];
-
-var transform;
-var insertInto;
-
-
-
-var options = {"hmr":true}
-
-options.transform = transform
-options.insertInto = undefined;
-
-var update = __webpack_require__(/*! ../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
-
-if(content.locals) module.exports = content.locals;
-
-if(false) {}
 
 /***/ }),
 
