@@ -1857,15 +1857,11 @@ __webpack_require__(/*! ./IndicatorNumeric.scss */ "./resources/js/components/In
   },
   props: ["indicator", "multiple"],
   data: function data() {
-    var size = this.multiple ? 0.5 : 1,
-        i = this.indicator;
+    var i = this.indicator;
     return {
       title: i.title,
       symbol: i.symbol,
-      value: i.value,
-      h1Size: 35 * size,
-      h2Size: 11 * size,
-      offset: 5 * size
+      value: i.value
     };
   }
 });
@@ -1895,6 +1891,9 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 //
 //
 //
+//
+//
+//
 __webpack_require__(/*! ./IndicatorStatistic.scss */ "./resources/js/components/Indicator/IndicatorStatistic.scss");
 
 
@@ -1902,10 +1901,9 @@ __webpack_require__(/*! ./IndicatorStatistic.scss */ "./resources/js/components/
   components: {
     Chart: _helpers_Chart__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  props: ["indicator", "multiple"],
+  props: ["indicator", "stretched"],
   data: function data() {
-    var size = this.multiple ? 0.5 : 1,
-        i = this.indicator,
+    var i = this.indicator,
         colors = ["#344669", "#3C8376", "#58B6C0", "#7F8FA9", "#84ACB6", "#75BDA7"],
         datasets = [{
       data: i.data,
@@ -2026,10 +2024,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
 __webpack_require__(/*! ./Panel.scss */ "./resources/js/containers/Panel/Panel.scss");
 
 
@@ -2045,6 +2039,25 @@ Chart.defaults.global.legend.display = false;
     return {
       multiple: this.indicators.flat().length > 1
     };
+  },
+  mounted: function mounted() {
+    this.setSize("h1", 35);
+    this.setSize("h2", 10);
+    this.setSize(".indicatorNumeric", 5, "vh", "bottom");
+    this.setSize(".indicatorNumeric", 5, "vw", "right");
+  },
+  methods: {
+    setSize: function setSize(selector, size) {
+      var _this = this;
+
+      var metric = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "vh";
+      var attribute = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "fontSize";
+      var vm = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : this;
+      document.querySelectorAll(selector).forEach(function (el) {
+        var ratio = _this.multiple ? 0.5 : 1;
+        el.style[attribute] = size * ratio + metric;
+      });
+    }
   }
 });
 
@@ -6526,7 +6539,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, ".indicatorStatistic {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 50%;\n}", ""]);
+exports.push([module.i, ".indicatorStatistic {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  display: flex;\n  width: 100%;\n  height: 100%;\n  flex-direction: column;\n  justify-content: space-evenly;\n}\n.indicatorStatistic .chart {\n  width: 60%;\n}\n.indicatorStatistic[stretched=true] {\n  flex-direction: row;\n}\n.indicatorStatistic[stretched=true] .chart {\n  width: 45%;\n}", ""]);
 
 // exports
 
@@ -6545,7 +6558,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, ".panel {\n  background-color: white;\n  margin: 0.5vh 0.5vw;\n  display: grid;\n  grid-gap: 0.5vh;\n  height: 99vh;\n  width: 99vw;\n}\n.panel .row {\n  display: grid;\n  grid-gap: 0.5vh;\n  grid-auto-flow: column;\n}\n.panel .row .frame {\n  min-height: 49vh;\n  min-width: 49vw;\n  background-color: white;\n  box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.75);\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}", ""]);
+exports.push([module.i, ".panel {\n  background-color: white;\n  margin: 0.5vh 0.5vw;\n  display: grid;\n  grid-gap: 0.5vh;\n  height: 99vh;\n  width: 99vw;\n}\n.panel .row {\n  display: grid;\n  grid-gap: 0.5vh;\n  grid-auto-flow: column;\n}\n.panel .row .frame {\n  min-height: 49vh;\n  min-width: 49vw;\n  background-color: white;\n  box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.75);\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  border: 1px solid rgba(0, 0, 0, 0.25);\n}", ""]);
 
 // exports
 
@@ -37994,21 +38007,14 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    {
-      staticClass: "indicatorNumeric",
-      style: { bottom: _vm.offset + "vh", right: _vm.offset + "vw" }
-    },
+    { staticClass: "indicatorNumeric" },
     [
       _c("Icon", { attrs: { icon: _vm.symbol } }),
       _vm._v(" "),
       _c("div", { staticClass: "text" }, [
-        _c("h1", { style: { fontSize: _vm.h1Size + "vh" } }, [
-          _vm._v(_vm._s(_vm.value))
-        ]),
+        _c("h1", [_vm._v(_vm._s(_vm.value))]),
         _vm._v(" "),
-        _c("h2", { style: { fontSize: _vm.h2Size + "vh" } }, [
-          _vm._v(_vm._s(_vm.title))
-        ])
+        _c("h2", [_vm._v(_vm._s(_vm.title))])
       ])
     ],
     1
@@ -38038,19 +38044,27 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "indicatorStatistic" },
+    { staticClass: "indicatorStatistic", attrs: { stretched: _vm.stretched } },
     [
-      _c("Chart", {
-        attrs: {
-          id: _vm.title,
-          type: _vm.graph,
-          labels: _vm.labels,
-          datasets: _vm.datasets,
-          options: _vm.options
-        }
-      })
-    ],
-    1
+      _c(
+        "div",
+        { staticClass: "chart" },
+        [
+          _c("Chart", {
+            attrs: {
+              id: _vm.title,
+              type: _vm.graph,
+              labels: _vm.labels,
+              datasets: _vm.datasets,
+              options: _vm.options
+            }
+          })
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("h2", [_vm._v(_vm._s(_vm.title))])
+    ]
   )
 }
 var staticRenderFns = []
@@ -38136,18 +38150,19 @@ var render = function() {
     _vm._l(_vm.indicators, function(row) {
       return _c(
         "div",
-        { staticClass: "row" },
+        { key: _vm.indicators.indexOf(row), staticClass: "row" },
         _vm._l(row, function(indicator) {
           return _c(
             "div",
-            { staticClass: "frame" },
+            { key: row.indexOf(indicator), staticClass: "frame" },
             [
               indicator.type === "numeric"
-                ? _c("IndicatorNumeric", {
-                    attrs: { indicator: indicator, multiple: _vm.multiple }
-                  })
+                ? _c("IndicatorNumeric", { attrs: { indicator: indicator } })
                 : _c("IndicatorStatistic", {
-                    attrs: { indicator: indicator, multiple: _vm.multiple }
+                    attrs: {
+                      indicator: indicator,
+                      stretched: row.length == 1 && _vm.multiple
+                    }
                   })
             ],
             1

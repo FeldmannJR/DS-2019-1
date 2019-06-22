@@ -1,6 +1,9 @@
 <template>
-  <div class="indicatorStatistic">
-    <Chart :id="title" :type="graph" :labels="labels" :datasets="datasets" :options="options"/>
+  <div class="indicatorStatistic" :stretched="stretched">
+    <div class="chart">
+      <Chart :id="title" :type="graph" :labels="labels" :datasets="datasets" :options="options"/>
+    </div>
+    <h2>{{title}}</h2>
   </div>
 </template>
 <script>
@@ -11,10 +14,9 @@ export default {
   components: {
     Chart
   },
-  props: ["indicator", "multiple"],
+  props: ["indicator", "stretched"],
   data() {
-    const size = this.multiple ? 0.5 : 1,
-      i = this.indicator,
+    const i = this.indicator,
       colors = [
         "#344669",
         "#3C8376",
@@ -31,6 +33,7 @@ export default {
           })
         }
       ];
+
     var options = {
       legend: {
         display: false

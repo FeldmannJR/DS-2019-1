@@ -12,11 +12,11 @@ class PanelController extends Controller
     {
         $indicators = '[';
         $indicators .=      '[';
-        $indicators .=          '{ type: "numeric", title: "Texto Indicador", symbol: "'.Symbols::QUIT.'", value: "50%" },';
-        $indicators .=          '{ type: "statistic", title: "C", graph: "bar", data: [30], labels: ["A"]}';
+        $indicators .=          '{ type: "numeric", title: "Texto Indicador1", symbol: "'.Symbols::QUIT.'", value: "50%" },';
+        $indicators .=          '{ type: "statistic", title: "Texto Indicador2", graph: "bar", data: [30], labels: ["A"]}';
         $indicators .=      '],';
         $indicators .=      '[';
-        $indicators .=          '{ type: "statistic", title: "B", graph: "doughnut", data: [10, 20, 30], labels: ["Red", "Yellow", "Blue"] }';
+        $indicators .=          '{ type: "statistic", title: "Texto Indicador3", graph: "doughnut", data: [10, 20, 30], labels: ["Red", "Yellow", "Blue"] }';
         $indicators .=      ']';
         $indicators .= ']';
         return view('panel.index', ['indicators' => $indicators]);
