@@ -12,7 +12,7 @@ class PanelController extends Controller
     {
         $indicators = '[';
         $indicators .=      '[';
-        $indicators .=          '{ type: "numeric", title: "Texto Indicador1", symbol: "'.Symbols::QUIT.'", value: "50%" },';
+        $indicators .=          '{ type: "numeric", title: "Texto Indicador1", symbol: "'.Symbols::HOSPITAL.'", value: "50%" },';
         $indicators .=          '{ type: "statistic", title: "Texto Indicador2", graph: "bar", data: [30], labels: ["A"]}';
         $indicators .=      '],';
         $indicators .=      '[';

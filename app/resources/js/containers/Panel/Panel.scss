@@ -49,8 +49,8 @@
                     text-shadow: .1vh .1vh .15vh rgba(0, 0, 0, 0.5);
                 }
 
-                [icon],
-                .chart {
+                .chart,
+                [icon] {
                     filter: drop-shadow(0 0 .2vh black);
                 }
 
@@ -63,8 +63,9 @@
                 position: relative;
 
                 [icon] {
-                    width: 35%;
-                    fill: $he-green;
+                    position: relative;
+                    top: 1vh;
+                    color: $he-green;
                 }
             }
 

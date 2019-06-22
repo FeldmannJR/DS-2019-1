@@ -30,6 +30,7 @@ export default {
     this.setSize("h1", 35);
     this.setSize("h2", 10);
     this.setSize("h3", 4);
+    this.setSize("[icon]", 70);
     this.setSize("[label]", 5, "vh", "width");
     this.setSize("[label]", 5, "vh", "height");
     this.setSize(".indicatorNumeric", 5, "vh", "bottom");
