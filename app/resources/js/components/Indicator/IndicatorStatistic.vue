@@ -1,9 +1,15 @@
 <template>
   <div class="indicatorStatistic" :stretched="stretched">
-    <div class="chart">
-      <Chart :id="title" :type="graph" :labels="labels" :datasets="datasets" :options="options"/>
-    </div>
     <h2>{{title}}</h2>
+    <div class="chart">
+      <Chart :id="title" :type="graph" :datasets="datasets" :options="options"/>
+    </div>
+    <div class="legend">
+      <div class="label" v-for="label in labels" :key="label">
+        <div label :style="{ backgroundColor: colors[labels.indexOf(label)] }"/>
+        <h3>{{label}}</h3>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -57,7 +63,7 @@ export default {
       graph: i.graph,
       labels: i.labels,
       options: options,
-      colors: ["#344669", "#3C8376", "#58B6C0", "#7F8FA9", "#84ACB6", "#75BDA7"]
+      colors: ["#344669", "#3C8376", "#3ec940", "#dde02c", "#dd9c2c", "#af3838"]
     };
   },
   computed: {

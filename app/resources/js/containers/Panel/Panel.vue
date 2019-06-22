@@ -29,6 +29,9 @@ export default {
   mounted() {
     this.setSize("h1", 35);
     this.setSize("h2", 10);
+    this.setSize("h3", 4);
+    this.setSize("[label]", 5, "vh", "width");
+    this.setSize("[label]", 5, "vh", "height");
     this.setSize(".indicatorNumeric", 5, "vh", "bottom");
     this.setSize(".indicatorNumeric", 5, "vw", "right");
   },

@@ -1892,6 +1892,12 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -1937,7 +1943,7 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       graph: i.graph,
       labels: i.labels,
       options: options,
-      colors: ["#344669", "#3C8376", "#58B6C0", "#7F8FA9", "#84ACB6", "#75BDA7"]
+      colors: ["#344669", "#3C8376", "#3ec940", "#dde02c", "#dd9c2c", "#af3838"]
     };
   },
   computed: {
@@ -2050,6 +2056,9 @@ Chart.defaults.global.legend.display = false;
   mounted: function mounted() {
     this.setSize("h1", 35);
     this.setSize("h2", 10);
+    this.setSize("h3", 4);
+    this.setSize("[label]", 5, "vh", "width");
+    this.setSize("[label]", 5, "vh", "height");
     this.setSize(".indicatorNumeric", 5, "vh", "bottom");
     this.setSize(".indicatorNumeric", 5, "vw", "right");
   },
@@ -6527,7 +6536,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, ".panel {\n  background-color: white;\n  margin: 0.5vh 0.5vw;\n  display: grid;\n  grid-gap: 0.5vh;\n  height: 99vh;\n  width: 99vw;\n}\n.panel .row {\n  display: grid;\n  grid-gap: 0.5vh;\n  grid-auto-flow: column;\n}\n.panel .row .frame {\n  min-height: 49vh;\n  min-width: 49vw;\n  background-color: white;\n  box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.75);\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  border: 1px solid rgba(0, 0, 0, 0.25);\n}\n.panel .row .frame .indicatorNumeric,\n.panel .row .frame .indicatorStatistic {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 100%;\n  height: 100%;\n}\n.panel .row .frame .indicatorNumeric h1,\n.panel .row .frame .indicatorNumeric h2,\n.panel .row .frame .indicatorStatistic h1,\n.panel .row .frame .indicatorStatistic h2 {\n  margin: 0;\n  color: #344669;\n  text-shadow: 0.2vh 0.2vh 0.2vh rgba(0, 0, 0, 0.75);\n}\n.panel .row .frame .indicatorNumeric [icon],\n.panel .row .frame .indicatorNumeric .chart,\n.panel .row .frame .indicatorStatistic [icon],\n.panel .row .frame .indicatorStatistic .chart {\n  -webkit-filter: drop-shadow(0 0 0.2vh black);\n          filter: drop-shadow(0 0 0.2vh black);\n}\n.panel .row .frame .indicatorNumeric {\n  position: relative;\n}\n.panel .row .frame .indicatorNumeric [icon] {\n  width: 35%;\n  fill: #3C8376;\n}\n.panel .row .frame .indicatorStatistic {\n  flex-direction: column;\n  justify-content: space-evenly;\n}\n.panel .row .frame .indicatorStatistic .chart {\n  width: 60%;\n}\n.panel .row .frame .indicatorStatistic[stretched=true] {\n  flex-direction: row;\n}\n.panel .row .frame .indicatorStatistic[stretched=true] .chart {\n  width: 45%;\n}", ""]);
+exports.push([module.i, ".panel {\n  background-color: white;\n  margin: 0.5vh 0.5vw;\n  display: grid;\n  grid-gap: 0.5vh;\n  height: 99vh;\n  width: 99vw;\n}\n.panel .row {\n  display: grid;\n  grid-gap: 0.5vh;\n  grid-auto-flow: column;\n}\n.panel .row .frame {\n  min-height: 49vh;\n  min-width: 49vw;\n  background-color: white;\n  box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.75);\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  border: 1px solid rgba(0, 0, 0, 0.25);\n}\n.panel .row .frame .indicatorNumeric,\n.panel .row .frame .indicatorStatistic {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 100%;\n  height: 100%;\n}\n.panel .row .frame .indicatorNumeric h1,\n.panel .row .frame .indicatorNumeric h2,\n.panel .row .frame .indicatorStatistic h1,\n.panel .row .frame .indicatorStatistic h2 {\n  margin: 0;\n  color: #344669;\n}\n.panel .row .frame .indicatorNumeric h1,\n.panel .row .frame .indicatorStatistic h1 {\n  text-shadow: 0.3vh 0.3vh 0.3vh rgba(0, 0, 0, 0.75);\n}\n.panel .row .frame .indicatorNumeric h2,\n.panel .row .frame .indicatorStatistic h2 {\n  text-shadow: 0.2vh 0.2vh 0.2vh rgba(0, 0, 0, 0.75);\n}\n.panel .row .frame .indicatorNumeric h3,\n.panel .row .frame .indicatorStatistic h3 {\n  text-shadow: 0.1vh 0.1vh 0.15vh rgba(0, 0, 0, 0.5);\n}\n.panel .row .frame .indicatorNumeric [icon],\n.panel .row .frame .indicatorNumeric .chart,\n.panel .row .frame .indicatorStatistic [icon],\n.panel .row .frame .indicatorStatistic .chart {\n  -webkit-filter: drop-shadow(0 0 0.2vh black);\n          filter: drop-shadow(0 0 0.2vh black);\n}\n.panel .row .frame .indicatorNumeric [label],\n.panel .row .frame .indicatorStatistic [label] {\n  -webkit-filter: drop-shadow(0 0 0.2vh rgba(0, 0, 0, 0.5));\n          filter: drop-shadow(0 0 0.2vh rgba(0, 0, 0, 0.5));\n}\n.panel .row .frame .indicatorNumeric {\n  position: relative;\n}\n.panel .row .frame .indicatorNumeric [icon] {\n  width: 35%;\n  fill: #3C8376;\n}\n.panel .row .frame .indicatorStatistic {\n  flex-direction: column;\n  justify-content: space-evenly;\n}\n.panel .row .frame .indicatorStatistic .chart {\n  width: 60%;\n}\n.panel .row .frame .indicatorStatistic .legend {\n  width: 100%;\n  display: flex;\n  justify-content: space-evenly;\n}\n.panel .row .frame .indicatorStatistic .legend .label {\n  display: flex;\n  align-items: center;\n}\n.panel .row .frame .indicatorStatistic .legend .label [label] {\n  height: auto;\n  border-radius: 100%;\n  margin-right: 1vh;\n}\n.panel .row .frame .indicatorStatistic[stretched=true] {\n  flex-direction: row-reverse;\n}\n.panel .row .frame .indicatorStatistic[stretched=true] .chart {\n  width: 50%;\n  margin-right: -10vh;\n}\n.panel .row .frame .indicatorStatistic[stretched=true] .legend {\n  height: 100%;\n  width: -webkit-min-content;\n  width: -moz-min-content;\n  width: min-content;\n  flex-direction: column;\n}", ""]);
 
 // exports
 
@@ -38015,6 +38024,8 @@ var render = function() {
     "div",
     { staticClass: "indicatorStatistic", attrs: { stretched: _vm.stretched } },
     [
+      _c("h2", [_vm._v(_vm._s(_vm.title))]),
+      _vm._v(" "),
       _c(
         "div",
         { staticClass: "chart" },
@@ -38023,7 +38034,6 @@ var render = function() {
             attrs: {
               id: _vm.title,
               type: _vm.graph,
-              labels: _vm.labels,
               datasets: _vm.datasets,
               options: _vm.options
             }
@@ -38032,7 +38042,21 @@ var render = function() {
         1
       ),
       _vm._v(" "),
-      _c("h2", [_vm._v(_vm._s(_vm.title))])
+      _c(
+        "div",
+        { staticClass: "legend" },
+        _vm._l(_vm.labels, function(label) {
+          return _c("div", { key: label, staticClass: "label" }, [
+            _c("div", {
+              style: { backgroundColor: _vm.colors[_vm.labels.indexOf(label)] },
+              attrs: { label: "" }
+            }),
+            _vm._v(" "),
+            _c("h3", [_vm._v(_vm._s(label))])
+          ])
+        }),
+        0
+      )
     ]
   )
 }
