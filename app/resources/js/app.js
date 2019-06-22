@@ -31,5 +31,6 @@ const app = new Vue({
     el: "#app"
 });
 
+// Atribui estilo de fonte padrao para o Chart.js
 Chart.defaults.global.defaultFontColor = "#636b6f";
 Chart.defaults.global.defaultFontFamily = "'Nunito', sans-serif";

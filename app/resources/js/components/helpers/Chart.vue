@@ -3,20 +3,24 @@
 </template>
 <script>
 export default {
+  // Helper para criar charts utilizando Chart.js
+
   props: ["id", "type", "labels", "datasets", "options"],
   mounted() {
+    // Renderiza o chart no canvas indicado pelo id passado
     var ctx = document.getElementById(this.id).getContext("2d");
     var chart = new Chart(ctx, {
-      // The type of chart we want to create
+      // Tipo de grafico
       type: this.type || "bar",
 
-      // The data for our dataset
       data: {
+        // Legendas
         labels: this.labels,
+        // Valores
         datasets: this.datasets
       },
 
-      // Configuration options go here
+      // Configuracoes opcionais
       options: this.options
     });
   }

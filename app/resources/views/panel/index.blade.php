@@ -1,5 +1,5 @@
 @extends('layouts/basic')
 
 @section('body')
-  <Panel :indicators="{{$indicators}}">
+  <Panel :slides="{{$indicators}}" :timers="[5, 5]">
 @endsection

@@ -1847,6 +1847,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["indicator", "multiple"],
   data: function data() {
@@ -1893,6 +1896,11 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -1900,16 +1908,19 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   },
   props: ["indicator", "stretched"],
   data: function data() {
-    var i = this.indicator;
+    var i = this.indicator; // Configuracoes opcionais do chart
+
     var options = {
+      // Oculta legenda nativa do chart
       legend: {
         display: false
       },
       plugins: {
+        // Plugin datalabels utilizado para exibir os valores em cima dos graficos
         datalabels: {
           color: "white",
           textShadowColor: "black",
-          textShadowBlur: 10,
+          textShadowBlur: 4,
           font: {
             size: window.innerWidth / 30
           }
@@ -1921,7 +1932,7 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         }
       },
       scales: {}
-    };
+    }; // Ajusta intervalo de valores para graficos dos tipos barra e linha
 
     if (i.graph === "bar" || i.graph === "line") {
       var maxValue = Math.max.apply(Math, _toConsumableArray(i.data));
@@ -1938,10 +1949,12 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       graph: i.graph,
       labels: i.labels,
       options: options,
+      // Esquema padrao de cores para diferenciar os dados
       colors: ["#344669", "#3C8376", "#3ec940", "#dde02c", "#dd9c2c", "#af3838"]
     };
   },
   computed: {
+    // Cria dataset com dados e esquema de cores
     datasets: function datasets() {
       var _this = this;
 
@@ -1971,18 +1984,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
+  // Helper para criar charts utilizando Chart.js
   props: ["id", "type", "labels", "datasets", "options"],
   mounted: function mounted() {
+    // Renderiza o chart no canvas indicado pelo id passado
     var ctx = document.getElementById(this.id).getContext("2d");
     var chart = new Chart(ctx, {
-      // The type of chart we want to create
+      // Tipo de grafico
       type: this.type || "bar",
-      // The data for our dataset
       data: {
+        // Legendas
         labels: this.labels,
+        // Valores
         datasets: this.datasets
       },
-      // Configuration options go here
+      // Configuracoes opcionais
       options: this.options
     });
   }
@@ -2012,33 +2028,54 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 __webpack_require__(/*! ./Panel.scss */ "./resources/js/containers/Panel/Panel.scss");
 
 
 
-Chart.defaults.global.legend.display = false;
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     IndicatorNumeric: _components_Indicator_IndicatorNumeric__WEBPACK_IMPORTED_MODULE_0__["default"],
     IndicatorStatistic: _components_Indicator_IndicatorStatistic__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
-  props: ["indicators"],
+  props: ["slides", "timers"],
   data: function data() {
     return {
-      multiple: this.indicators.flat().length > 1
+      // Index do slide atual
+      index: 1
     };
   },
-  mounted: function mounted() {
-    this.setSize("h1", 35);
-    this.setSize("h2", 10);
-    this.setSize("h3", 4);
-    this.setSize("[icon]", 70);
-    this.setSize("[label]", 5, "vh", "width");
-    this.setSize("[label]", 5, "vh", "height");
-    this.setSize(".indicatorNumeric", 5, "vh", "bottom");
-    this.setSize(".indicatorNumeric", 5, "vw", "right");
+  computed: {
+    // Indica se ha mais de um indicador no painel
+    multiple: function multiple() {
+      return this.indicators.flat().length > 1;
+    },
+    // Indicadores do slide atual
+    indicators: function indicators() {
+      // Inicializa timer para avançar para o próximo slide
+      setTimeout(this.changeSlide, this.timers[this.index] * 1000);
+      return this.slides[this.index];
+    }
   },
   methods: {
+    // Avança 1 slide
+    changeSlide: function changeSlide() {
+      this.index = (this.index + 1) % this.slides.length;
+    },
+    // Ajusta tamanhos de headers, icones, legendas e posicionamento de indicadores numericos
+    setSizes: function setSizes() {
+      this.setSize("h1", 35);
+      this.setSize("h2", 10);
+      this.setSize("h3", 4);
+      this.setSize("[icon]", 70);
+      this.setSize("[label]", 5, "vh", "width");
+      this.setSize("[label]", 5, "vh", "height");
+      this.setSize(".indicatorNumeric", 5, "vh", "bottom");
+      this.setSize(".indicatorNumeric", 5, "vw", "right");
+    },
+    // Altera um atributo CSS, utilizando metade do valor passado se multiple for verdadeiro
     setSize: function setSize(selector, size) {
       var _this = this;
 
@@ -2050,6 +2087,12 @@ Chart.defaults.global.legend.display = false;
         el.style[attribute] = size * ratio + metric;
       });
     }
+  },
+  mounted: function mounted() {
+    this.setSizes();
+  },
+  updated: function updated() {
+    this.setSizes();
   }
 });
 
@@ -50286,7 +50329,8 @@ Vue.component("Panel", __webpack_require__(/*! ./containers/Panel/Panel.vue */ "
 
 var app = new Vue({
   el: "#app"
-});
+}); // Atribui estilo de fonte padrao para o Chart.js
+
 Chart.defaults.global.defaultFontColor = "#636b6f";
 Chart.defaults.global.defaultFontFamily = "'Nunito', sans-serif";
 
