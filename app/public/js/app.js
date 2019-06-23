@@ -1934,7 +1934,7 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       scales: {}
     }; // Ajusta intervalo de valores para graficos dos tipos barra e linha
 
-    if (i.graph === "bar" || i.graph === "line") {
+    if (this.indicator.graph === "bar") {
       var maxValue = Math.max.apply(Math, _toConsumableArray(i.data));
       options.scales.yAxes = [{
         ticks: {
@@ -1959,12 +1959,22 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var _this = this;
 
       var data = this.indicator.data;
-      return [{
-        data: data,
-        backgroundColor: data.map(function (d, i) {
-          return _this.colors[i];
-        })
-      }];
+
+      if (this.indicator.graph === "bar") {
+        return data.map(function (d, i) {
+          return {
+            data: [d],
+            backgroundColor: _this.colors[i]
+          };
+        });
+      } else {
+        return [{
+          data: data,
+          backgroundColor: data.map(function (d, i) {
+            return _this.colors[i];
+          })
+        }];
+      }
     }
   }
 });
@@ -2044,7 +2054,7 @@ __webpack_require__(/*! ./Panel.scss */ "./resources/js/containers/Panel/Panel.s
   data: function data() {
     return {
       // Index do slide atual
-      index: 1
+      index: 0
     };
   },
   computed: {
@@ -6555,7 +6565,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, ".panel {\n  background-color: white;\n  margin: 0.5vh 0.5vw;\n  display: grid;\n  grid-gap: 0.5vh;\n  height: 99vh;\n  width: 99vw;\n}\n.panel .row {\n  display: grid;\n  grid-gap: 0.5vh;\n  grid-auto-flow: column;\n}\n.panel .row .frame {\n  min-height: 49vh;\n  min-width: 49vw;\n  background-color: white;\n  box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.75);\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  border: 1px solid rgba(0, 0, 0, 0.25);\n}\n.panel .row .frame .indicatorNumeric,\n.panel .row .frame .indicatorStatistic {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 100%;\n  height: 100%;\n}\n.panel .row .frame .indicatorNumeric h1,\n.panel .row .frame .indicatorNumeric h2,\n.panel .row .frame .indicatorStatistic h1,\n.panel .row .frame .indicatorStatistic h2 {\n  margin: 0;\n  color: #344669;\n}\n.panel .row .frame .indicatorNumeric h1,\n.panel .row .frame .indicatorStatistic h1 {\n  text-shadow: 0.3vh 0.3vh 0.3vh rgba(0, 0, 0, 0.75);\n}\n.panel .row .frame .indicatorNumeric h2,\n.panel .row .frame .indicatorStatistic h2 {\n  text-shadow: 0.2vh 0.2vh 0.2vh rgba(0, 0, 0, 0.75);\n}\n.panel .row .frame .indicatorNumeric h3,\n.panel .row .frame .indicatorStatistic h3 {\n  text-shadow: 0.1vh 0.1vh 0.15vh rgba(0, 0, 0, 0.5);\n}\n.panel .row .frame .indicatorNumeric .chart,\n.panel .row .frame .indicatorNumeric [icon],\n.panel .row .frame .indicatorStatistic .chart,\n.panel .row .frame .indicatorStatistic [icon] {\n  -webkit-filter: drop-shadow(0 0 0.2vh black);\n          filter: drop-shadow(0 0 0.2vh black);\n}\n.panel .row .frame .indicatorNumeric [label],\n.panel .row .frame .indicatorStatistic [label] {\n  -webkit-filter: drop-shadow(0 0 0.2vh rgba(0, 0, 0, 0.5));\n          filter: drop-shadow(0 0 0.2vh rgba(0, 0, 0, 0.5));\n}\n.panel .row .frame .indicatorNumeric {\n  position: relative;\n}\n.panel .row .frame .indicatorNumeric [icon] {\n  position: relative;\n  top: 1vh;\n  color: #3C8376;\n}\n.panel .row .frame .indicatorStatistic {\n  flex-direction: column;\n  justify-content: space-evenly;\n}\n.panel .row .frame .indicatorStatistic .chart {\n  width: 60%;\n}\n.panel .row .frame .indicatorStatistic .legend {\n  width: 100%;\n  display: flex;\n  justify-content: space-evenly;\n}\n.panel .row .frame .indicatorStatistic .legend .label {\n  display: flex;\n  align-items: center;\n}\n.panel .row .frame .indicatorStatistic .legend .label [label] {\n  height: auto;\n  border-radius: 100%;\n  margin-right: 1vh;\n}\n.panel .row .frame .indicatorStatistic[stretched=true] {\n  flex-direction: row-reverse;\n}\n.panel .row .frame .indicatorStatistic[stretched=true] .chart {\n  width: 50%;\n  margin-right: -10vh;\n}\n.panel .row .frame .indicatorStatistic[stretched=true] .legend {\n  height: 100%;\n  width: -webkit-min-content;\n  width: -moz-min-content;\n  width: min-content;\n  flex-direction: column;\n}", ""]);
+exports.push([module.i, ".panel {\n  background-color: white;\n  margin: 0.5vh 0.5vw;\n  display: grid;\n  grid-gap: 0.5vh;\n  height: 99vh;\n  width: 99vw;\n}\n.panel .row {\n  display: grid;\n  grid-gap: 0.5vh;\n  grid-auto-flow: column;\n}\n.panel .row .frame {\n  min-height: 49vh;\n  min-width: 49vw;\n  background-color: white;\n  box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.75);\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  border: 1px solid rgba(0, 0, 0, 0.25);\n}\n.panel .row .frame .indicatorNumeric,\n.panel .row .frame .indicatorStatistic {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  width: 100%;\n  height: 100%;\n}\n.panel .row .frame .indicatorNumeric h1,\n.panel .row .frame .indicatorNumeric h2,\n.panel .row .frame .indicatorStatistic h1,\n.panel .row .frame .indicatorStatistic h2 {\n  margin: 0;\n  color: #344669;\n}\n.panel .row .frame .indicatorNumeric h1,\n.panel .row .frame .indicatorStatistic h1 {\n  text-shadow: 0.3vh 0.3vh 0.3vh rgba(0, 0, 0, 0.75);\n}\n.panel .row .frame .indicatorNumeric h2,\n.panel .row .frame .indicatorStatistic h2 {\n  text-shadow: 0.2vh 0.2vh 0.2vh rgba(0, 0, 0, 0.75);\n}\n.panel .row .frame .indicatorNumeric h3,\n.panel .row .frame .indicatorStatistic h3 {\n  text-shadow: 0.1vh 0.1vh 0.15vh rgba(0, 0, 0, 0.5);\n}\n.panel .row .frame .indicatorNumeric .chart,\n.panel .row .frame .indicatorNumeric [icon],\n.panel .row .frame .indicatorStatistic .chart,\n.panel .row .frame .indicatorStatistic [icon] {\n  -webkit-filter: drop-shadow(0 0 0.2vh black);\n          filter: drop-shadow(0 0 0.2vh black);\n}\n.panel .row .frame .indicatorNumeric [label],\n.panel .row .frame .indicatorStatistic [label] {\n  -webkit-filter: drop-shadow(0 0 0.2vh rgba(0, 0, 0, 0.5));\n          filter: drop-shadow(0 0 0.2vh rgba(0, 0, 0, 0.5));\n}\n.panel .row .frame .indicatorNumeric {\n  position: relative;\n}\n.panel .row .frame .indicatorNumeric [icon] {\n  position: relative;\n  top: 1vh;\n  color: #3C8376;\n}\n.panel .row .frame .indicatorStatistic {\n  flex-direction: column;\n  justify-content: space-evenly;\n}\n.panel .row .frame .indicatorStatistic .chart {\n  width: 60%;\n}\n.panel .row .frame .indicatorStatistic .legend {\n  width: 100%;\n  display: flex;\n  justify-content: space-evenly;\n}\n.panel .row .frame .indicatorStatistic .legend .label {\n  display: flex;\n  align-items: center;\n}\n.panel .row .frame .indicatorStatistic .legend .label [label] {\n  height: auto;\n  border-radius: 100%;\n  margin-right: 1vh;\n}\n.panel .row .frame .indicatorStatistic[stretched=true] {\n  flex-direction: row-reverse;\n}\n.panel .row .frame .indicatorStatistic[stretched=true] .chart {\n  width: 45%;\n  margin-right: -10vh;\n}\n.panel .row .frame .indicatorStatistic[stretched=true] .legend {\n  height: 100%;\n  width: -webkit-min-content;\n  width: -moz-min-content;\n  width: min-content;\n  flex-direction: column;\n}", ""]);
 
 // exports
 
@@ -38135,8 +38145,12 @@ var render = function() {
             { key: row.indexOf(indicator), staticClass: "frame" },
             [
               indicator.type === "numeric"
-                ? _c("IndicatorNumeric", { attrs: { indicator: indicator } })
+                ? _c("IndicatorNumeric", {
+                    key: indicator.title,
+                    attrs: { indicator: indicator }
+                  })
                 : _c("IndicatorStatistic", {
+                    key: indicator.title,
                     attrs: {
                       indicator: indicator,
                       stretched: row.length == 1 && _vm.multiple

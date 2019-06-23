@@ -54,7 +54,7 @@ export default {
     };
 
     // Ajusta intervalo de valores para graficos dos tipos barra e linha
-    if (i.graph === "bar" || i.graph === "line") {
+    if (this.indicator.graph === "bar") {
       const maxValue = Math.max(...i.data);
 
       options.scales.yAxes = [
@@ -80,14 +80,22 @@ export default {
     // Cria dataset com dados e esquema de cores
     datasets() {
       const data = this.indicator.data;
-      return [
-        {
-          data: data,
-          backgroundColor: data.map((d, i) => {
-            return this.colors[i];
-          })
-        }
-      ];
+
+      if(this.indicator.graph === "bar") {
+        return data.map((d, i) => {
+          return { data: [d], backgroundColor: this.colors[i] }
+        })
+      }
+      else {
+        return [
+          {
+            data: data,
+            backgroundColor: data.map((d, i) => {
+              return this.colors[i];
+            })
+          }
+        ];
+      }
     }
   }
 };
