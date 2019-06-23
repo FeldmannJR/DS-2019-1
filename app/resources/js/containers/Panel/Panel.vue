@@ -4,9 +4,9 @@
     <div v-for="row in indicators" class="row" :key="indicators.indexOf(row)">
       <div v-for="indicator in row" class="frame" :key="row.indexOf(indicator)">
         <!-- Renderiza indicador numerico -->
-        <IndicatorNumeric v-if="indicator.type === 'numeric'" :indicator="indicator"/>
+        <IndicatorNumeric v-if="indicator.type === 'numeric'" :indicator="indicator" :key="indicator.title"/>
         <!-- Renderiza indicador estatistico -->
-        <IndicatorStatistic v-else :indicator="indicator" :stretched="row.length == 1 && multiple"/>
+        <IndicatorStatistic v-else :indicator="indicator" :stretched="row.length == 1 && multiple" :key="indicator.title"/>
       </div>
     </div>
   </div>
@@ -26,7 +26,7 @@ export default {
   data() {
     return {
       // Index do slide atual
-      index: 1
+      index: 0
     };
   },
   computed: {
