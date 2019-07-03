@@ -1,12 +1,10 @@
 <template>
   <div class="indicatorNumeric">
-    <!-- Simbolo atribuido ao indicador -->
-    <i icon class="material-icons">{{symbol}}</i>
-    <div class="text">
-      <!-- Valor do indicador -->
-      <h1>{{value}}</h1>
+    <div class="text" :style="{opacity: opacity}">
       <!-- Titulo do indicador -->
       <h2>{{title}}</h2>
+      <!-- Valor do indicador -->
+      <h1>{{value}}</h1>
     </div>
   </div>
 </template>
@@ -18,9 +16,15 @@ export default {
 
     return {
       title: i.title,
-      symbol: i.symbol,
-      value: i.value
+      value: i.value,
+      opacity: 0
     };
+  },
+  mounted() {
+    var vm = this;
+    setTimeout(function() {
+      vm.opacity = 1;
+    }, 50);
   }
 };
 </script>

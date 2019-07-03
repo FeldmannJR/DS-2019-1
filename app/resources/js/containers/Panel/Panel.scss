@@ -1,6 +1,7 @@
 @import "../../../sass/variables";
 
 .panel {
+    font-family: 'Roboto';
     background-color: white;
     margin: .5vh .5vw;
     display: grid;
@@ -16,7 +17,7 @@
         .frame {
             min-height: 49vh;
             min-width: 49vw;
-            background-color: white;
+            background-color: rgb(245, 245, 245);
             box-shadow: 0 .5vh 1vh rgba(0, 0, 0, 0.75);
             display: flex;
             justify-content: center;
@@ -34,39 +35,22 @@
                 h1,
                 h2 {
                     margin: 0;
-                    color: $he-blue;
-                }
-
-                h1 {
-                    text-shadow: .3vh .3vh .3vh rgba(0, 0, 0, 0.75);
-                }
-
-                h2 {
-                    text-shadow: .2vh .2vh .2vh rgba(0, 0, 0, 0.75);
-                }
-
-                h3 {
-                    text-shadow: .1vh .1vh .15vh rgba(0, 0, 0, 0.5);
-                }
-
-                .chart,
-                [icon] {
-                    filter: drop-shadow(0 0 .2vh black);
-                }
-
-                [label] {
-                    filter: drop-shadow(0 0 .2vh rgba(0, 0, 0, 0.5));
                 }
             }
 
             .indicatorNumeric {
-                position: relative;
+                display: flex;
+                height: min-content;
 
-                [icon] {
-                    position: relative;
-                    top: 1vh;
-                    color: $he-green;
+                .text {
+                    text-align: center;
+                    transition: 1s;
+
+                    h1 {
+                        color: $he-blue;
+                    }
                 }
+
             }
 
             .indicatorStatistic {

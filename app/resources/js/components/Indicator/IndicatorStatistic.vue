@@ -4,13 +4,13 @@
     <h2>{{title}}</h2>
     <div class="chart">
       <!-- Grafico que representa os valores -->
-      <Chart :id="title" :type="graph" :datasets="datasets" :options="options"/>
+      <Chart :id="title" :type="graph" :datasets="datasets" :options="options" />
     </div>
     <!-- Legenda -->
     <div class="legend">
       <div class="label" v-for="label in labels" :key="label">
         <!-- Circulo com cor respectiva ao valor no grafico -->
-        <div label :style="{ backgroundColor: colors[labels.indexOf(label)] }"/>
+        <div label :style="{ backgroundColor: colors[labels.indexOf(label)] }" />
         <!-- Rotulo -->
         <h3>{{label}}</h3>
       </div>
@@ -81,12 +81,11 @@ export default {
     datasets() {
       const data = this.indicator.data;
 
-      if(this.indicator.graph === "bar") {
+      if (this.indicator.graph === "bar") {
         return data.map((d, i) => {
-          return { data: [d], backgroundColor: this.colors[i] }
-        })
-      }
-      else {
+          return { data: [d], backgroundColor: this.colors[i] };
+        });
+      } else {
         return [
           {
             data: data,

@@ -4,9 +4,18 @@
     <div v-for="row in indicators" class="row" :key="indicators.indexOf(row)">
       <div v-for="indicator in row" class="frame" :key="row.indexOf(indicator)">
         <!-- Renderiza indicador numerico -->
-        <IndicatorNumeric v-if="indicator.type === 'numeric'" :indicator="indicator" :key="indicator.title"/>
+        <IndicatorNumeric
+          v-if="indicator.type === 'numeric'"
+          :indicator="indicator"
+          :key="indicator.title"
+        />
         <!-- Renderiza indicador estatistico -->
-        <IndicatorStatistic v-else :indicator="indicator" :stretched="row.length == 1 && multiple" :key="indicator.title"/>
+        <IndicatorStatistic
+          v-else
+          :indicator="indicator"
+          :stretched="row.length == 1 && multiple"
+          :key="indicator.title"
+        />
       </div>
     </div>
   </div>
@@ -48,7 +57,7 @@ export default {
     },
     // Ajusta tamanhos de headers, icones, legendas e posicionamento de indicadores numericos
     setSizes() {
-      this.setSize("h1", 35);
+      this.setSize("h1", 40);
       this.setSize("h2", 10);
       this.setSize("h3", 4);
       this.setSize("[icon]", 70);
