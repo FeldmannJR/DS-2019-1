@@ -18,7 +18,7 @@
   </div>
 </template>
 <script>
-import Chart from "../helpers/Chart";
+import Chart from "./helpers/Chart";
 
 export default {
   components: {

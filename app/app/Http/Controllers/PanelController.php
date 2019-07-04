@@ -10,22 +10,64 @@ class PanelController extends Controller
 {
     public function index()
     {
-        $indicators = '[';
-        $indicators .=      '[';
-        $indicators .=           '[';
-        $indicators .=               '{ type: "numeric", title: "Texto Indicador1", symbol: "'.Symbols::HOSPITAL.'", value: "50%" },';
-        $indicators .=               '{ type: "statistic", title: "Texto Indicador2", graph: "bar", data: [30, 50], labels: ["A", "B"]}';
-        $indicators .=           '],';
-        $indicators .=           '[';
-        $indicators .=               '{ type: "statistic", title: "Texto Indicador3", graph: "doughnut", data: [1, 2, 3, 4, 5, 6], labels: ["Label1", "Label2", "Label3", "Label4", "Label5", "Label6"] },';
-        $indicators .=           ']';
-        $indicators .=      '],';
-        $indicators .=      '[';
-        $indicators .=           '[';
-        $indicators .=               '{ type: "statistic", title: "Texto Indicador4", graph: "pie", data: [10, 20, 30], labels: ["Red", "Yellow", "Blue"] }';
-        $indicators .=           ']';
-        $indicators .=      ']';
-        $indicators .= ']';
-        return view('panel.index', ['indicators' => $indicators]);
+        $fixed = [
+            [
+                "title" => "Indicador Fixo1",
+                "value" => "50%"
+            ],
+            [
+                "title" => "Indicador Fixo2",
+                "value" => "72.9"
+            ],
+            [
+                "title" => "Indicador Fixo3",
+                "value" => "30"
+            ],
+            [
+                "title" => "Indicador Fixo4 de Indicador de Fixo",
+                "value" => "N/A"
+            ],
+        ];
+
+        $indicators = [
+            [
+                [
+                    [
+                        "type" => "numeric",
+                        "title" => "Texto Indicador1",
+                        "value" => "50%"
+                    ],
+                    [
+                        "type" => "statistic", 
+                        "title" => "Texto Indicador2", 
+                        "graph" => "bar", 
+                        "data" => [30, 50], 
+                        "labels" => ["A", "B"]
+                    ],
+                ],
+                [
+                    [
+                        "type" => "statistic", 
+                        "title" => "Texto Indicador3", 
+                        "graph" => "doughnut", 
+                        "data" => [1, 2, 3, 4, 5, 6], 
+                        "labels" => ["Label1", "Label2", "Label3", "Label4", "Label5", "Label6"]
+                    ],
+                ]
+            ],
+            [
+                [
+                   [ 
+                    "type" => "statistic", 
+                    "title" => "Texto Indicador4", 
+                    "graph" => "pie", 
+                    "data" => [30, 25, 10], 
+                    "labels" => ["Red", "Yellow", "Blue"]
+                ]
+                ]
+            ]
+        ];
+        
+        return view('panel.index', ['indicators' => $indicators, 'fixed' => $fixed]);
     }
 }
