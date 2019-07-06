@@ -6,8 +6,10 @@
 
 require("./bootstrap");
 
-window.Vue = require("vue");
+window.Vue = require('vue');
+window.Vuetify = require('vuetify');
 
+Vue.use(Vuetify);
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -20,7 +22,8 @@ window.Vue = require("vue");
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
 Vue.component("Panel", require("./containers/Panel/Panel.vue").default);
-Vue.component("report", require("./containers/Report/Report.vue").default);
+Vue.component("Report", require("./containers/Report/Report.vue").default);
+Vue.component('h-indicator',require('./components/IndicatorComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

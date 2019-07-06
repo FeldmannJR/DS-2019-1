@@ -16,10 +16,12 @@
         "jquery": "^3.2",
         "laravel-mix": "^4.0.7",
         "lodash": "^4.17.5",
-        "popper.js": "^1.12",
+        "popper.js": "^1.15.0",
         "resolve-url-loader": "^2.3.1",
         "sass": "^1.15.2",
         "sass-loader": "^7.1.0",
+        "stylus": "^0.54.5",
+        "stylus-loader": "^3.0.2",
         "vue": "^2.5.17",
         "vue-template-compiler": "^2.6.10"
     },
@@ -28,6 +30,10 @@
         "eslint": "^6.0.0",
         "eslint-config-prettier": "^5.0.0",
         "eslint-plugin-prettier": "^3.1.0",
-        "prettier": "^1.18.2"
+        "prettier": "^1.18.2",
+        "laravel-echo": "^1.5.4",
+        "material-design-icons-iconfont": "^5.0.1",
+        "pusher-js": "^4.4.0",
+        "vuetify": "^1.5.14"
     }
 }
