@@ -23,7 +23,9 @@
     </v-dialog>
     <v-dialog v-model="editDialog" max-width="500px">
       <template v-slot:activator="{ on }">
-        <v-btn id="addUser" flat class="mb-2" v-on="on"><v-icon>add</v-icon>Adicionar usuário</v-btn>
+        <v-btn id="addUser" flat class="mb-2" v-on="on">
+          <v-icon>add</v-icon>Adicionar usuário
+        </v-btn>
       </template>
       <v-card>
         <v-card-title>
@@ -32,7 +34,7 @@
 
         <v-card-text>
           <v-container grid-list-md>
-            <v-form :lazy-validation="true" ref="form">
+            <v-form ref="form" v-model="validUser">
               <v-layout wrap>
                 <v-flex xs12>
                   <v-text-field v-model="editedUser.name" label="Nome" :rules="nameRules"></v-text-field>
@@ -43,7 +45,8 @@
                     label="Tipo"
                     :items="Object.keys(userTypes).map((type) => {
                       return { text: userType(type), value: type }
-                    })"></v-select>
+                    })"
+                  ></v-select>
                 </v-flex>
                 <v-flex xs12>
                   <v-text-field
@@ -66,7 +69,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn flat @click="closeEdit">Cancelar</v-btn>
-          <v-btn flat @click="save">Salvar</v-btn>
+          <v-btn flat @click="save" :disabled="!validUser">Salvar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -83,16 +86,8 @@
         <td>{{ userType(props.item.type) }}</td>
         <td>{{ props.item.pass }}</td>
         <td>
-          <v-icon
-            @click="editUser(props.item)"
-          >
-            edit
-          </v-icon>
-          <v-icon
-            @click="deleteUser(props.item)"
-          >
-            delete
-          </v-icon>
+          <v-icon @click="editUser(props.item)">edit</v-icon>
+          <v-icon @click="deleteUser(props.item)">delete</v-icon>
         </td>
       </template>
     </v-data-table>
@@ -113,122 +108,115 @@ export default {
       headers: [
         { text: "ID", value: "id" },
         { text: "Usuário", value: "name" },
-        { text: "Tipo", value: "type"},
-        { text: "Senha", value: "pass"},
-        { text: 'Opções', value: 'name', sortable: false }
+        { text: "Tipo", value: "type" },
+        { text: "Senha", value: "pass" },
+        { text: "Opções", value: "name", sortable: false }
       ],
       userTypes: {
-        "A": "Administrador",
-        "S": "Estatística",
-        "R": "Funcionário"
+        A: "Administrador",
+        S: "Estatística",
+        R: "Funcionário"
       },
       validUser: false,
-      currentUser: '',
+      currentUser: "",
       showPass: false,
       editedIndex: -1,
       editedUser: {
-        name: '',
-        type: 'R',
-        pass: '',
+        name: "",
+        type: "R",
+        pass: ""
       },
       defaultUser: {
-        name: '',
-        type: 'R',
-        pass: '',
+        name: "",
+        type: "R",
+        pass: ""
       },
       deletingIndex: -1,
-      deletedUser: '',
-    }
+      deletedUser: ""
+    };
   },
   computed: {
-      formTitle () {
-        return this.editedIndex === -1 ? 'Novo Usuário' : 'Editar Usuário'
-      },
-      nameRules() {
-        return [
-          v => !!v || 'Insira um nome de usuário',
-          v => {
-            if(v == this.currentUser) return true;
-
-            var existingUser = this.items.filter(item => {
-              return item.name == v
-            })
-
-            return existingUser.length == 0 || 'Usuário com este nome já existe'
-          }
-        ]
-      },
-      confirmDelete() {
-        return this.deletingIndex != -1 && this.deletedUser == this.items[this.deletingIndex].name
-      }
+    formTitle() {
+      return this.editedIndex === -1 ? "Novo Usuário" : "Editar Usuário";
     },
+    nameRules() {
+      return [
+        v => !!v || "Insira um nome de usuário",
+        v => {
+          if (v == this.currentUser) return true;
+
+          var existingUser = this.items.filter(item => {
+            return item.name == v;
+          });
+
+          return existingUser.length == 0 || "Usuário com este nome já existe";
+        }
+      ];
+    },
+    confirmDelete() {
+      return (
+        this.deletingIndex != -1 &&
+        this.deletedUser == this.items[this.deletingIndex].name
+      );
+    }
+  },
   watch: {
-    editDialog (val) {
-      val || this.closeEdit()
+    editDialog(val) {
+      this.validUser = false;
+      val || this.closeEdit();
     },
-    deleteDialog (val) {
-      val || this.closeDelete()
-    },
+    deleteDialog(val) {
+      val || this.closeDelete();
+    }
   },
   created() {
-    this.initialize()
+    this.initialize();
   },
   methods: {
     initialize() {
-      this.items = this.users
+      this.items = this.users;
     },
-    userType (type) {
-      return this.userTypes[type]
+    userType(type) {
+      return this.userTypes[type];
     },
-    deleteUser (user) {
-      this.deletingIndex = this.users.indexOf(user)
-      this.deleteDialog = true
+    deleteUser(user) {
+      this.deletingIndex = this.users.indexOf(user);
+      this.deleteDialog = true;
     },
-    editUser (user) {
-      this.editedIndex = this.users.indexOf(user)
-      this.editedUser = Object.assign({}, user)
-      this.currentUser = user.name
-      this.editDialog = true
+    editUser(user) {
+      this.editedIndex = this.users.indexOf(user);
+      this.editedUser = Object.assign({}, user);
+      this.currentUser = user.name;
+      this.editDialog = true;
     },
-    closeEdit () {
-      this.editDialog = false
+    closeEdit() {
+      this.editDialog = false;
       setTimeout(() => {
-        this.editedUser = Object.assign({}, this.defaultUser)
-        this.currentUser = ''
-        this.editedIndex = -1
-        this.validUser = false
-        this.$refs.form.resetValidation()
-      }, 300)
+        this.editedUser = Object.assign({}, this.defaultUser);
+        this.currentUser = "";
+        this.editedIndex = -1;
+        this.$refs.form.resetValidation();
+      }, 300);
     },
-    save () {
-      if(this.validate()) {
-        if (this.editedIndex > -1) {
-          Object.assign(this.items[this.editedIndex], this.editedUser)
-        } else {
-          this.items.push(this.editedUser)
-        }
-        this.closeEdit()
+    save() {
+      if (this.editedIndex > -1) {
+        Object.assign(this.items[this.editedIndex], this.editedUser);
+      } else {
+        this.items.push(this.editedUser);
       }
+      this.closeEdit();
     },
-    closeDelete () {
-      this.deleteDialog = false
+    closeDelete() {
+      this.deleteDialog = false;
       setTimeout(() => {
-        this.deletingIndex = -1
-        this.deletedUser = ''
-      }, 300)
+        this.deletingIndex = -1;
+        this.deletedUser = "";
+      }, 300);
     },
     confirmUserDelete() {
-      this.items.splice(this.deletingIndex, 1)
-      this.closeDelete()
-    },
-    validate () {
-      if (this.$refs.form.validate()) {
-        this.validUser = true
-        this.snackbar = true
-      }
-
-      return this.validUser
-    },
+      this.items.splice(this.deletingIndex, 1);
+      this.closeDelete();
+    }
   }
 };
 </script>
