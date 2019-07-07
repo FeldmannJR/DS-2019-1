@@ -13,7 +13,7 @@
       </div>
     </div>
 
-    <button id="generateReport">Gerar Relatório</button>
+    <v-btn id="generateReport" class="heButton">Gerar Relatório</v-btn>
   </div>
 </template>
 

@@ -23,6 +23,7 @@ Vue.use(Vuetify);
 
 Vue.component("Panel", require("./containers/Panel/Panel.vue").default);
 Vue.component("Report", require("./containers/Report/Report.vue").default);
+Vue.component("Maintenance", require("./containers/Maintenance/Maintenance.vue").default);
 Vue.component('h-indicator',require('./components/IndicatorComponent.vue').default);
 
 /**

@@ -22,11 +22,29 @@
     <!-- Styles -->
     <style>
         html, body {
-            background-color: #fff;
+            background-color: white;
             color: #636b6f;
             font-family: 'Nunito', sans-serif;
             font-weight: 200;
             margin: 0;
+        }
+
+        .v-select__slot {
+            cursor: pointer;
+        }
+
+        .heButton {
+            background-color: #636b6f !important;
+            color: white !important;
+            transition: .25s;
+
+        }
+        .heButton:hover {
+            background-color: #344669 !important;
+        }
+
+        .centered-input input {
+            text-align: center
         }
     </style>
 
@@ -36,7 +54,7 @@
 
 </head>
 <body>
-    <div id="app">
+    <div id="app" data-app="true">
         @yield('body')
     </div>
 </body>

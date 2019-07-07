@@ -7,8 +7,8 @@
     h1 {
         padding-bottom: 1.5vh;
         margin: 0 15% 1vh;
-        color: #636b6f;
-        border-bottom: 2px solid #636b6f;
+        color: $gray;
+        border-bottom: 2px solid $gray;
     }
 
     .periodFilter {
@@ -27,16 +27,5 @@
 
     #generateReport {
         margin-top: 5vh;
-        font-size: 1.5vh;
-        background-color: #636b6f;
-        color: white;
-        padding: 1vh;
-        border-radius: .5vh;
-        outline: none;
-        transition: .25s;
-
-        &:hover {
-            background-color: $he-blue;
-        }
     }
 }
