@@ -1,7 +1,7 @@
 <template>
   <div class="indicatorMultiple" :style="{opacity: opacity}">
     <!-- Titulo do indicador -->
-    <h4 class="title">{{title}}</h4>
+    <h4 class="text">{{text}}</h4>
     <div class="units">
       <div class="unit" v-for="unit in units" :key="unit">
         <h4 class="unitName">{{unit}}</h4>
@@ -17,7 +17,7 @@ export default {
     const i = this.indicator;
 
     return {
-      title: i.title,
+      text: i.text,
       data: i.data,
       units: i.units,
       opacity: 0

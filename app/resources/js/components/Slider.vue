@@ -9,21 +9,23 @@
           :indicator="indicator"
           :key="indicator.title"
         />
-        <!-- Renderiza indicador múltiplo -->
-        <IndicatorMultiple
-          v-if="indicator.type === 'multiple'"
-          :indicator="indicator"
-          :stretched="row.length == 1 && multiple"
-          :multiple="multiple"
-          :key="indicator.title"
-        />
-        <!-- Renderiza indicador múltiplo estatistico -->
-        <IndicatorStatistic
-          v-if="indicator.type === 'statistic'"
-          :indicator="indicator"
-          :stretched="row.length == 1 && multiple"
-          :key="indicator.title"
-        />
+        <template v-else>
+          <!-- Renderiza indicador múltiplo -->
+          <IndicatorMultiple
+            v-if="indicator.graph === 'none'"
+            :indicator="indicator"
+            :stretched="row.length == 1 && multiple"
+            :multiple="multiple"
+            :key="indicator.title"
+          />
+          <!-- Renderiza indicador múltiplo estatistico -->
+          <IndicatorStatistic
+            v-else
+            :indicator="indicator"
+            :stretched="row.length == 1 && multiple"
+            :key="indicator.title"
+          />
+        </template>
       </div>
     </div>
   </div>
@@ -46,11 +48,8 @@ export default {
       this.setSize(".slider h1", 40);
       this.setSize(".slider h2", 10);
       this.setSize(".slider h3", 4);
-      this.setSize(".slider [icon]", 70);
       this.setSize(".slider [label]", 5, "vh", "width");
       this.setSize(".slider [label]", 5, "vh", "height");
-      this.setSize(".slider .indicatorNumeric", 5, "vh", "bottom");
-      this.setSize(".slider .indicatorNumeric", 5, "vw", "right");
     },
     // Altera um atributo CSS, utilizando metade do valor passado se multiple for verdadeiro
     setSize(selector, size, metric = "vh", attribute = "fontSize", vm = this) {

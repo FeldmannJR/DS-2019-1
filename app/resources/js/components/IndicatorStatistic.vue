@@ -1,10 +1,10 @@
 <template>
   <div class="indicatorStatistic" :stretched="stretched">
     <!-- Titulo do indicador -->
-    <h2>{{title}}</h2>
+    <h2>{{text}}</h2>
     <div class="chart">
       <!-- Grafico que representa os valores -->
-      <Chart :id="title" :type="graph" :datasets="datasets" :options="options" />
+      <Chart :id="text" :type="graph" :datasets="datasets" :options="options" />
     </div>
     <!-- Legenda -->
     <div class="legend">
@@ -68,7 +68,7 @@ export default {
     }
 
     return {
-      title: i.title,
+      text: i.text,
       graph: i.graph,
       labels: i.units,
       options: options,

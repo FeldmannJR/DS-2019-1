@@ -12,19 +12,19 @@ class PanelController extends Controller
     {
         $fixed = [
             [
-                "title" => "Indicador Fixo1",
+                "text" => "Indicador Fixo1",
                 "value" => "50%"
             ],
             [
-                "title" => "Indicador Fixo2",
+                "text" => "Indicador Fixo2",
                 "value" => "72.9"
             ],
             [
-                "title" => "Indicador Fixo3",
+                "text" => "Indicador Fixo3",
                 "value" => "30"
             ],
             [
-                "title" => "Indicador Fixo4 de Indicador de Fixo",
+                "text" => "Indicador Fixo4 de Indicador de Fixo",
                 "value" => "N/A"
             ],
         ];
@@ -34,12 +34,12 @@ class PanelController extends Controller
                 [
                     [
                         "type" => "numeric",
-                        "title" => "Texto Indicador1",
+                        "text" => "Texto Indicador1",
                         "value" => "50%"
                     ],
                     [
-                        "type" => "statistic", 
-                        "title" => "Texto Indicador2", 
+                        "type" => "statistic",
+                        "text" => "Texto Indicador2", 
                         "graph" => "bar",
                         "data" => [30, 50],
                         "units" => ["A", "B"]
@@ -48,8 +48,8 @@ class PanelController extends Controller
                 [
                     [
                         "type" => "multiple",
-                        "title" => "Texto Indicador3", 
-                        "graph" => "doughnut",
+                        "text" => "Texto Indicador3",
+                        "graph" => "none",
                         "data" => [1, 2, 3, 4, 5, 6], 
                         "units" => ["Label1", "Label2", "Label3", "Label4", "Label5", "Label6"]
                     ],
@@ -59,7 +59,7 @@ class PanelController extends Controller
                 [
                    [ 
                     "type" => "statistic", 
-                    "title" => "Texto Indicador4",
+                    "text" => "Texto Indicador4",
                     "graph" => "pie", 
                     "data" => [30, 25, 10], 
                     "units" => ["Red", "Yellow", "Blue"]

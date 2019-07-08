@@ -1,7 +1,7 @@
 <template>
   <div class="indicatorNumeric" :style="{opacity: opacity}">
     <!-- Titulo do indicador -->
-    <h2>{{title}}</h2>
+    <h2>{{text}}</h2>
     <!-- Valor do indicador -->
     <h1>{{value}}</h1>
   </div>
@@ -13,7 +13,7 @@ export default {
     const i = this.indicator;
 
     return {
-      title: i.title,
+      text: i.text,
       value: i.value,
       opacity: 0
     };
