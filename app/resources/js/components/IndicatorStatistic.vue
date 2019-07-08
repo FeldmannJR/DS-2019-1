@@ -1,16 +1,16 @@
 <template>
   <div class="indicatorStatistic" :stretched="stretched">
     <!-- Titulo do indicador -->
-    <h2>{{text}}</h2>
+    <h2>{{indicator.text}}</h2>
     <div class="chart">
       <!-- Grafico que representa os valores -->
-      <Chart :id="text" :type="graph" :datasets="datasets" :options="options" />
+      <Chart :id="indicator.name" :graph="indicator.graph" :datasets="datasets" :options="options" />
     </div>
     <!-- Legenda -->
     <div class="legend">
-      <div class="label" v-for="label in labels" :key="label">
+      <div class="label" v-for="label in indicator.units" :key="label">
         <!-- Circulo com cor respectiva ao valor no grafico -->
-        <div label :style="{ backgroundColor: colors[labels.indexOf(label)] }" />
+        <div label :style="{ backgroundColor: colors[indicator.units.indexOf(label)] }" />
         <!-- Rotulo -->
         <h3>{{label}}</h3>
       </div>
@@ -26,8 +26,7 @@ export default {
   },
   props: ["indicator", "stretched", "scale"],
   data() {
-    const i = this.indicator,
-      scale = this.scale || 1;
+    const scale = this.scale || 1;
 
     // Configuracoes opcionais do chart
     var options = {
@@ -56,7 +55,7 @@ export default {
 
     // Ajusta intervalo de valores para graficos dos tipos barra e linha
     if (this.indicator.graph === "bar") {
-      const maxValue = Math.max(...i.data);
+      const maxValue = Math.max(...this.indicator.data);
 
       options.scales.yAxes = [
         {
@@ -70,9 +69,6 @@ export default {
     }
 
     return {
-      text: i.text,
-      graph: i.graph,
-      labels: i.units,
       options: options,
       // Esquema padrao de cores para diferenciar os dados
       colors: ["#344669", "#3C8376", "#3ec940", "#dde02c", "#dd9c2c", "#af3838"]

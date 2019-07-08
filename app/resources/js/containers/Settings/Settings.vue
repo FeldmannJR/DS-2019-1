@@ -1,7 +1,7 @@
 <template>
   <div class="settings">
     <div class="indicatorsList">
-      <div class="indicator" v-for="indicator in indicators" :key="indicator.name">
+      <div class="indicator" v-for="indicator in indicatorsList" :key="indicator.name">
         <div class="preview">
           <IndicatorPanel :indicator="indicator" :scale="0.1" />
         </div>
@@ -19,6 +19,14 @@
               prepend-icon="bar_chart"
             ></v-select>
           </v-form>
+        </div>
+        <div class="save" :disabled="!updated(indicatorsList.indexOf(indicator))">
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on }">
+              <v-icon :disabled="!updated(indicatorsList.indexOf(indicator))" v-on="on">save</v-icon>
+            </template>
+            <span>Salvar</span>
+          </v-tooltip>
         </div>
       </div>
     </div>
@@ -45,8 +53,21 @@ export default {
         pie: "Pizza",
         doughnut: "Rosca",
         none: "Nenhum"
-      }
+      },
+      original: this.indicators.map(i => ({ ...i })),
+      indicatorsList: []
     };
+  },
+  methods: {
+    updated(index) {
+      return (
+        JSON.stringify(this.indicatorsList[index]) !=
+        JSON.stringify(this.original[index])
+      );
+    }
+  },
+  created() {
+    this.indicatorsList = this.indicators;
   }
 };
 </script>

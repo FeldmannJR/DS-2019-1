@@ -25,6 +25,26 @@
 
                 @include indicators($scale);
             }
+
+            .indicatorSettings {
+                flex-grow: 1;
+            }
+
+            .save {
+                align-self: flex-start;
+                cursor: pointer;
+
+                &:hover {
+
+                    i {
+                        color: black;
+                    }
+                }
+
+                &[disabled] {
+                    cursor: default;
+                }
+            }
         }
 
     }

@@ -1,28 +1,23 @@
 <template>
   <div class="indicatorPanel">
-    {{update}}
     <!-- Renderiza indicador numerico -->
-    <IndicatorNumeric
-      v-if="indicator.type === 'numeric'"
-      :indicator="indicator"
-      :key="indicator.title"
-    />
+    <IndicatorNumeric v-if="i.type === 'numeric'" :indicator="i" :key="i.name" />
     <template v-else>
       <!-- Renderiza indicador múltiplo -->
       <IndicatorMultiple
         v-if="indicator.graph === 'none'"
-        :indicator="indicator"
+        :indicator="i"
         :stretched="stretched"
         :multiple="multiple"
-        :key="indicator.title"
+        :key="i.name"
       />
       <!-- Renderiza indicador múltiplo estatistico -->
       <IndicatorStatistic
         v-else
-        :indicator="indicator"
+        :indicator="i"
         :stretched="stretched"
         :scale="scale"
-        :key="indicator.title"
+        :key="i.name"
       />
     </template>
   </div>
@@ -33,11 +28,16 @@ import IndicatorMultiple from "./IndicatorMultiple";
 import IndicatorStatistic from "./IndicatorStatistic";
 
 export default {
-  props: ["indicator", "multiple", "stretched", "scale", "update"],
+  props: ["indicator", "multiple", "stretched", "scale"],
   components: {
     IndicatorNumeric,
     IndicatorMultiple,
     IndicatorStatistic
+  },
+  data() {
+    return {
+      i: this.indicator
+    };
   }
 };
 </script>
