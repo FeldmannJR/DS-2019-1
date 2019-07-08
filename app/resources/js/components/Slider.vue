@@ -3,44 +3,22 @@
     <!-- Painel deve receber de 1-4 indicadores divididos em 2 arrays -->
     <div v-for="row in indicators" class="row" :key="indicators.indexOf(row)">
       <div v-for="indicator in row" class="frame" :key="row.indexOf(indicator)">
-        <!-- Renderiza indicador numerico -->
-        <IndicatorNumeric
-          v-if="indicator.type === 'numeric'"
+        <IndicatorPanel
           :indicator="indicator"
-          :key="indicator.title"
+          :multiple="multiple"
+          :stretched="row.length == 1 && multiple"
         />
-        <template v-else>
-          <!-- Renderiza indicador múltiplo -->
-          <IndicatorMultiple
-            v-if="indicator.graph === 'none'"
-            :indicator="indicator"
-            :stretched="row.length == 1 && multiple"
-            :multiple="multiple"
-            :key="indicator.title"
-          />
-          <!-- Renderiza indicador múltiplo estatistico -->
-          <IndicatorStatistic
-            v-else
-            :indicator="indicator"
-            :stretched="row.length == 1 && multiple"
-            :key="indicator.title"
-          />
-        </template>
       </div>
     </div>
   </div>
 </template>
 <script>
-import IndicatorNumeric from "./IndicatorNumeric";
-import IndicatorMultiple from "./IndicatorMultiple";
-import IndicatorStatistic from "./IndicatorStatistic";
+import IndicatorPanel from "./IndicatorPanel";
 
 export default {
   props: ["indicators"],
   components: {
-    IndicatorNumeric,
-    IndicatorMultiple,
-    IndicatorStatistic
+    IndicatorPanel
   },
   methods: {
     // Ajusta tamanhos de headers, icones, legendas e posicionamento de indicadores numericos

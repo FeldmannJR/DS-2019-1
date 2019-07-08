@@ -51,7 +51,6 @@ $fixed-width: 15vw;
             .frame {
                 min-height: 49vh;
                 min-width: 49 - $fixed-width/2;
-                background-image: linear-gradient(white, rgb(230, 230, 230));
                 box-shadow: 0 .5vh 1vh rgba(0, 0, 0, 0.75);
                 display: flex;
                 justify-content: center;

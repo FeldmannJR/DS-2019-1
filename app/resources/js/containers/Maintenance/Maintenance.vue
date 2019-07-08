@@ -104,7 +104,6 @@ export default {
       editDialog: false,
       deleteDialog: false,
       items: [],
-      root: null,
       headers: [
         { text: "ID", value: "id" },
         { text: "Usuário", value: "name" },

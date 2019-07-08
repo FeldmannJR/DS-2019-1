@@ -24,9 +24,10 @@ export default {
   components: {
     Chart
   },
-  props: ["indicator", "stretched"],
+  props: ["indicator", "stretched", "scale"],
   data() {
-    const i = this.indicator;
+    const i = this.indicator,
+      scale = this.scale || 1;
 
     // Configuracoes opcionais do chart
     var options = {
@@ -39,9 +40,9 @@ export default {
         datalabels: {
           color: "white",
           textShadowColor: "black",
-          textShadowBlur: 4,
+          textShadowBlur: 4 * scale,
           font: {
-            size: window.innerWidth / 30
+            size: (window.innerWidth / 30) * scale
           }
         }
       },
@@ -60,6 +61,7 @@ export default {
       options.scales.yAxes = [
         {
           ticks: {
+            fontSize: 10 * scale,
             suggestedMin: 0,
             max: maxValue * 1.5
           }

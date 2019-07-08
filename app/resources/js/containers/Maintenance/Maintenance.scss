@@ -20,6 +20,12 @@
         }
     }
 
+    tr {
+        &:hover {
+            background-color: white !important;
+        }
+    }
+
     i {
         transition: .25s;
 
