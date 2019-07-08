@@ -40,18 +40,18 @@ class PanelController extends Controller
                     [
                         "type" => "statistic", 
                         "title" => "Texto Indicador2", 
-                        "graph" => "bar", 
-                        "data" => [30, 50], 
-                        "labels" => ["A", "B"]
+                        "graph" => "bar",
+                        "data" => [30, 50],
+                        "units" => ["A", "B"]
                     ],
                 ],
                 [
                     [
-                        "type" => "statistic", 
+                        "type" => "multiple",
                         "title" => "Texto Indicador3", 
-                        "graph" => "doughnut", 
+                        "graph" => "doughnut",
                         "data" => [1, 2, 3, 4, 5, 6], 
-                        "labels" => ["Label1", "Label2", "Label3", "Label4", "Label5", "Label6"]
+                        "units" => ["Label1", "Label2", "Label3", "Label4", "Label5", "Label6"]
                     ],
                 ]
             ],
@@ -59,10 +59,10 @@ class PanelController extends Controller
                 [
                    [ 
                     "type" => "statistic", 
-                    "title" => "Texto Indicador4", 
+                    "title" => "Texto Indicador4",
                     "graph" => "pie", 
                     "data" => [30, 25, 10], 
-                    "labels" => ["Red", "Yellow", "Blue"]
+                    "units" => ["Red", "Yellow", "Blue"]
                 ]
                 ]
             ]

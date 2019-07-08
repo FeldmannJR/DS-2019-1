@@ -1,16 +1,14 @@
 <template>
-  <div class="indicatorNumeric">
-    <div class="text" :style="{opacity: opacity}">
-      <!-- Titulo do indicador -->
-      <h2>{{title}}</h2>
-      <!-- Valor do indicador -->
-      <h1>{{value}}</h1>
-    </div>
+  <div class="indicatorNumeric" :style="{opacity: opacity}">
+    <!-- Titulo do indicador -->
+    <h2>{{title}}</h2>
+    <!-- Valor do indicador -->
+    <h1>{{value}}</h1>
   </div>
 </template>
 <script>
 export default {
-  props: ["indicator", "multiple"],
+  props: ["indicator"],
   data() {
     const i = this.indicator;
 

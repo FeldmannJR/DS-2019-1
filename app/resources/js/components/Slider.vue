@@ -9,9 +9,17 @@
           :indicator="indicator"
           :key="indicator.title"
         />
-        <!-- Renderiza indicador estatistico -->
+        <!-- Renderiza indicador múltiplo -->
+        <IndicatorMultiple
+          v-if="indicator.type === 'multiple'"
+          :indicator="indicator"
+          :stretched="row.length == 1 && multiple"
+          :multiple="multiple"
+          :key="indicator.title"
+        />
+        <!-- Renderiza indicador múltiplo estatistico -->
         <IndicatorStatistic
-          v-else
+          v-if="indicator.type === 'statistic'"
           :indicator="indicator"
           :stretched="row.length == 1 && multiple"
           :key="indicator.title"
@@ -22,12 +30,14 @@
 </template>
 <script>
 import IndicatorNumeric from "./IndicatorNumeric";
+import IndicatorMultiple from "./IndicatorMultiple";
 import IndicatorStatistic from "./IndicatorStatistic";
 
 export default {
   props: ["indicators"],
   components: {
     IndicatorNumeric,
+    IndicatorMultiple,
     IndicatorStatistic
   },
   methods: {
@@ -44,8 +54,8 @@ export default {
     },
     // Altera um atributo CSS, utilizando metade do valor passado se multiple for verdadeiro
     setSize(selector, size, metric = "vh", attribute = "fontSize", vm = this) {
+      const ratio = this.multiple ? 0.5 : 1;
       document.querySelectorAll(selector).forEach(el => {
-        const ratio = this.multiple ? 0.5 : 1;
         el.style[attribute] = size * ratio + metric;
       });
     }

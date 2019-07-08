@@ -70,7 +70,7 @@ export default {
     return {
       title: i.title,
       graph: i.graph,
-      labels: i.labels,
+      labels: i.units,
       options: options,
       // Esquema padrao de cores para diferenciar os dados
       colors: ["#344669", "#3C8376", "#3ec940", "#dde02c", "#dd9c2c", "#af3838"]
