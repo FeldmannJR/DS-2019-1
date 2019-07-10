@@ -78,30 +78,6 @@
 @endpush
 @section('content')
     <div class="container">
-        @error('fileId')
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{$message}}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        @enderror
-        @if(Session::has('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                {{Session::get('error')}}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
-        @if(Session::has('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{Session::get('success')}}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
 
         <div class="bd-callout bd-callout-info">
             <h4>Como funciona</h4>
