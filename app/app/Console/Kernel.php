@@ -30,7 +30,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')
         //          ->hourly();
         $schedule->command(UpdateIndicators::class, ['RealTime'])
-            ->everyFiveMinutes()->sendOutputTo(storage_path("/logs/crontab.log"));
+            ->everyFiveMinutes();
         $schedule->command(UpdateIndicators::class, ['Daily'])
             ->dailyAt('00:10');
         $schedule->command(UpdateIndicators::class, ['Monthly'])

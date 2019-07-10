@@ -53,14 +53,14 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 ENV TZ=America/Sao_Paulo
 
 # Add user to match user id
-RUN groupadd -g 1000 www
-RUN useradd -u 1000 -ms /bin/bash -g www www
+RUN groupmod -g 1000 www-data
+RUN usermod -u 1000 -g www-data www-data
 
 
 
-COPY cronjobs /etc/cron.d/www
-RUN chmod 0644 /etc/cron.d/www
-RUN crontab -u www /etc/cron.d/www
+COPY cronjobs /etc/cron.d/www-data
+RUN chmod 0644 /etc/cron.d/www-data
+RUN crontab -u www-data /etc/cron.d/www-data
 
 
 WORKDIR /sites/

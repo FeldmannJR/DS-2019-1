@@ -61,6 +61,8 @@ class UpdateIndicators extends Command
                 $this->error("Não consegui baixar a planilha!");
             }
         }
+        \Log::debug("Atualizando o indicador: ".$update_type->key);
+
         /*
          *  Vai ser chamado só no proximo dia 00:10, seta a hora pra calcular no dia anterior
          *  Ver \App\Console\Kernel:schedule
