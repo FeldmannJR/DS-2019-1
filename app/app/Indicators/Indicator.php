@@ -182,13 +182,13 @@ abstract class Indicator
                     ModelIndicators::addIndicatorHistoryValue($this->getId(), $unit_value, $allUnits[$unit_id]);
                 }
             }
-            event(new UpdateIndicatorEvent($this, $value));
+            //event(new UpdateIndicatorEvent($this, $value));
             return true;
         } else {
             if (is_numeric($value)) {
                 $output("Calculated $this->name to $value");
                 ModelIndicators::addIndicatorHistoryValue($this->getId(), $value);
-                event(new UpdateIndicatorEvent($this, $value));
+                //event(new UpdateIndicatorEvent($this, $value));
                 return true;
             }
         }

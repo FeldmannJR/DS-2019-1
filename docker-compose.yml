@@ -1,19 +1,40 @@
 version: '3'
 services:
-  apache:
+  nginx:
     build:
-      context: ./apache
-    container_name: he-apache
+        context: ./nginx
+    container_name: he-nginx
     restart: unless-stopped
     tty: true
     ports:
       - "80:80"
       - "6001:6001"
       - "443:443"
+    volumes:
+      - ./nginx/configs/:/nginx/configs/
+      - ./app:/sites/he/
+    depends_on:
+      - "php"
     networks:
       - HE-network
+  php:
+    build:
+      context: ./php
+    container_name: he-php
     volumes:
-      - ./app/:/var/www/app
+      - ./app:/sites/he/
+    networks:
+      - HE-network
+  node:
+    container_name: he-node
+    environment:
+      WATCH_ASSETS: "${WATCH_ASSETS:-1}"
+    build:
+      context: ./node
+    volumes:
+      - ./app/:/sites/he
+      - ./node/programs:/etc/supervisor/programs
+
   #Postgres
   postgres:
     image: postgres:11
