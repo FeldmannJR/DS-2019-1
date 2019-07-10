@@ -23,29 +23,22 @@ docker-compose rm
 
 # Configurações Iniciais
 ## Permissões
-É necessário criar um grupo na sua maquina com o ID 33 e adicionar seu usuario a ele, pois todos os arquivos do dentro do app/ estão com permissões para este grupo.
-Você pode fazer isto com os seguintes comandos:
-```bash
-# Provavelmente se você já instalou o apache na sua maquina(não no docker), você já tem este grupo
-groupadd --gid 33 www-data
-# Adicionando seu usuario ao grupo
-usermod -a -G www-data $USER
-# Setar a permissão dos arquivos dentro do app para o www-data
-chown -R www-data:www-data app/
-```
-Você reiniciar sua sessão para ter acesso aos arquivos!
+Só dar docker-compose up 
 
 
 
-## Dentro do container
-- Para entrar na linha de comando do container basta executar o ``./container``
+## Comandos
 - Baixar dependencias
-``composer install``
+``./composer install``
 - Executar migrações do banco de dados (https://laravel.com/docs/5.8/migrations)
-``php artisan migrate``
+``./artisan migrate``
 - Inserir Indicadores no banco, irá pedir confirmação para adicionar dados aleatórias para testar
-``php artisan db:seed``
-
+``./artisan db:seed``
+- Instalar as dependencias do node
+``./npm install``
+- Watch changes in assets
+``./watch
+``
 ## PgAdmin
 - Importar dump do HE, instruções no ava
 
@@ -57,7 +50,7 @@ Linha de comandos do laravel, é preciso executar as migrações do banco de dad
 
 ``` bash
     # Entra em um terminal interativo com o laravel onde é possivel testar instruções
-    php artisan tinker
+    ./artisan tinker
 ```
 Ler mais em https://laravel.com/docs/5.8/migrations
 

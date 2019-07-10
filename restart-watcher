@@ -1,2 +1,0 @@
-#!/bin/bash
-docker exec -it he-node supervisorctl restart watch-assets

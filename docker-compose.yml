@@ -25,15 +25,6 @@ services:
       - ./app:/sites/he/
     networks:
       - HE-network
-  node:
-    container_name: he-node
-    environment:
-      WATCH_ASSETS: "${WATCH_ASSETS:-1}"
-    build:
-      context: ./node
-    volumes:
-      - ./app/:/sites/he
-      - ./node/programs:/etc/supervisor/programs
 
   #Postgres
   postgres:

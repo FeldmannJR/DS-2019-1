@@ -1,2 +1,2 @@
 #!/bin/bash
-docker exec -it -w /sites/he he-php ./artisan $@
+docker exec -it -u www -w /sites/he he-php ./artisan $@

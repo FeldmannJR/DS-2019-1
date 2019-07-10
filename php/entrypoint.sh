@@ -1,3 +1,3 @@
 #!/bin/sh
-cron -L 15
-docker-php-entrypoint php-fpm
+chmod -R 777 /sites/he/storage/
+cron -f & docker-php-entrypoint php-fpm
