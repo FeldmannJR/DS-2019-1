@@ -1,0 +1,52 @@
+@import "../../../sass/variables";
+
+.settings {
+    padding: 5vh 10vw;
+
+    .indicatorsList {
+        width: 80vw;
+        display: grid;
+        grid-template-columns: 50% 50%;
+        grid-gap: 1vh;
+
+        .indicator {
+            width: 40vw;
+            box-shadow: 0 0 4px rgba($gray, .5);
+            padding: 2vh;
+            display: flex;
+
+            .preview {
+                $scale: 0.175;
+                width: $scale * 85vw;
+                height: $scale * 100vh;
+                box-shadow: 0 0 4px rgba($gray, .5);
+                border: 0.1vh solid rgba($gray, .5);
+                margin-right: 2vh;
+
+                @include indicators($scale);
+            }
+
+            .indicatorSettings {
+                flex-grow: 1;
+            }
+
+            .save {
+                align-self: flex-start;
+                cursor: pointer;
+
+                &:hover {
+
+                    i {
+                        color: black;
+                    }
+                }
+
+                &[disabled] {
+                    cursor: default;
+                }
+            }
+        }
+
+    }
+
+}

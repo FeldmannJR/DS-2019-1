@@ -4,7 +4,7 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require('./bootstrap');
+require("./bootstrap");
 
 window.Vue = require('vue');
 window.Vuetify = require('vuetify');
@@ -21,16 +21,22 @@ Vue.use(Vuetify);
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component("Panel", require("./containers/Panel/Panel.vue").default);
+Vue.component("Report", require("./containers/Report/Report.vue").default);
+Vue.component("Settings", require("./containers/Settings/Settings.vue").default);
+Vue.component("Maintenance", require("./containers/Maintenance/Maintenance.vue").default);
 Vue.component('h-indicator',require('./components/IndicatorComponent.vue').default);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-window.onload = function () {
-    const app = new Vue({
-        el: '#app',
-    });
-}
+const app = new Vue({
+    el: "#app"
+});
+
+// Atribui estilo de fonte padrao para o Chart.js
+Chart.defaults.global.defaultFontColor = "#636b6f";
+Chart.defaults.global.defaultFontFamily = "'Nunito', sans-serif";
