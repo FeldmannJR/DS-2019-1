@@ -1,11 +1,11 @@
 <template>
   <div class="indicatorMultiple" :style="{opacity: opacity}">
     <!-- Titulo do indicador -->
-    <h4 class="text">{{text}}</h4>
+    <h4 class="text">{{indicator.text}}</h4>
     <div class="units">
-      <div class="unit" v-for="unit in units" :key="unit">
+      <div class="unit" v-for="unit in indicator.units" :key="unit">
         <h4 class="unitName">{{unit}}</h4>
-        <h4 class="unitValue">{{data[units.indexOf(unit)]}}</h4>
+        <h4 class="unitValue">{{indicator.data[indicator.units.indexOf(unit)]}}</h4>
       </div>
     </div>
   </div>
@@ -14,12 +14,8 @@
 export default {
   props: ["indicator"],
   data() {
-    const i = this.indicator;
-
     return {
-      text: i.text,
-      data: i.data,
-      units: i.units,
+      i: this.indicator,
       opacity: 0
     };
   },

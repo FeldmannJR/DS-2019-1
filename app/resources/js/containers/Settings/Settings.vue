@@ -1,9 +1,82 @@
 <template>
   <div class="settings">
+    <h1 class="header">Configuração do painel</h1>
+    <div class="slides">
+      <div class="slidesList" :class="hide">
+        <v-data-iterator
+          1
+          :items="sortedPresentation"
+          :rows-per-page-items="[4]"
+          :pagination.sync="slideListPagination"
+          content-tag="v-layout"
+        >
+          <template v-slot:item="props">
+            <div @click="currentSlide = sortedPresentation.indexOf(props.item)">
+              <Panel
+                :fixed="fixed"
+                :presentation="sortedPresentation"
+                :scale=".09"
+                :container="'slidePreview_' + sortedPresentation.indexOf(props.item)"
+                :index="sortedPresentation.indexOf(props.item)"
+                :stop="true"
+                :selected="currentSlide == sortedPresentation.indexOf(props.item)"
+                :key="props.item.order"
+              />
+            </div>
+          </template>
+        </v-data-iterator>
+        <v-btn class="btnAdd" @click="addSlide">
+          <v-icon>add</v-icon>Adicionar Slide
+        </v-btn>
+      </div>
+      <Panel
+        :fixed="fixed"
+        :presentation="sortedPresentation"
+        :scale=".5"
+        :index="currentSlide"
+        :stop="true"
+        :container="'slideBigPreview'"
+        :class="hide"
+      />
+      <v-form class="slideSettings">
+        <v-select
+          v-for="n in [0, 1, 2, 3]"
+          :label="'Indicador ' + (n + 1)"
+          :items="availableIndicators"
+          :placeholder="getIndicatorName(n)"
+          :value="getIndicatorName(n)"
+          prepend-icon="show_chart"
+          :key="n"
+          @input="rearrangeSlide($event, n)"
+        />
+        <v-text-field
+          id="timerInput"
+          label="Tempo"
+          v-model="sortedPresentation[currentSlide].timer"
+          type="number"
+          min="0"
+          max="3600"
+          prepend-icon="alarm"
+          @keypress="checkTimer"
+          @input="formatTimer"
+        ></v-text-field>
+        <v-select
+          label="Ordem"
+          v-model="sortedPresentation[currentSlide].order"
+          :items="order"
+          prepend-icon="swap_vert"
+          @input="formatOrder"
+        ></v-select>
+        <v-btn class="btnSave" :disabled="!updatedPresentation" @click="savePresentation">
+          <v-icon>save</v-icon>Salvar
+        </v-btn>
+      </v-form>
+    </div>
+    <h1 class="header">Indicadores</h1>
     <div class="indicatorsList">
-      <div class="indicator" v-for="indicator in indicatorsList" :key="indicator.name">
+      <div class="indicator" v-for="indicator in localIndicators" :key="indicator.name">
         <div class="preview">
-          <IndicatorPanel :indicator="indicator" :scale="0.1" />
+          <IndicatorPanel :indicator="indicator" :scale="0.175" />
         </div>
         <div class="indicatorSettings">
           <h4>{{indicator.name}}</h4>
@@ -20,10 +93,14 @@
             ></v-select>
           </v-form>
         </div>
-        <div class="save" :disabled="!updated(indicatorsList.indexOf(indicator))">
+        <div class="save" :disabled="!updatedIndicator(localIndicators.indexOf(indicator))">
           <v-tooltip bottom>
             <template v-slot:activator="{ on }">
-              <v-icon :disabled="!updated(indicatorsList.indexOf(indicator))" v-on="on">save</v-icon>
+              <v-icon
+                :disabled="!updatedIndicator(localIndicators.indexOf(indicator))"
+                v-on="on"
+                @click="saveIndicator(localIndicators.indexOf(indicator))"
+              >save</v-icon>
             </template>
             <span>Salvar</span>
           </v-tooltip>
@@ -36,38 +113,189 @@
 <script>
 require("./Settings.scss");
 import IndicatorPanel from "../../components/IndicatorPanel";
+import Panel from "../Panel/Panel";
+import { setTimeout } from "timers";
 
 export default {
   components: {
-    IndicatorPanel
+    IndicatorPanel,
+    Panel
   },
-  props: ["fixed", "indicators"],
+  props: ["fixed", "presentation", "indicators"],
   data() {
+    var sortedPresentation = this.presentation.sort((a, b) => {
+      return a.order < b.order ? -1 : 1;
+    });
+
     return {
-      headers: [
-        { text: "Indicador", value: "name", sortable: false },
-        { text: "Texto", value: "text", sortable: false }
-      ],
+      currentSlide: 0,
+      slideListPagination: {
+        page: 1,
+        totalItems: 2
+      },
       graphs: {
         bar: "Barras",
         pie: "Pizza",
         doughnut: "Rosca",
         none: "Nenhum"
       },
-      original: this.indicators.map(i => ({ ...i })),
-      indicatorsList: []
+      order: sortedPresentation.map(p => {
+        return p.order;
+      }),
+      sortedPresentation: sortedPresentation,
+      localIndicators: this.indicators,
+      originalIndicators: this.indicators.map(i => ({ ...i })),
+      originalPresentation: sortedPresentation.map(p => p),
+      hide: ""
     };
   },
-  methods: {
-    updated(index) {
+  computed: {
+    updatedPresentation() {
       return (
-        JSON.stringify(this.indicatorsList[index]) !=
-        JSON.stringify(this.original[index])
+        JSON.stringify(this.originalPresentation) !=
+        JSON.stringify(this.sortedPresentation)
+      );
+    },
+    availableIndicators() {
+      return [
+        this.localIndicators
+          .filter(i => {
+            return !this.getSlide()
+              .slide.flat()
+              .includes(i);
+          })
+          .map(i => {
+            return { text: i.name, value: i.id };
+          }),
+        { text: "Nenhum", value: null }
+      ].flat();
+    }
+  },
+  methods: {
+    addSlide() {
+      this.sortedPresentation.push({
+        timer: 1,
+        order: this.sortedPresentation.length,
+        slide: [[]]
+      });
+
+      this.currentSlide = this.sortedPresentation.length - 1;
+      this.slideListPagination.page = Math.floor(this.currentSlide / 4) + 1;
+    },
+    getSlide(index = this.currentSlide) {
+      return this.sortedPresentation[index];
+    },
+    savePresentation() {
+      this.originalPresentation = JSON.parse(
+        JSON.stringify(this.sortedPresentation)
+      );
+    },
+    rearrangeSlide(id, index) {
+      const row = Math.floor(index / 2),
+        indicator = this.localIndicators.filter(i => {
+          return i.id == id;
+        })[0];
+      let slide = this.getSlide().slide;
+      index %= 2;
+
+      if (indicator) {
+        if (!slide[row]) {
+          slide.push([]);
+        }
+        slide[row][index] = indicator;
+      } else {
+        slide[row].splice(index, 1);
+        if (slide[1] && slide[1].length == 0) {
+          slide.splice(row, 1);
+        }
+      }
+      this.forceRender();
+    },
+    forceRender() {
+      for (var i = 0; i < 5; ++i) {
+        this.sortedPresentation.push({
+          timer: 0,
+          order: this.sortedPresentation.length,
+          slide: this.getSlide().slide
+        });
+      }
+
+      this.hide = "hide";
+      this.currentSlide += 5;
+      const vm = this;
+      setTimeout(function() {
+        document.querySelector('[aria-label="Next page"]').click();
+        setTimeout(function() {
+          document.querySelector('[aria-label="Previous page"]').click();
+          vm.currentSlide -= 5;
+          vm.sortedPresentation.splice(-5, 5);
+          vm.hide = "";
+        }, 0.1);
+      }, 0.1);
+    },
+    getIndicatorName(n) {
+      return this.getSlide().slide[Math.floor(n / 2)] &&
+        this.getSlide().slide[Math.floor(n / 2)][n % 2]
+        ? this.getSlide().slide[Math.floor(n / 2)][n % 2].name
+        : null;
+    },
+    checkTimer(e) {
+      if (e.key < "0" || e.key > "9") {
+        e.preventDefault();
+      }
+    },
+    formatTimer() {
+      var timer = this.getSlide().timer,
+        value =
+          timer
+            .split("")
+            .filter(char => {
+              return char >= "0" && char <= "9";
+            })
+            .join("") || 0;
+      timer = parseInt(value);
+    },
+    formatOrder(newOrder) {
+      var order = this.currentSlide;
+      newOrder--;
+      if (order < newOrder) {
+        for (var i = newOrder; i > order; i--) {
+          this.getSlide(i).order -= 1;
+        }
+      } else {
+        for (var i = newOrder; i < order; i++) {
+          this.getSlide(i).order += 1;
+        }
+      }
+
+      this.currentSlide = newOrder;
+    },
+    updatedIndicator(index) {
+      return (
+        JSON.stringify(this.localIndicators[index]) !=
+        JSON.stringify(this.originalIndicators[index])
+      );
+    },
+    saveIndicator(index) {
+      this.originalIndicators[index] = JSON.parse(
+        JSON.stringify(this.localIndicators[index])
       );
     }
   },
   created() {
-    this.indicatorsList = this.indicators;
+    this.sortedPresentation = this.sortedPresentation.map(p => {
+      return {
+        timer: p.timer,
+        order: p.order,
+        slide: p.slide.map(row => {
+          return row.map(i => {
+            return this.localIndicators.filter(ind => {
+              return ind.id == i;
+            })[0];
+          });
+        })
+      };
+    });
   }
 };
 </script>

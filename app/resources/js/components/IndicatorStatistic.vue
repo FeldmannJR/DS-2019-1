@@ -1,10 +1,15 @@
 <template>
-  <div class="indicatorStatistic" :stretched="stretched">
+  <div :id="id" class="indicatorStatistic" :stretched="stretched">
     <!-- Titulo do indicador -->
     <h2>{{indicator.text}}</h2>
     <div class="chart">
       <!-- Grafico que representa os valores -->
-      <Chart :id="indicator.name" :graph="indicator.graph" :datasets="datasets" :options="options" />
+      <Chart
+        :id="['chart', id].join('_')"
+        :graph="indicator.graph"
+        :datasets="datasets"
+        :options="options"
+      />
     </div>
     <!-- Legenda -->
     <div class="legend">
@@ -24,7 +29,7 @@ export default {
   components: {
     Chart
   },
-  props: ["indicator", "stretched", "scale"],
+  props: ["indicator", "stretched", "scale", "container"],
   data() {
     const scale = this.scale || 1;
 
@@ -69,6 +74,7 @@ export default {
     }
 
     return {
+      id: [this.container, this.indicator.id].join("_"),
       options: options,
       // Esquema padrao de cores para diferenciar os dados
       colors: ["#344669", "#3C8376", "#3ec940", "#dde02c", "#dd9c2c", "#af3838"]
@@ -93,6 +99,14 @@ export default {
           }
         ];
       }
+    }
+  },
+  mounted() {
+    if (this.container == "indicator") {
+      document.querySelectorAll("#" + this.id + " [label]").forEach(label => {
+        label.style["width"] = 5 * this.scale + "vh";
+        label.style["height"] = 5 * this.scale + "vh";
+      });
     }
   }
 };

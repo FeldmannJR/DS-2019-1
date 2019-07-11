@@ -1,5 +1,5 @@
 <template>
-  <canvas :id="id" :graph="graph"></canvas>
+  <canvas :id="singleId" :graph="graph"></canvas>
 </template>
 <script>
 export default {
@@ -8,17 +8,18 @@ export default {
   props: ["id", "graph", "labels", "datasets", "options"],
   data() {
     return {
-      chart: null
+      chart: null,
     };
+  },
+  created() {
+    this.singleId = document.getElementById(this.id) ? this.id + "_" : this.id;
   },
   mounted() {
     // Renderiza o chart no canvas indicado pelo id passado
+    this.ctx = document.getElementById(this.singleId).getContext("2d");
     this.chart = new Chart(this.ctx, this.chartStructure);
   },
   computed: {
-    ctx() {
-      return document.getElementById(this.id).getContext("2d");
-    },
     chartStructure() {
       return {
         // Tipo de grafico
