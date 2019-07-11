@@ -11,17 +11,47 @@
           content-tag="v-layout"
         >
           <template v-slot:item="props">
-            <div @click="currentSlide = sortedPresentation.indexOf(props.item)">
-              <Panel
-                :fixed="fixed"
-                :presentation="sortedPresentation"
-                :scale=".09"
-                :container="'slidePreview_' + sortedPresentation.indexOf(props.item)"
-                :index="sortedPresentation.indexOf(props.item)"
-                :stop="true"
-                :selected="currentSlide == sortedPresentation.indexOf(props.item)"
-                :key="props.item.order"
-              />
+            <div class="slidePreview">
+              <div class="slideOptions">
+                <v-tooltip left>
+                  <template v-slot:activator="{ on }">
+                    <v-icon
+                      v-on="on"
+                      :disabled="sortedPresentation.indexOf(props.item) == 0"
+                      @click="formatOrder(sortedPresentation.indexOf(props.item), sortedPresentation.indexOf(props.item))"
+                    >arrow_upward</v-icon>
+                  </template>
+                  <span>Mover acima</span>
+                </v-tooltip>
+                <v-tooltip left>
+                  <template v-slot:activator="{ on }">
+                    <v-icon v-on="on">delete</v-icon>
+                  </template>
+                  <span>Excluir Slide</span>
+                </v-tooltip>
+                <v-tooltip left>
+                  <template v-slot:activator="{ on }">
+                    <v-icon
+                      v-on="on"
+                      :disabled="sortedPresentation.indexOf(props.item) == sortedPresentation.length - 1"
+                      @click="formatOrder(sortedPresentation.indexOf(props.item) + 2, sortedPresentation.indexOf(props.item))"
+                    >arrow_downward</v-icon>
+                  </template>
+                  <span>Mover abaixo</span>
+                </v-tooltip>
+              </div>
+              <div @click="currentSlide = sortedPresentation.indexOf(props.item)">
+                <Panel
+                  :fixed="fixed"
+                  :presentation="sortedPresentation"
+                  :scale=".09"
+                  :container="'slidePreview_' + sortedPresentation.indexOf(props.item)"
+                  :index="sortedPresentation.indexOf(props.item)"
+                  :stop="true"
+                  :selected="currentSlide == sortedPresentation.indexOf(props.item)"
+                  :key="props.item.order"
+                />
+              </div>
             </div>
           </template>
         </v-data-iterator>
@@ -139,9 +169,6 @@ export default {
         doughnut: "Rosca",
         none: "Nenhum"
       },
-      order: sortedPresentation.map(p => {
-        return p.order;
-      }),
       sortedPresentation: sortedPresentation,
       localIndicators: this.indicators,
       originalIndicators: this.indicators.map(i => ({ ...i })),
@@ -169,13 +196,18 @@ export default {
           }),
         { text: "Nenhum", value: null }
       ].flat();
+    },
+    order() {
+      return this.sortedPresentation.map(p => {
+        return p.order;
+      });
     }
   },
   methods: {
     addSlide() {
       this.sortedPresentation.push({
-        timer: 1,
-        order: this.sortedPresentation.length,
+        timer: 3,
+        order: this.sortedPresentation.length + 1,
         slide: [[]]
       });
 
@@ -258,8 +290,13 @@ export default {
             .join("") || 0;
       timer = parseInt(value);
     },
-    formatOrder(newOrder) {
-      var order = this.currentSlide;
+    formatOrder(newOrder, order) {
+      if (order != null) {
+        this.getSlide(order).order = newOrder;
+      } else {
+        order = this.currentSlide;
+      }
+
       newOrder--;
       if (order < newOrder) {
         for (var i = newOrder; i > order; i--) {
@@ -271,7 +308,7 @@ export default {
         }
       }
 
-      this.currentSlide = newOrder;
+      this.currentSlide = this.currentSlide == order ? newOrder : order;
     },
     updatedIndicator(index) {
       return (

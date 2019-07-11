@@ -32,6 +32,24 @@
             flex-direction: column;
             align-items: center;
 
+            .slidePreview {
+                display: flex;
+
+                .slideOptions {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-evenly;
+
+                    i {
+                        cursor: pointer;
+
+                        &:hover {
+                            color: black;
+                        }
+                    }
+                }
+            }
+
             .v-data-iterator {
                 display: flex;
                 flex-direction: column;
