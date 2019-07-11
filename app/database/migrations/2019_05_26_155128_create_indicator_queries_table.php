@@ -13,7 +13,7 @@ class CreateIndicatorsSimpleSqlTable extends Migration
      */
     public function up()
     {
-        Schema::create('indicators_simple_sql', function (Blueprint $table) {
+        Schema::create('indicator_queries', function (Blueprint $table) {
             $table->integer('id')->primary();
             $table->text('sql_query');
             $table->foreign('id')->references('id')->on('indicators')->onDelete('cascade');
@@ -27,6 +27,6 @@ class CreateIndicatorsSimpleSqlTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('indicators_simple_sql');
+        Schema::dropIfExists('indicators_queries');
     }
 }

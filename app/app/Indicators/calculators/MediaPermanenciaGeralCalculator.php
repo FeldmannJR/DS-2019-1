@@ -1,30 +1,28 @@
 <?php
 
 
-namespace App\Indicators\Custom;
+namespace App\Indicators\Calculators;
 
 
 use App\Enums\UpdateType;
+use App\Indicators\Calculators\Base\IndicatorSQLCalculator;
+
 use App\Indicators\Indicator;
-use App\Indicators\IndicatorSql;
 use App\Unit;
 use Carbon\Carbon;
 
-class IndicatorMediaPermanenciaGeral extends IndicatorSql
+class MediaPermanenciaGeralCalculator extends IndicatorSQLCalculator
 {
-    public function __construct(?int $id, string $name, UpdateType $update_frequency)
-    {
-        parent::__construct($id, $name, $update_frequency);
-    }
 
 
     /**
      * Calcula o indicador de uma unidade especifica se a unidade for null
      * ele calcula o geral
+     * @param Indicator $indicator
      * @param Carbon|null $data
      * @return double valor do indicador calculado
      */
-    public function calculateIndicator(Carbon $data = null)
+    public function calculateIndicator(Indicator $indicator, Carbon $data = null)
     {
 
         $qry = "select extract(epoch from sum(

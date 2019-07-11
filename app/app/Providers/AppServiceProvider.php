@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Indicators\IndicatorsService;
 use App\Indicators\Spreadsheets\SpreadsheetDriveService;
 use function foo\func;
 use Illuminate\Support\ServiceProvider;
@@ -17,6 +18,9 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(SpreadsheetDriveService::class, function ($app) {
             return new SpreadsheetDriveService();
+        });
+        $this->app->singleton(IndicatorsService::class, function () {
+            return new IndicatorsService();
         });
 
     }

@@ -27,14 +27,16 @@
 
             function onAuthApiLoad() {
                 var authBtn = document.getElementById('auth');
-                authBtn.disabled = false;
-                authBtn.addEventListener('click', function () {
-                    gapi.auth2.init({client_id: clientId}).then(function (googleAuth) {
-                        googleAuth.signIn({scope: scope}).then(function (result) {
-                            handleAuthResult(result.getAuthResponse());
+                if (authBtn !== null) {
+                    authBtn.disabled = false;
+                    authBtn.addEventListener('click', function () {
+                        gapi.auth2.init({client_id: clientId}).then(function (googleAuth) {
+                            googleAuth.signIn({scope: scope}).then(function (result) {
+                                handleAuthResult(result.getAuthResponse());
+                            })
                         })
-                    })
-                });
+                    });
+                }
             }
 
             function onPickerApiLoad() {
@@ -84,10 +86,12 @@
             <p>O administrador do sistema vai precisar logar com uma conta do google drive e selecionaro arquivo, após
                 selecionar vai ficar guardado no banco de dados
                 qual usuário escolheu o arquivo junto com o token do google dele, caso o usuário deslogar do google,o
-                arquivo selecionado é removido e não será mais possível baixar as tabelas, somente se outro usuario logar e selecionar outro!
+                arquivo selecionado é removido e não será mais possível baixar as tabelas, somente se outro usuario
+                logar e selecionar outro!
             </p>
             <p>
-                Para baixar a tabela do google drive para o servidor basta clicar no botão, isso vai ocorrer automaticamente quando precisar calcular os indicadores.
+                Para baixar a tabela do google drive para o servidor basta clicar no botão, isso vai ocorrer
+                automaticamente quando precisar calcular os indicadores.
             </p>
         </div>
 
@@ -95,7 +99,7 @@
         @isset($token)
             <button type='button' onclick="createPicker();" class="btn btn-primary btn-lg">Selecionar Planilha</button>
 
-            <script type="text/javascript" src="https://apis.google.com/js/api.js?onload=onApiLoad"></script>
+            <script type="application/javascript" src="https://apis.google.com/js/api.js?onload=onApiLoad"></script>
             <form id="choose_file" action="{{ action('SpreadsheetController@pickFile') }}" method="POST"
                   style="display: none;">
                 @csrf

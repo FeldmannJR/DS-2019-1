@@ -31,22 +31,13 @@ class CreateIndicatorsTable extends Migration
             $table->double('value');
             $table->timestamp('created_at')->useCurrent();
             $table->primary(['id', 'indicator_id']);
+            $table->integer('unit_id')->nullable();
             // Adicionado relações
+            $table->foreign('unit_id')
+                ->references('id')->on('units');
             $table->foreign('indicator_id')
                 ->references('id')
                 ->on('indicators');
-
-        });
-
-        Schema::create('indicators_history_unit', function (Blueprint $table) {
-            $table->bigInteger('history_id');
-            $table->integer('indicator_id');
-            $table->integer('unit_id');
-            $table->primary(['history_id', 'indicator_id']);
-            // Adicionado relações
-            $table->foreign(['history_id', 'indicator_id'])
-                ->references(['id', 'indicator_id'])
-                ->on('indicators_history');
 
         });
 
@@ -80,7 +71,6 @@ class CreateIndicatorsTable extends Migration
     {
         DB::unprepared('DROP FUNCTION IF EXISTS create_history_id_func');
         DB::unprepared('DROP TRIGGER IF EXISTS create_history_id FROM indicators_history');
-        Schema::dropIfExists('indicators_history_unit');
         Schema::dropIfExists('indicators_history');
         Schema::dropIfExists('indicators');
 

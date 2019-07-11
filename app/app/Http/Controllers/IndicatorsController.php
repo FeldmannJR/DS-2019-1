@@ -6,16 +6,17 @@ use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\SpreadsheetController;
 use App\IndicatorHistory;
-use App\Indicators\Custom\IndicatorMediaPermanenciaGeral;
+use App\Indicators\Custom\MediaPermanenciaGeralCalculator;
 use App\Indicators\Indicator;
-use App\Indicators\IndicatorSimpleSqlQuery;
-use App\Indicators\IndicatorSpreadsheet;
+use App\Indicators\IndicatorOld;
+use App\Indicators\CalculateIndicatorSimpleSQL;
+use App\Indicators\IndicatorOldSpreadsheet;
 use Illuminate\Http\Request;
 use App\Enums\UpdateType;
 use App\Unit;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use App\Indicators\ModelIndicators;
+use App\Indicators\IndicatorsService;
 use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use ReflectionClass;
@@ -23,23 +24,26 @@ use ReflectionClass;
 class IndicatorsController extends Controller
 {
 
+    private $indicatorsService;
+
 
     /**
      * IndicatorsController constructor.
      */
-    public function __construct()
+    public function __construct(IndicatorsService $service)
     {
+        $this->indicatorsService = $service;
         $this->middleware('role:' . UserRole::Root);
     }
 
     public function calculateAndSaveAll()
     {
-        ModelIndicators::calculateAndSaveAll();
+        $this->indicatorsService->calculateAndSaveAll();
     }
 
-    public function index()
+    public function index(IndicatorsService $indicators)
     {
-        $indicators = \App\Indicators\ModelIndicators::loadIndicators();
+        $indicators = $indicators->load();
         $units_ids = Unit::$displayUnits;
         $all_units = Unit::getAllUnits();
         $display_units = [];
@@ -48,10 +52,9 @@ class IndicatorsController extends Controller
                 $display_units[] = $all_units[$id];
             }
         }
-
         usort($indicators, function (Indicator $a, Indicator $b) {
             if ($a->isPerUnit() == $b->isPerUnit()) {
-                return $a->getId() - $b->getId();
+                return $a->id - $b->id;
             } else {
                 if ($a->isPerUnit()) {
                     return 1;

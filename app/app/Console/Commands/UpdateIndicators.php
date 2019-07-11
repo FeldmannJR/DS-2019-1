@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Enums\UpdateType;
-use App\Indicators\ModelIndicators;
+use App\Indicators\IndicatorsService;
 
 use App\Indicators\Spreadsheets\SpreadsheetDriveService;
 use Illuminate\Console\Command;
@@ -61,7 +61,7 @@ class UpdateIndicators extends Command
                 $this->error("Não consegui baixar a planilha!");
             }
         }
-        \Log::debug("Atualizando o indicador: ".$update_type->key);
+        \Log::debug("Atualizando o indicador: " . $update_type->key);
 
         /*
          *  Vai ser chamado só no proximo dia 00:10, seta a hora pra calcular no dia anterior
@@ -71,6 +71,6 @@ class UpdateIndicators extends Command
             $data = $data->subDay()->setHour(23)->setMinute(59);
         }
 
-        ModelIndicators::calculateAndSaveAll($update_type, $data, $this);
+        resolve(IndicatorsService::class)->calculateAndSaveAll($update_type, $data, $this);
     }
 }

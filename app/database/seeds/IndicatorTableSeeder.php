@@ -1,15 +1,15 @@
 <?php
 
 use App\Enums\UpdateType;
-use App\Indicators\Custom\IndicatorMediaPermanenciaGeral;
-use App\Indicators\Custom\IndicatorNumeroCirurgiasRealizadas;
-use App\Indicators\Custom\IndicatorNumeroPartosCesareos;
-use App\Indicators\Custom\IndicatorNumeroPartosNaturais;
-use App\Indicators\Custom\IndicatorOcupacaoPorUnidade;
-use App\Indicators\Custom\IndicatorRotatividadeLeitos;
-use App\Indicators\Custom\IndicatorTaxaDeSuspensaoDeCirurgias;
+use App\Indicators\Calculators\MediaPermanenciaGeralCalculator;
+use App\Indicators\Calculators\NumeroPartosNaturaisCalculator;
+use App\Indicators\Calculators\OcupacaoPorUnidadeCalculator;
+use App\Indicators\Calculators\RotatividadeLeitosCalculator;
+use App\Indicators\Calculators\TaxaDeSuspensaoDeCirurgiasCalculator;
+use App\Indicators\Custom\NumeroCirurgiasRealizadasCalculator;
+use App\Indicators\Custom\NumeroPartosCesareosCalculator;
 use App\Indicators\Indicator;
-use App\Indicators\ModelIndicators;
+use App\Indicators\IndicatorsService;
 use App\Unit;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
@@ -17,6 +17,17 @@ use Illuminate\Support\Facades\DB;
 
 class IndicatorTableSeeder extends Seeder
 {
+    /** @var IndicatorsService */
+    private $service = null;
+
+    /**
+     * IndicatorTableSeeder constructor.
+     */
+    public function __construct()
+    {
+        $this->service = resolve(IndicatorsService::class);;
+    }
+
     /**
      * Run the database seeds.
      *
@@ -24,8 +35,9 @@ class IndicatorTableSeeder extends Seeder
      */
     public function run()
     {
+
         // Remove os indicadores antigos pra não dar conflito
-        ModelIndicators::truncate();
+        $this->service->truncate();
         // Copia as unidades para a nossa tabela
         $this->populateUnits();
 
@@ -100,19 +112,27 @@ class IndicatorTableSeeder extends Seeder
             on int_t.seq = int.nro_internacao where int.ind_paciente_internado='S' and lto_lto_id is not null) - (select sum(leitos_indisp) as total
             from agh.v_ain_leitos_indisp) ;");
 
-        $this->addIndicator(new IndicatorMediaPermanenciaGeral(null, 'Media de permanência geral', UpdateType::Monthly()));
-        $this->addIndicator(new IndicatorOcupacaoPorUnidade(null, "Ocupação por Unidade", UpdateType::RealTime()));
-        $this->addIndicator(new IndicatorRotatividadeLeitos(null, "Rotatividade de Leitos", UpdateType::Monthly()));
+        $this->addIndicator('Média de permanência geral', UpdateType::Monthly(), MediaPermanenciaGeralCalculator::class);
+        $this->addIndicator('Ocupação por Unidade', UpdateType::RealTime(), OcupacaoPorUnidadeCalculator::class, true);
+        $this->addIndicator('Rotatividade de Leitos', UpdateType::Monthly(), RotatividadeLeitosCalculator::class, true);
+
+        $this->addIndicator('Número de Cirurgias Realizadas', UpdateType::Daily(), NumeroCirurgiasRealizadasCalculator::class);
+        $this->addIndicator('Taxa de suspensão de cirurgias', UpdateType::Daily(), TaxaDeSuspensaoDeCirurgiasCalculator::class);
+
+        $this->addIndicator('Número de partos naturais', UpdateType::Daily(), NumeroPartosNaturaisCalculator::class);
+        $this->addIndicator('Número de partos cesáreos', UpdateType::Daily(), NumeroPartosCesareosCalculator::class);
+
+        /*
 
         // Planilhas
         $this->addIndicator(new IndicatorNumeroCirurgiasRealizadas(null, "Número de Cirurgias realizadas", UpdateType::Daily()));
         $this->addIndicator(new IndicatorTaxaDeSuspensaoDeCirurgias(null, "Taxa de suspensão de cirurgias", UpdateType::Daily()));
         $this->addIndicator(new IndicatorNumeroPartosNaturais(null, "Número de partos naturais", UpdateType::Daily()));
         $this->addIndicator(new IndicatorNumeroPartosCesareos(null, "Número de partos cesáreos", UpdateType::Daily()));
-
+        */
 
         if ($this->command->confirm('Você deseja popular o historico com valores aleatorios?', false)) {
-            foreach (ModelIndicators::loadIndicators() as $indicator) {
+            foreach ($this->service->load() as $indicator) {
                 $this->addExampleData($indicator);
             }
         }
@@ -124,7 +144,7 @@ class IndicatorTableSeeder extends Seeder
     private function populateUnits()
     {
         Unit::truncate();
-        $units = ModelIndicators::getHeConnection()->table("agh.agh_unidades_funcionais")->get();
+        $units = $this->service->getHeConnection()->table("agh.agh_unidades_funcionais")->get();
         foreach ($units as $unit) {
             $newUnit = new Unit();
             $newUnit->id = $unit->seq;
@@ -141,21 +161,24 @@ class IndicatorTableSeeder extends Seeder
      */
     private function addSimple($name, UpdateType $updateType, string $query)
     {
-        $indicador = ModelIndicators::addSimpleQueryIndicator($name, $updateType, $query);
+        $indicador = $this->service->addSingleQueryIndicator($name, $updateType, $query);
 
     }
 
     /**
-     * Adicionado um indicador ao banco, e cria valores aleatorios para ele
-     * @param Indicator $indicator
+     * Adicionado um indicador ao banco
+     * @param string $name
+     * @param UpdateType $updateType
+     * @param string $calculatorClass
+     * @param bool $per_unit
      */
-    private function addIndicator(Indicator $indicator)
+    private function addIndicator(string $name, UpdateType $updateType, string $calculatorClass, bool $per_unit = false)
     {
-        $id = ModelIndicators::addIndicator($indicator);
+        $id = $this->service->addIndicator($name, $updateType, $calculatorClass, $per_unit);
     }
 
     /**
-     * @param Indicator $indicator
+     * @param IndicatorOld $indicator
      */
     private function addExampleData(Indicator $indicator)
     {
@@ -169,7 +192,7 @@ class IndicatorTableSeeder extends Seeder
             if ($indicator->isPerUnit()) {
                 $unit = Unit::getById(Unit::$displayUnits[array_rand(Unit::$displayUnits)]);
             }
-            ModelIndicators::addIndicatorHistoryValue($indicator->getId(), $value, $unit, $timestamp);
+            $this->service->addHistoryValue($indicator, $value, $unit, $timestamp);
         }
     }
 

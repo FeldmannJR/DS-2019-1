@@ -1,29 +1,27 @@
 <?php
 
 
-namespace App\Indicators\Custom;
+namespace App\Indicators\Calculators;
 
 
 use App\Enums\UpdateType;
-use App\Indicators\IndicatorSql;
+use App\Indicators\Calculators\Base\IndicatorSQLCalculator;
+use App\Indicators\Indicator;
 use App\Unit;
 use Carbon\Carbon;
 
-class IndicatorOcupacaoPorUnidade extends IndicatorSql
+class OcupacaoPorUnidadeCalculator extends IndicatorSQLCalculator
 {
-
-    public function __construct(?int $id, string $name, UpdateType $update_frequency)
-    {
-        parent::__construct($id, $name, $update_frequency, true);
-    }
+    
 
     /**
      * Calcula o indicador de uma unidade especifica se a unidade for null
      * ele calcula o geral
+     * @param Indicator $indicator
      * @param Carbon|null $data
      * @return double|double[] valor do indicador calculado ou map por unidade
      */
-    public function calculateIndicator(Carbon $data = null)
+    public function calculateIndicator(Indicator $indicator, Carbon $data = null)
     {
         $rs_pacientes = $this->getHeConnection()->select(
             $this->replaceDates(

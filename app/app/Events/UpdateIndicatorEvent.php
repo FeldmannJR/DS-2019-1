@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Indicators\Indicator;
+use App\Indicators\IndicatorOld;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -23,7 +23,7 @@ class UpdateIndicatorEvent implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct(Indicator $indicator, $newvalue)
+    public function __construct(IndicatorOld $indicator, $newvalue)
     {
         $this->indicator = $indicator;
         $this->newValue = $newvalue;

@@ -1,14 +1,6 @@
 @extends ('layouts.app')
 
 @push('scripts')
-    <script defer>
-       Echo
-            .channel('indicators')
-            .listen('UpdateIndicatorEvent', (e) => {
-                console.log(e);
-            });
-
-    </script>
 @endpush
 @section('content')
 
@@ -28,8 +20,8 @@
             @foreach($indicators as $indicador)
                 <tr>
                     <th scope="row">{{$indicador->getId()}}</th>
-                    <td>{{$indicador instanceof \App\Indicators\IndicatorSpreadsheet ? ($indicador->getName() . " (planilha)") : $indicador->getName()}}</td>
-                    <td>{{$indicador->getUpdateFrequency()->key}}</td>
+                    <td>{{$indicador->getCalculator() instanceof \App\Indicators\Calculators\SpreadsheetCalculator ? ($indicador->getName() . " (planilha)") : $indicador->getName()}}</td>
+                    <td>{{$indicador->getUpdateType()->key}}</td>
                     <td>
                         @if($indicador->isPerUnit())
                             <table class="table table-sm table-borderless">

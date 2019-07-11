@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Indicators;
+namespace App\Indicators\Calculators\Base;
 
 
 use App\SpreadsheetFile;
@@ -12,11 +12,11 @@ use PhpOffice\PhpSpreadsheet\Reader\Xls;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
-abstract class IndicatorSpreadsheet extends Indicator
+abstract class SpreadsheetCalculator extends IndicatorCalculator
 {
 
 
-    public $spreadsheetReader = null;
+    protected static $spreadsheetReader = null;
 
     public function canCalculate(): bool
     {
@@ -27,10 +27,18 @@ abstract class IndicatorSpreadsheet extends Indicator
         return true;
     }
 
+
     protected function getSpreadsheet()
     {
-        return $this->spreadsheetReader;
+        return self::$spreadsheetReader;
+    }
 
+    /**
+     * @param null $spreadsheetReader
+     */
+    public static function setSpreadsheetReader($spreadsheetReader): void
+    {
+        self::$spreadsheetReader = $spreadsheetReader;
     }
 
     /**
