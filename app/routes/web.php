@@ -41,25 +41,26 @@ Route::middleware(\App\Http\Middleware\ForceJson::class)->group(function () {
 
     });
 
-    Route::prefix('/indicators/')->group(function () {
+    Route::prefix('/indicators/')->middleware('role:' . UserRole::Screen)->group(function () {
         Route::get('/values', 'IndicatorsController@getLastValues');
         Route::get('/units/{all?}', 'IndicatorsController@getUnits');
         Route::get('/', 'IndicatorsController@getIndicators');
     });
 });
 
+Route::prefix('/planilhas')->middleware('role:' . UserRole::Admin)->group(function () {
+    Route::get('/', 'SpreadsheetController@index');
+    Route::get('/gcallback', 'SpreadsheetController@googleCallback');
+    Route::get('/login', 'SpreadsheetController@googleLogin');
+    Route::get('/logout', 'SpreadsheetController@googleLogout');
+    Route::post('/pickFile', 'SpreadsheetController@pickFile');
+    Route::get('/downloadFromDrive', 'SpreadsheetController@downloadFromDriveWithRedirects');
+    Route::get('/download', 'SpreadsheetController@downloadLast');
+});
 
-Route::get('/planilhas/', 'SpreadsheetController@index');
-Route::get('/planilhas/gcallback', 'SpreadsheetController@googleCallback');
-Route::get('/planilhas/login', 'SpreadsheetController@googleLogin');
-Route::get('/planilhas/logout', 'SpreadsheetController@googleLogout');
-Route::post('/planilhas/pickFile', 'SpreadsheetController@pickFile');
-Route::get('/planilhas/downloadFromDrive', 'SpreadsheetController@downloadFromDriveWithRedirects');
-Route::get('/planilhas/download', 'SpreadsheetController@downloadLast');
 
-
-Route::get('/', "Indicators\IndicatorsController@index");
-Route::get('/calculateAll', "Indicators\IndicatorsController@calculateAndSaveAll");
+Route::get('/', "IndicatorsController@index");
+Route::get('/calculateAll', "IndicatorsController@calculateAndSaveAll");
 Route::get("/addunits", "Indicators\IndicatorsController@addUnits");
 Route::get("/teste", "Indicators\IndicatorsController@calculateIndicador");
 Route::get("/units", "Indicators\IndicatorsController@showUnits");

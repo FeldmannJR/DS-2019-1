@@ -25,8 +25,8 @@ Vue.component("Panel", require("./containers/Panel/Panel.vue").default);
 Vue.component("Report", require("./containers/Report/Report.vue").default);
 Vue.component("Settings", require("./containers/Settings/Settings.vue").default);
 Vue.component("Maintenance", require("./containers/Maintenance/Maintenance.vue").default);
-Vue.component('h-indicator',require('./components/IndicatorComponent.vue').default);
-
+Vue.component('h-indicator', require('./components/IndicatorComponent.vue').default);
+Vue.component('he-navbar', require('./components/HeNavbar.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
