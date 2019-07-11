@@ -17,7 +17,7 @@
                   <template v-slot:activator="{ on }">
                     <v-icon
                       v-on="on"
-                      :disabled="sortedPresentation.indexOf(props.item) == 0"
+                      v-if="!(sortedPresentation.indexOf(props.item) == 0)"
                       @click="formatOrder(sortedPresentation.indexOf(props.item), sortedPresentation.indexOf(props.item))"
                     >arrow_upward</v-icon>
                   </template>
@@ -25,7 +25,10 @@
                 </v-tooltip>
                 <v-tooltip left>
                   <template v-slot:activator="{ on }">
-                    <v-icon v-on="on">delete</v-icon>
+                    <v-icon
+                      v-on="on"
+                      @click="deleteSlide(sortedPresentation.indexOf(props.item))"
+                    >delete</v-icon>
                   </template>
                   <span>Excluir Slide</span>
                 </v-tooltip>
@@ -33,7 +36,7 @@
                   <template v-slot:activator="{ on }">
                     <v-icon
                       v-on="on"
-                      :disabled="sortedPresentation.indexOf(props.item) == sortedPresentation.length - 1"
+                      v-if="!(sortedPresentation.indexOf(props.item) == sortedPresentation.length - 1)"
                       @click="formatOrder(sortedPresentation.indexOf(props.item) + 2, sortedPresentation.indexOf(props.item))"
                     >arrow_downward</v-icon>
                   </template>
@@ -145,6 +148,7 @@ require("./Settings.scss");
 import IndicatorPanel from "../../components/IndicatorPanel";
 import Panel from "../Panel/Panel";
 import { setTimeout } from "timers";
+import { createHash } from "crypto";
 
 export default {
   components: {
@@ -216,6 +220,18 @@ export default {
     },
     getSlide(index = this.currentSlide) {
       return this.sortedPresentation[index];
+    },
+    deleteSlide(index) {
+      var current = this.currentSlide;
+      this.formatOrder(this.sortedPresentation.length, index);
+      this.sortedPresentation.splice(index, 1);
+      this.currentSlide = Math.min(current, this.sortedPresentation.length - 1);
+
+      if (this.sortedPresentation.length == 0) {
+        this.addSlide();
+      } else if (current == index) {
+        this.forceRender();
+      }
     },
     savePresentation() {
       this.originalPresentation = JSON.parse(
