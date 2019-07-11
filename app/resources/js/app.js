@@ -34,7 +34,9 @@ Vue.component('h-indicator',require('./components/IndicatorComponent.vue').defau
  */
 
 const app = new Vue({
-    el: "#app"
+    el: "#app",
+    primary: "#344669",
+    secondary: "#3C8376"
 });
 
 // Atribui estilo de fonte padrao para o Chart.js

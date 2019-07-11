@@ -145,7 +145,7 @@ export default {
       sortedPresentation: sortedPresentation,
       localIndicators: this.indicators,
       originalIndicators: this.indicators.map(i => ({ ...i })),
-      originalPresentation: sortedPresentation.map(p => p),
+      originalPresentation: null,
       hide: ""
     };
   },
@@ -205,8 +205,11 @@ export default {
         slide[row][index] = indicator;
       } else {
         slide[row].splice(index, 1);
-        if (slide[1] && slide[1].length == 0) {
+        if (slide[row] && slide[row].length == 0) {
           slide.splice(row, 1);
+          if (slide.length == 0) {
+            slide = [[]];
+          }
         }
       }
       this.forceRender();
@@ -296,6 +299,8 @@ export default {
         })
       };
     });
+
+    this.originalPresentation = this.sortedPresentation.map(p => ({ ...p }));
   }
 };
 </script>
