@@ -1,5 +1,5 @@
 <template>
-  <div class="slider">
+  <div :class="container" class="slider">
     <!-- Painel deve receber de 1-4 indicadores divididos em 2 arrays -->
     <div v-for="row in indicators" class="row" :key="indicators.indexOf(row)">
       <div v-for="indicator in row" class="frame" :key="row.indexOf(indicator)">
@@ -7,6 +7,8 @@
           :indicator="indicator"
           :multiple="multiple"
           :stretched="row.length == 1 && multiple"
+          :scale="scale"
+          :container="container"
         />
       </div>
     </div>
@@ -16,24 +18,24 @@
 import IndicatorPanel from "./IndicatorPanel";
 
 export default {
-  props: ["indicators"],
+  props: ["indicators", "scale", "container"],
   components: {
     IndicatorPanel
   },
   methods: {
     // Ajusta tamanhos de headers, icones, legendas e posicionamento de indicadores numericos
     setSizes() {
-      this.setSize(".slider h1", 40);
-      this.setSize(".slider h2", 10);
-      this.setSize(".slider h3", 4);
-      this.setSize(".slider [label]", 5, "vh", "width");
-      this.setSize(".slider [label]", 5, "vh", "height");
+      this.setSize("." + this.container + " h1", 40);
+      this.setSize("." + this.container + " h2", 10);
+      this.setSize("." + this.container + " h3", 4);
+      this.setSize("." + this.container + " [label]", 5, "vh", "width");
+      this.setSize("." + this.container + " [label]", 5, "vh", "height");
     },
     // Altera um atributo CSS, utilizando metade do valor passado se multiple for verdadeiro
     setSize(selector, size, metric = "vh", attribute = "fontSize", vm = this) {
       const ratio = this.multiple ? 0.5 : 1;
       document.querySelectorAll(selector).forEach(el => {
-        el.style[attribute] = size * ratio + metric;
+        el.style[attribute] = size * ratio * this.scale + metric;
       });
     }
   },
@@ -44,6 +46,7 @@ export default {
     }
   },
   mounted() {
+    this.container = this.container || "sliderContainer";
     this.setSizes();
   },
   updated() {

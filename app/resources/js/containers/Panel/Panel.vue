@@ -7,7 +7,12 @@
         :key="fixed.indexOf(indicator)"
       />
     </div>
-    <Slider :key="index" :indicators="slides[index]" />
+    <Slider
+      :key="index"
+      :indicators="presentation[index].slide"
+      :scale="scale || 1"
+      :container="container || 'panelContainer'"
+    />
   </div>
 </template>
 
@@ -17,26 +22,37 @@ import IndicatorFixed from "../../components/IndicatorFixed";
 import Slider from "../../components/Slider";
 
 export default {
-  props: ["fixed", "slides", "timers"],
+  props: ["fixed", "presentation", "scale", "container", "index", "stop"],
   components: {
     IndicatorFixed,
     Slider
   },
   data() {
     return {
-      // Index do slide atual
-      index: 0
+      sortedPresentation: this.presentation.sort((a, b) => {
+        return a.order < b.order ? -1 : 1;
+      })
     };
   },
   methods: {
     // Avança 1 slide
     changeSlide() {
-      this.index = (this.index + 1) % this.slides.length;
-      setTimeout(this.changeSlide, this.timers[this.index] * 1000);
+      if (!this.stop) {
+        this.index = (this.index + 1) % this.sortedPresentation.length;
+        setTimeout(
+          this.changeSlide,
+          this.sortedPresentation[this.index].timer * 1000
+        );
+      }
     }
   },
-  mounted() {
-    setTimeout(this.changeSlide, this.timers[this.index] * 1000);
+  created() {
+    this.index = this.index || 0;
+
+    setTimeout(
+      this.changeSlide,
+      this.sortedPresentation[this.index].timer * 1000
+    );
   }
 };
 </script>
