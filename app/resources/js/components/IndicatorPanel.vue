@@ -46,9 +46,6 @@ export default {
       i: this.indicator,
       cntnr: this.container || "indicatorContainer"
     };
-  },
-  updated() {
-    console.log("aa");
   }
 };
 </script>

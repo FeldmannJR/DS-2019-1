@@ -1,7 +1,7 @@
 <template>
   <div class="settings">
     <div class="slides">
-      <div class="slidesList">
+      <div class="slidesList" :class="hide">
         <v-data-iterator :items="sortedPresentation" :rows-per-page-items="[2]">
           <template v-slot:item="props">
             <div @click="currentSlide = sortedPresentation.indexOf(props.item)">
@@ -26,8 +26,31 @@
         :index="currentSlide"
         :stop="true"
         :container="'slideBigPreview'"
+        :class="hide"
       />
       <v-form class="slideSettings">
+        <v-select
+          label="Indicador 1"
+          :items="availableIndicators"
+          @input="rearrangeSlide($event, 0)"
+          :value="sortedPresentation[currentSlide].slide[0][0]"
+        />
+        <v-select
+          label="Indicador 2"
+          :items="availableIndicators"
+          @input="rearrangeSlide($event, 1)"
+          :value="null"
+        />
+        <v-select
+          label="Indicador 3"
+          :items="availableIndicators"
+          @input="rearrangeSlide($event, 2)"
+        />
+        <v-select
+          label="Indicador 4"
+          :items="availableIndicators"
+          @input="rearrangeSlide($event, 3)"
+        />
         <v-text-field
           id="timerInput"
           label="Tempo"
@@ -90,6 +113,7 @@
 require("./Settings.scss");
 import IndicatorPanel from "../../components/IndicatorPanel";
 import Panel from "../Panel/Panel";
+import { setTimeout } from "timers";
 
 export default {
   components: {
@@ -116,7 +140,8 @@ export default {
       sortedPresentation: sortedPresentation,
       localIndicators: this.indicators,
       originalIndicators: this.indicators.map(i => ({ ...i })),
-      originalPresentation: sortedPresentation.map(p => ({ ...p }))
+      originalPresentation: sortedPresentation.map(p => ({ ...p })),
+      hide: ""
     };
   },
   computed: {
@@ -125,6 +150,20 @@ export default {
         JSON.stringify(this.originalPresentation) !=
         JSON.stringify(this.sortedPresentation)
       );
+    },
+    availableIndicators() {
+      return [
+        this.localIndicators
+          .filter(i => {
+            return !this.sortedPresentation[this.currentSlide].slide
+              .flat()
+              .includes(i);
+          })
+          .map(i => {
+            return { text: i.name, value: i.id };
+          }),
+        { text: "Nenhum", value: null }
+      ].flat();
     }
   },
   methods: {
@@ -132,6 +171,40 @@ export default {
       this.originalPresentation = JSON.parse(
         JSON.stringify(this.sortedPresentation)
       );
+    },
+    rearrangeSlide(id, index) {
+      const row = Math.floor(index / 2),
+        indicator = this.localIndicators.filter(i => {
+          return i.id == id;
+        })[0];
+      let slide = this.sortedPresentation[this.currentSlide].slide;
+      index %= 2;
+
+      if (indicator) {
+        if (!slide[row]) {
+          slide.push([]);
+        }
+        slide[row][index] = indicator;
+      } else {
+        slide[row].splice(index, 1);
+        if (slide[1] && slide[1].length == 0) {
+          slide.splice(row, 1);
+        }
+      }
+      this.forceRender();
+    },
+    forceRender() {
+      this.sortedPresentation.push({
+        timer: 0,
+        order: this.sortedPresentation.length,
+        slide: [[]]
+      });
+
+      this.currentSlide = 2;
+      const vm = this;
+      setTimeout(function() {
+        vm.currentSlide = 0;
+      }, 1);
     },
     checkTimer(e) {
       if (e.key < "0" || e.key > "9") {
