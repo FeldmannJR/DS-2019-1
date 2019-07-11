@@ -37,6 +37,11 @@ class Unit extends Model
         return self::$allUnits;
     }
 
+    public static function getDisplayUnits()
+    {
+        return Unit::all()->whereIn('id', self::$displayUnits);
+    }
+
     public static function getById(int $id): Unit
     {
         return self::getAllUnits()[$id];

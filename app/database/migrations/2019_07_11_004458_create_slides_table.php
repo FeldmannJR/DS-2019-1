@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateIndicatorQueriesTable extends Migration
+class CreateSlidesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,12 @@ class CreateIndicatorQueriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('indicator_queries', function (Blueprint $table) {
-            $table->integer('id')->primary();
-            $table->text('sql_query');
-            $table->foreign('id')->references('id')->on('indicators')->onDelete('cascade');
+        Schema::create('slides', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('order')->default(0);
+            $table->integer('template');
+            $table->integer('screen_time')->default(10);
+            $table->timestamps();
         });
     }
 
@@ -27,6 +29,6 @@ class CreateIndicatorQueriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('indicators_queries');
+        Schema::dropIfExists('slides');
     }
 }

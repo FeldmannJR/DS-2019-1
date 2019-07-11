@@ -17,6 +17,22 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
+Route::prefix('/account/')->middleware(\App\Http\Middleware\ForceJson::class)->group(function () {
+    Route::post('/delete', 'AccountController@delete');
+    Route::post('/update', 'AccountController@update');
+    Route::post('/create', 'AccountController@create');
+});
+Route::prefix('/presentation/')->group(function () {
+    Route::get('/templates', 'PresentationController@getTemplates');
+    Route::get('/slides', 'PresentationController@getSlides');
+
+});
+Route::prefix('/indicators/')->middleware(\App\Http\Middleware\ForceJson::class)->group(function () {
+    Route::get('/values', 'IndicatorsController@getLastValues');
+    Route::get('/units/{all?}', 'IndicatorsController@getUnits');
+    Route::get('/', 'IndicatorsController@getIndicators');
+});
+
 Route::get('/planilhas/', 'SpreadsheetController@index');
 Route::get('/planilhas/gcallback', 'SpreadsheetController@googleCallback');
 Route::get('/planilhas/login', 'SpreadsheetController@googleLogin');

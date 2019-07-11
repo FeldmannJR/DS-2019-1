@@ -20,14 +20,22 @@ class CheckUserRole
     {
 
         if (!Auth::check()) {
-            return redirect('login')->with('not_authenticated', url()->current());
+            if ($request->wantsJson()) {
+                return response()->json(['error' => 'Not authenticated!'], 401);
+            } else {
+                return redirect('login')->with('not_authenticated', url()->current());
+            }
         }
         $user_role = $request->user()->user_role;
         $val = intval($role);
         $page_role = UserRole::getInstance($val);
 
         if (!UserRole::checkPermission($page_role, $user_role)) {
-            return redirect('/home')->with('status', 'Você não tem permissão para ver a pagina que solicitou!');
+            if ($request->wantsJson()) {
+                return response()->json(['error' => 'You doesn\'t have permission to request this page!'], 401);
+            } else {
+                return redirect('/home')->with('status', 'Você não tem permissão para ver a pagina que solicitou!');
+            }
         }
 
         return $next($request);

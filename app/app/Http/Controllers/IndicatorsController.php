@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Indicators;
+namespace App\Http\Controllers;
 
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
@@ -33,8 +33,35 @@ class IndicatorsController extends Controller
     public function __construct(IndicatorsService $service)
     {
         $this->indicatorsService = $service;
-        $this->middleware('role:' . UserRole::Root);
+        $this->middleware('role:' . UserRole::Screen);
     }
+
+    /**
+     * Get the last values from the indicators
+     */
+    public function getLastValues()
+    {
+        $indicators = $this->indicatorsService->load();
+        $array = [];
+        foreach ($indicators as $indicator) {
+            if ($indicator->isPerUnit()) {
+                $per_unit = [];
+                foreach (Unit::getDisplayUnits() as $unit) {
+                    $per_unit[$unit->id] = $indicator->getLastValue($unit);
+                }
+                $array[$indicator->id] = $per_unit;
+            } else {
+                $array[$indicator->id] = $indicator->getLastValue();
+            }
+        }
+        return response()->json($array);
+    }
+
+    public function getIndicators()
+    {
+        return $indicators = $this->indicatorsService->load();
+    }
+
 
     public function calculateAndSaveAll()
     {
@@ -68,24 +95,19 @@ class IndicatorsController extends Controller
             ->with('indicators', $indicators)
             ->with('display_units', $display_units);
     }
+    
 
-
-    public function calculateIndicador()
+    /**
+     * @param bool $all Se vai retornar todas as unidades ou somente as que são mostradas
+     * @return array
+     */
+    public function getUnits($all = false)
     {
-    }
-
-
-    public function showUnits()
-    {
-        $units = Unit::all();
-        foreach ($units as $unit) {
-            echo $unit->code . " " . $unit->name . "<br/>";
+        if ($all == "true") {
+            return Unit::all()->all();
+        } else {
+            return Unit::getDisplayUnits()->all();
         }
     }
 
-
-    public function updateAll($updateType)
-    {
-
-    }
 }

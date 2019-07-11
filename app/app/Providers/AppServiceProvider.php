@@ -4,7 +4,9 @@ namespace App\Providers;
 
 use App\Indicators\IndicatorsService;
 use App\Indicators\Spreadsheets\SpreadsheetDriveService;
-use function foo\func;
+use App\Presentation\PresentationService;
+use App\Rules\NonRoot;
+
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -22,6 +24,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(IndicatorsService::class, function () {
             return new IndicatorsService();
         });
+        $this->app->singleton(PresentationService::class, function () {
+            return new PresentationService();
+        });
 
     }
 
@@ -32,6 +37,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        \Validator::extend('nonroot', function ($attribute, $value, $parameters) {
+            return (new NonRoot())->passes($attribute, $value, $parameters);
+        }, (new NonRoot())->message());
     }
 }
