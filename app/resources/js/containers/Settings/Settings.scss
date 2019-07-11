@@ -3,15 +3,23 @@
 .settings {
     padding: 5vh 10vw;
 
+    h1 {
+        text-align: center;
+        padding-bottom: 1.5vh;
+        margin: 0 15% 5vh;
+        color: $gray;
+        border-bottom: 2px solid $gray;
+    }
+
     .slides {
         display: flex;
         justify-content: center;
+        margin-bottom: 10vh;
         @include panel(.5);
 
         .panel {
             border: .1vh solid rgba($gray, 0.25);
             overflow: hidden;
-            transition: .5s;
 
             &.hide {
                 opacity: 0
@@ -20,7 +28,6 @@
 
         .slidesList {
             @include panel(.09);
-            transition: .5s;
 
             .panel {
                 width: min-content;
@@ -46,6 +53,7 @@
 
         .slideSettings {
             margin: .5vh 2vh;
+            width: 12vw;
 
             .btnSave {
                 background-color: $he-blue;
@@ -54,6 +62,10 @@
                 i {
                     margin-right: .5vh;
                 }
+            }
+
+            ::placeholder {
+                color: black;
             }
         }
     }

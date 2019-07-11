@@ -218,7 +218,7 @@ $he-green: #3C8376;
             background-color: white;
             margin: ($scale * .5vh) ($scale * .5vw);
             display: grid;
-            grid-gap: ($scale * 0.5vh) ($scale * 0.5vw);
+            grid-gap: $scale * 0.5vh;
             height: $scale * 99vh;
             width: $scale * (99 - $fixed-width);
             object-fit: cover;

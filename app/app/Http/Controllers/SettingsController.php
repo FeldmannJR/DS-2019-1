@@ -81,8 +81,9 @@ class SettingsController extends Controller
                 'order' => 1,
                 'slide' => [
                     [
-                        '1'
-                    ]
+                        '1', '2'
+                    ],
+                    [ '3', '4' ]
                 ]
             ],
             [
@@ -90,7 +91,7 @@ class SettingsController extends Controller
                 'order' => 2,
                 'slide' => [
                     [
-                        '2'
+                        '4'
                     ]
                 ]
             ]

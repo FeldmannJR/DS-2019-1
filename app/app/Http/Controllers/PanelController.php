@@ -35,8 +35,8 @@ class PanelController extends Controller
 
         $presentation = [
             [
-                'timer' => 1,
-                'order' => 3,
+                'timer' => 2,
+                'order' => 1,
                 'slide' => [
                     [
                         [
@@ -64,12 +64,22 @@ class PanelController extends Controller
                             "text" => "Texto Indicador6",
                             "value" => "25"
                         ],
+                        [
+
+                                "id" => '4',
+                                "type" => "statistic",
+                                "name" => "Texto Indicador4",
+                                "text" => "Texto Indicador4",
+                                "graph" => "pie",
+                                "data" => [30, 25, 10],
+                                "units" => ["Red", "Yellow", "Blue"]
+                        ]
                     ],
                 ]
             ],
             [
                 'timer' => 1,
-                'order' => 1,
+                'order' => 3,
                 'slide' => [
                     [
                         [

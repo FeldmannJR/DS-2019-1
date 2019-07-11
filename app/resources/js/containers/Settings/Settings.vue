@@ -1,8 +1,9 @@
 <template>
   <div class="settings">
+    <h1>Configuração do painel</h1>
     <div class="slides">
       <div class="slidesList" :class="hide">
-        <v-data-iterator :items="sortedPresentation" :rows-per-page-items="[2]">
+        <v-data-iterator :items="sortedPresentation" :rows-per-page-items="[5]">
           <template v-slot:item="props">
             <div @click="currentSlide = sortedPresentation.indexOf(props.item)">
               <Panel
@@ -30,26 +31,13 @@
       />
       <v-form class="slideSettings">
         <v-select
-          label="Indicador 1"
+          v-for="n in [0, 1, 2, 3]"
+          :label="'Indicador ' + (n + 1)"
           :items="availableIndicators"
-          @input="rearrangeSlide($event, 0)"
-          :value="sortedPresentation[currentSlide].slide[0][0]"
-        />
-        <v-select
-          label="Indicador 2"
-          :items="availableIndicators"
-          @input="rearrangeSlide($event, 1)"
-          :value="null"
-        />
-        <v-select
-          label="Indicador 3"
-          :items="availableIndicators"
-          @input="rearrangeSlide($event, 2)"
-        />
-        <v-select
-          label="Indicador 4"
-          :items="availableIndicators"
-          @input="rearrangeSlide($event, 3)"
+          :placeholder="getIndicatorName(n)"
+          :value="getIndicatorName(n)"
+          :key="n"
+          @input="rearrangeSlide($event, n)"
         />
         <v-text-field
           id="timerInput"
@@ -72,6 +60,7 @@
         </v-btn>
       </v-form>
     </div>
+    <h1>Indicadores</h1>
     <div class="indicatorsList">
       <div class="indicator" v-for="indicator in localIndicators" :key="indicator.name">
         <div class="preview">
@@ -155,8 +144,8 @@ export default {
       return [
         this.localIndicators
           .filter(i => {
-            return !this.sortedPresentation[this.currentSlide].slide
-              .flat()
+            return !this.getSlide()
+              .slide.flat()
               .includes(i);
           })
           .map(i => {
@@ -167,6 +156,9 @@ export default {
     }
   },
   methods: {
+    getSlide(index = this.currentSlide) {
+      return this.sortedPresentation[index];
+    },
     savePresentation() {
       this.originalPresentation = JSON.parse(
         JSON.stringify(this.sortedPresentation)
@@ -177,7 +169,7 @@ export default {
         indicator = this.localIndicators.filter(i => {
           return i.id == id;
         })[0];
-      let slide = this.sortedPresentation[this.currentSlide].slide;
+      let slide = this.getSlide().slide;
       index %= 2;
 
       if (indicator) {
@@ -194,17 +186,32 @@ export default {
       this.forceRender();
     },
     forceRender() {
-      this.sortedPresentation.push({
-        timer: 0,
-        order: this.sortedPresentation.length,
-        slide: [[]]
-      });
+      for (var i = 0; i < 5; ++i) {
+        this.sortedPresentation.push({
+          timer: 0,
+          order: this.sortedPresentation.length,
+          slide: this.getSlide().slide
+        });
+      }
 
-      this.currentSlide = 2;
+      this.hide = "hide";
+      this.currentSlide += 5;
       const vm = this;
       setTimeout(function() {
-        vm.currentSlide = 0;
-      }, 1);
+        document.querySelector('[aria-label="Next page"]').click();
+        setTimeout(function() {
+          document.querySelector('[aria-label="Previous page"]').click();
+          vm.currentSlide -= 5;
+          vm.sortedPresentation.splice(-5, 5);
+          vm.hide = "";
+        }, 0.1);
+      }, 0.1);
+    },
+    getIndicatorName(n) {
+      return this.getSlide().slide[Math.floor(n / 2)] &&
+        this.getSlide().slide[Math.floor(n / 2)][n % 2]
+        ? this.getSlide().slide[Math.floor(n / 2)][n % 2].name
+        : null;
     },
     checkTimer(e) {
       if (e.key < "0" || e.key > "9") {
@@ -212,7 +219,7 @@ export default {
       }
     },
     formatTimer() {
-      var timer = this.sortedPresentation[this.currentSlide].timer,
+      var timer = this.getSlide().timer,
         value =
           timer
             .split("")
@@ -227,11 +234,11 @@ export default {
       newOrder--;
       if (order < newOrder) {
         for (var i = newOrder; i > order; i--) {
-          this.sortedPresentation[i].order -= 1;
+          this.getSlide(i).order -= 1;
         }
       } else {
         for (var i = newOrder; i < order; i++) {
-          this.sortedPresentation[i].order += 1;
+          this.getSlide(i).order += 1;
         }
       }
 
