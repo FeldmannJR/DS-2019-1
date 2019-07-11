@@ -95,7 +95,7 @@ class IndicatorsController extends Controller
             ->with('indicators', $indicators)
             ->with('display_units', $display_units);
     }
-    
+
 
     /**
      * @param bool $all Se vai retornar todas as unidades ou somente as que são mostradas
