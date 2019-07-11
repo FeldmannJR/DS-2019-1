@@ -17,21 +17,37 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
-Route::prefix('/account/')->middleware(\App\Http\Middleware\ForceJson::class)->group(function () {
-    Route::post('/delete', 'AccountController@delete');
-    Route::post('/update', 'AccountController@update');
-    Route::post('/create', 'AccountController@create');
-});
-Route::prefix('/presentation/')->group(function () {
-    Route::get('/templates', 'PresentationController@getTemplates');
-    Route::get('/slides', 'PresentationController@getSlides');
+Route::middleware(\App\Http\Middleware\ForceJson::class)->group(function () {
 
+    Route::prefix('/account/')->middleware('role:' . UserRole::Root)->group(function () {
+        Route::post('/delete', 'AccountController@delete');
+        Route::post('/update', 'AccountController@update');
+        Route::post('/create', 'AccountController@create');
+    });
+
+
+    Route::prefix('/presentation/')->middleware('role:' . UserRole::Screen)->group(function () {
+        Route::get('/templates', 'PresentationController@getTemplates');
+        Route::prefix('slide')->group(function () {
+            Route::get('/', 'PresentationController@getSlides');
+            Route::middleware('role:' . UserRole::Statistics)->group(function () {
+                Route::get('/create', 'PresentationController@createSlide');
+                Route::get('/indicators', 'PresentationController@setIndicators');
+                Route::get('/delete', 'PresentationController@deleteSlide');
+                Route::get('/order', 'PresentationController@setOrder');
+            });
+
+        });
+
+    });
+
+    Route::prefix('/indicators/')->group(function () {
+        Route::get('/values', 'IndicatorsController@getLastValues');
+        Route::get('/units/{all?}', 'IndicatorsController@getUnits');
+        Route::get('/', 'IndicatorsController@getIndicators');
+    });
 });
-Route::prefix('/indicators/')->middleware(\App\Http\Middleware\ForceJson::class)->group(function () {
-    Route::get('/values', 'IndicatorsController@getLastValues');
-    Route::get('/units/{all?}', 'IndicatorsController@getUnits');
-    Route::get('/', 'IndicatorsController@getIndicators');
-});
+
 
 Route::get('/planilhas/', 'SpreadsheetController@index');
 Route::get('/planilhas/gcallback', 'SpreadsheetController@googleCallback');

@@ -12,10 +12,6 @@ use Illuminate\Validation\Rule;
 class AccountController extends Controller
 {
 
-    public function __construct()
-    {
-        $this->middleware('role:' . UserRole::Root);
-    }
 
     public function delete(Request $request)
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Presentation;
 
 use App\Indicators\Indicator;
 use App\Presentation\PresentationService;
@@ -18,20 +18,25 @@ class Slide extends Model
     }
 
 
+    /**
+     * @param $slot Id do slot modificado
+     * @param array $indicators Id dos indicadores
+     * @return bool Se foi feito com sucesso a modificao
+     */
     public function setSlot($slot, array $indicators)
     {
         $slots = count($this->getTemplate()->getSlots());
         if ($slot >= $slots) {
             return false;
         }
-        if (count($indicators) != $slots) {
+        if (count($indicators) > $slots) {
             return false;
         }
 
         $this->indicators()->delete();
         $slide_indicators = [];
         foreach ($indicators as $indicator) {
-            $slide_indicators[] = SlideIndicator::make(['slot' => $slot, 'indicator_id' => $indicator->id]);
+            $slide_indicators[] = SlideIndicator::make(['slot' => $slot, 'indicator_id' => $indicator]);
         }
         $this->indicators()->saveMany($slide_indicators);
         return true;

@@ -27,7 +27,7 @@ class CreateSlideIndicatorsTable extends Migration
 
             $table->foreign('slide_id')
                 ->references('id')
-                ->on('indicators')
+                ->on('slides')
                 ->onDelete('cascade');
         });
     }

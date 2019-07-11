@@ -3,7 +3,7 @@
 namespace App\Presentation;
 
 use App\Indicators\Indicator;
-use App\Slide;
+use App\Presentation\Slide;
 use Illuminate\Database\Eloquent\Model;
 
 class SlideIndicator extends Model

@@ -7,7 +7,7 @@ namespace App\Presentation;
 use App\Presentation\templates\BarPlusPercentage;
 use App\Presentation\templates\Full;
 use App\Presentation\templates\Template;
-use App\Slide;
+use App\Presentation\Slide;
 
 class PresentationService
 {
@@ -36,6 +36,16 @@ class PresentationService
     public function getTemplates()
     {
         return $this->templates;
+    }
+
+    public function getKeys()
+    {
+        $keys = [];
+        foreach ($this->templates as $k => $template) {
+            $keys[] = $k;
+        }
+        return $keys;
+
     }
 
 

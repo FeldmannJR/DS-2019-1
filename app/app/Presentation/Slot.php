@@ -35,7 +35,14 @@ class Slot implements \JsonSerializable
         $this->size = $size;
     }
 
-
+    /**
+     * @return int
+     */
+    public function getSize(): int
+    {
+        return $this->size;
+    }
+    
     /**
      * Specify data which should be serialized to JSON
      * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
