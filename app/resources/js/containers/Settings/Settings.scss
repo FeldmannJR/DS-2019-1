@@ -3,7 +3,7 @@
 .settings {
     padding: 5vh 10vw;
 
-    h1 {
+    .header {
         text-align: center;
         padding-bottom: 1.5vh;
         margin: 0 15% 5vh;
@@ -28,6 +28,20 @@
 
         .slidesList {
             @include panel(.09);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            .v-data-iterator {
+                display: flex;
+                flex-direction: column;
+                flex-grow: 1;
+
+                .layout {
+                    display: flex;
+                    flex-direction: column;
+                }
+            }
 
             .panel {
                 width: min-content;
@@ -46,6 +60,11 @@
 
             }
 
+            .btnAdd {
+                background-color: $he-green;
+                color: white;
+            }
+
             &.hide {
                 opacity: 0
             }
@@ -54,8 +73,11 @@
         .slideSettings {
             margin: .5vh 2vh;
             width: 12vw;
+            display: flex;
+            flex-direction: column;
 
             .btnSave {
+                align-self: center;
                 background-color: $he-blue;
                 color: white;
 

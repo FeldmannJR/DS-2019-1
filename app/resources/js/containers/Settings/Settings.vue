@@ -1,9 +1,15 @@
 <template>
   <div class="settings">
-    <h1>Configuração do painel</h1>
+    <h1 class="header">Configuração do painel</h1>
     <div class="slides">
       <div class="slidesList" :class="hide">
-        <v-data-iterator :items="sortedPresentation" :rows-per-page-items="[5]">
+        <v-data-iterator
+          1
+          :items="sortedPresentation"
+          :rows-per-page-items="[4]"
+          :pagination.sync="slideListPagination"
+          content-tag="v-layout"
+        >
           <template v-slot:item="props">
             <div @click="currentSlide = sortedPresentation.indexOf(props.item)">
               <Panel
@@ -19,6 +25,9 @@
             </div>
           </template>
         </v-data-iterator>
+        <v-btn class="btnAdd" @click="addSlide">
+          <v-icon>add</v-icon>Adicionar Slide
+        </v-btn>
       </div>
       <Panel
         :fixed="fixed"
@@ -36,6 +45,7 @@
           :items="availableIndicators"
           :placeholder="getIndicatorName(n)"
           :value="getIndicatorName(n)"
+          prepend-icon="show_chart"
           :key="n"
           @input="rearrangeSlide($event, n)"
         />
@@ -46,6 +56,7 @@
           type="number"
           min="0"
           max="3600"
+          prepend-icon="alarm"
           @keypress="checkTimer"
           @input="formatTimer"
         ></v-text-field>
@@ -53,6 +64,7 @@
           label="Ordem"
           v-model="sortedPresentation[currentSlide].order"
           :items="order"
+          prepend-icon="swap_vert"
           @input="formatOrder"
         ></v-select>
         <v-btn class="btnSave" :disabled="!updatedPresentation" @click="savePresentation">
@@ -60,7 +72,7 @@
         </v-btn>
       </v-form>
     </div>
-    <h1>Indicadores</h1>
+    <h1 class="header">Indicadores</h1>
     <div class="indicatorsList">
       <div class="indicator" v-for="indicator in localIndicators" :key="indicator.name">
         <div class="preview">
@@ -117,6 +129,10 @@ export default {
 
     return {
       currentSlide: 0,
+      slideListPagination: {
+        page: 1,
+        totalItems: 2
+      },
       graphs: {
         bar: "Barras",
         pie: "Pizza",
@@ -129,7 +145,7 @@ export default {
       sortedPresentation: sortedPresentation,
       localIndicators: this.indicators,
       originalIndicators: this.indicators.map(i => ({ ...i })),
-      originalPresentation: sortedPresentation.map(p => ({ ...p })),
+      originalPresentation: sortedPresentation.map(p => p),
       hide: ""
     };
   },
@@ -156,6 +172,16 @@ export default {
     }
   },
   methods: {
+    addSlide() {
+      this.sortedPresentation.push({
+        timer: 1,
+        order: this.sortedPresentation.length,
+        slide: [[]]
+      });
+
+      this.currentSlide = this.sortedPresentation.length - 1;
+      this.slideListPagination.page = Math.floor(this.currentSlide / 4) + 1;
+    },
     getSlide(index = this.currentSlide) {
       return this.sortedPresentation[index];
     },
