@@ -20,6 +20,8 @@ class CreateIndicatorsTable extends Migration
             $table->integer('update_type');
             $table->boolean('per_unit')->default(false);
             $table->timestamp('last_update')->nullable()->default(null);
+            $table->string('display_name')->nullable();
+            $table->string('display_type')->nullable();
             $table->string('class')->nullable(false);
             $table->unique('name');
             $table->timestamps();
