@@ -71,6 +71,7 @@
         :container="'slideBigPreview'"
         :class="hide"
       />
+
       <v-form class="slideSettings">
         <v-select
           v-for="n in [0, 1, 2, 3]"
@@ -78,6 +79,7 @@
           :items="availableIndicators"
           :placeholder="getIndicatorName(n)"
           :value="getIndicatorName(n)"
+          :disabled="getSlide().slide.flat().length < n"
           prepend-icon="show_chart"
           :key="n"
           @input="rearrangeSlide($event, n)"
@@ -239,27 +241,35 @@ export default {
       );
     },
     rearrangeSlide(id, index) {
-      const row = Math.floor(index / 2),
-        indicator = this.localIndicators.filter(i => {
-          return i.id == id;
-        })[0];
-      let slide = this.getSlide().slide;
-      index %= 2;
+      const indicator = this.localIndicators.filter(i => {
+        return i.id == id;
+      })[0];
+      let slide = this.getSlide().slide.flat();
+      index;
 
       if (indicator) {
-        if (!slide[row]) {
-          slide.push([]);
-        }
-        slide[row][index] = indicator;
+        slide[index] = indicator;
       } else {
-        slide[row].splice(index, 1);
-        if (slide[row] && slide[row].length == 0) {
-          slide.splice(row, 1);
-          if (slide.length == 0) {
-            slide = [[]];
+        slide.splice(index, 1);
+      }
+
+      var formattedSlide = [[]];
+      for (var i = 0; i < 2; ++i) {
+        if (slide[i]) {
+          formattedSlide[0].push(slide[i]);
+        }
+      }
+      if (slide[2]) {
+        formattedSlide.push([]);
+        for (var i = 2; i < 4; ++i) {
+          if (slide[i]) {
+            formattedSlide[1].push(slide[i]);
           }
         }
       }
+
+      this.getSlide().slide = formattedSlide;
+
       this.forceRender();
     },
     forceRender() {
