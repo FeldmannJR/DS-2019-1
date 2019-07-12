@@ -40,19 +40,15 @@ Route::middleware(\App\Http\Middleware\ForceJson::class)->group(function () {
 
         });
 
-        Route::prefix('/indicators/')->group(function () {
-            Route::get('/values', 'IndicatorsController@getLastValues')->middleware('role:' . UserRole::Screen);
-            Route::post('/update', 'IndicatorsController@update')->middleware('role:' . UserRole::Admin);
-            Route::get('/units/{all?}', 'IndicatorsController@getUnits');
-            Route::get('/', 'IndicatorsController@getIndicators');
-        });
+    });
+    Route::prefix('/indicators/')->group(function () {
+        Route::get('/values', 'IndicatorsController@getLastValues')->middleware('role:' . UserRole::Screen);
+        Route::post('/update', 'IndicatorsController@update')->middleware('role:' . UserRole::Admin);
+        Route::get('/units/{all?}', 'IndicatorsController@getUnits');
+        Route::get('/', 'IndicatorsController@getIndicators');
     });
 
 });
-
-
-
-
 
 
 Route::middleware(\App\Http\Middleware\RedirectIfAuthenticated::class)->group(function () {

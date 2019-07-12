@@ -12,10 +12,6 @@ window.Vue = require('vue');
 window.Vuetify = require('vuetify');
 
 Vue.use(Vuetify, {
-    theme: {
-        primary: "#344669",
-        secondary: "#3C8376"
-    }
 });
 /**
  * The following block of code may be used to automatically register your
@@ -43,7 +39,13 @@ Vue.component('LoginForm',require('./components/LoginForm.vue').default);
 
 const app = new Vue({
     el: "#app",
+    created() {
+        this.$vuetify.theme.primary= "#344669";
+        this.$vuetify.theme.secondary= "#3C8376";
+
+    }
 });
+
 
 // Atribui estilo de fonte padrao para o Chart.js
 Chart.defaults.global.defaultFontColor = "#636b6f";
