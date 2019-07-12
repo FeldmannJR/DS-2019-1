@@ -2,10 +2,17 @@
 
 use App\Enums\UpdateType;
 use App\Indicators\Calculators\MediaPermanenciaGeralCalculator;
+use App\Indicators\Calculators\NumeroAltasCalculator;
+use App\Indicators\Calculators\NumeroBloqueadosLimpezaCalculator;
+use App\Indicators\Calculators\NumeroInternacoesCalculator;
+use App\Indicators\Calculators\NumeroLeitosDesocupadosCalculator;
+use App\Indicators\Calculators\NumeroPacientesInternadosCalculator;
 use App\Indicators\Calculators\NumeroPartosNaturaisCalculator;
 use App\Indicators\Calculators\OcupacaoPorUnidadeCalculator;
 use App\Indicators\Calculators\RotatividadeLeitosCalculator;
 use App\Indicators\Calculators\TaxaDeSuspensaoDeCirurgiasCalculator;
+use App\Indicators\Calculators\TaxaMortalidadeGeralCalculator;
+use App\Indicators\Calculators\TaxaOcupacaoGeralCalculator;
 use App\Indicators\Custom\NumeroCirurgiasRealizadasCalculator;
 use App\Indicators\Custom\NumeroPartosCesareosCalculator;
 use App\Indicators\Indicator;
@@ -41,87 +48,21 @@ class IndicatorTableSeeder extends Seeder
         // Copia as unidades para a nossa tabela
         $this->populateUnits();
 
-        $this->addSimple('Número de pacientes internados', UpdateType::RealTime(),
-            "select count(*) 
-            from agh.v_ain_internacao int inner join agh.agh_unidades_funcionais unidade on unidade.seq = int.unidade_funcional 
-            where int.ind_paciente_internado='S' and unidade.seq in (4,3,9,7,11,8,15,19,20,14);"
-        );
-        $this->addSimple('Taxa de Ocupação Geral', UpdateType::RealTime(),
-            "SELECT cast(A.paciente_dia as float) / greatest(B.total_leitos,1) AS RESULT
-                    FROM
-                      (SELECT count(*) AS paciente_dia
-                       FROM agh.v_ain_internacao int
-                       INNER JOIN agh.agh_unidades_funcionais unidade ON unidade.seq = int.unidade_funcional
-                       INNER JOIN agh.ain_leitos leito ON leito.qrt_numero = int.qrt_numero
-                       AND leito.leito = int.leito
-                       WHERE int.ind_paciente_internado='S'
-                         AND unidade.seq IN (4,
-                                             3,
-                                             9,
-                                             7,
-                                             11,
-                                             8,
-                                             15,
-                                             19,
-                                             20,
-                                             14)) A,
-                    
-                      (SELECT count(*) AS total_leitos
-                       FROM agh.agh_unidades_funcionais unidade
-                       INNER JOIN agh.ain_leitos leito ON leito.unf_seq = unidade.seq
-                       AND unidade.seq IN (4,
-                                           3,
-                                           9,
-                                           7,
-                                           11,
-                                           8,
-                                           15,
-                                           19,
-                                           20,
-                                           14)
-                       AND leito.ind_situacao='A'
-                       AND lto_id NOT IN ('01-0121-A',
-                                          '01-0121-B')) B;");
 
-        $this->addSimple('Numero de leitos bloqueados para limpeza', UpdateType::RealTime(), "select count(*) from agh.v_ain_leitos_limpeza;");
-
-        $this->addSimple('Número de Internações', UpdateType::Daily(),
-            "select count(*) as qtd_nova_internacao
-                from agh.v_ain_internacao int inner join agh.ain_internacoes int_t on int_t.seq = int.nro_internacao
-                inner join agh.agh_unidades_funcionais unidade  on unidade.seq = int.unidade_funcional
-                where dthr_internacao >= '{LAST_24H}'   and unidade_funcional in (4,3,9,7,11,8,15,19,20,14) ;");
-
-        $this->addSimple('Número de altas', UpdateType::Daily(),
-            "select count(*) as qtd_alta_medica
-             from agh.v_ain_internacao int inner join agh.ain_internacoes int_t on int_t.seq = int.nro_internacao
-            inner join agh.agh_unidades_funcionais unidade  on unidade.seq = int.unidade_funcional
-            where dt_saida_paciente >= '{LAST_24H}' and unidade_funcional in (4,3,9,7,11,8,15,19,20,14) ;");
-
-        $this->addSimple("Taxa de Mortalidade Geral", UpdateType::RealTime(),
-            "select count(*)
-            from agh.v_ain_internacao int inner join agh.ain_internacoes int_t on int_t.seq = int.nro_internacao 
-            inner join agh.v_ain_internacao_paciente pac on int.nro_internacao = pac.seq 
-            inner join agh.agh_unidades_funcionais unidade on unidade.seq = int.unidade_funcional 
-            inner join agh.ain_leitos leito on leito.qrt_numero = int.qrt_numero and leito.leito = int.leito 
-            inner join agh.ain_tipos_alta_medica motivo on motivo.codigo = int_t.tam_codigo 
-            where motivo.codigo in ('C', 'D', 'O') and unidade.seq in (4,3,9,7,11,8,15,19,20,14)
-            and int_t.dthr_alta_medica>= '{LAST_24H}';");
-
-        $this->addSimple('Número de leitos desocupados', UpdateType::RealTime(),
-            "select (select count(*) from agh.ain_leitos leitos where ind_situacao='A' and lto_id not in ('01-0121-A', '01-0121-B')) - (select count(distinct trim(int_t.lto_lto_id)) from agh.ain_internacoes int_t inner join agh.v_ain_internacao int
-            on int_t.seq = int.nro_internacao where int.ind_paciente_internado='S' and lto_lto_id is not null) - (select sum(leitos_indisp) as total
-            from agh.v_ain_leitos_indisp) ;");
-
+        $this->addIndicator('Numero de leitos bloqueados para limpeza', UpdateType::RealTime(), NumeroBloqueadosLimpezaCalculator::class);
+        $this->addIndicator('Número de Internações', UpdateType::Daily(), NumeroInternacoesCalculator::class);
+        $this->addIndicator('Número de altas', UpdateType::Daily(), NumeroAltasCalculator::class);
+        $this->addIndicator("Taxa de Mortalidade Geral", UpdateType::RealTime(), TaxaMortalidadeGeralCalculator::class);
+        $this->addIndicator('Número de leitos desocupados', UpdateType::RealTime(), NumeroLeitosDesocupadosCalculator::class);
+        $this->addIndicator('Número de pacientes internados', UpdateType::RealTime(), NumeroPacientesInternadosCalculator::class);
         $this->addIndicator('Média de permanência geral', UpdateType::Monthly(), MediaPermanenciaGeralCalculator::class);
         $this->addIndicator('Ocupação por Unidade', UpdateType::RealTime(), OcupacaoPorUnidadeCalculator::class, true);
         $this->addIndicator('Rotatividade de Leitos', UpdateType::Monthly(), RotatividadeLeitosCalculator::class, true);
-
         $this->addIndicator('Número de Cirurgias Realizadas', UpdateType::Daily(), NumeroCirurgiasRealizadasCalculator::class);
         $this->addIndicator('Taxa de suspensão de cirurgias', UpdateType::Daily(), TaxaDeSuspensaoDeCirurgiasCalculator::class);
-
         $this->addIndicator('Número de partos naturais', UpdateType::Daily(), NumeroPartosNaturaisCalculator::class);
         $this->addIndicator('Número de partos cesáreos', UpdateType::Daily(), NumeroPartosCesareosCalculator::class);
-
+        $this->addIndicator('Taxa de Ocupação Geral', UpdateType::RealTime(), TaxaOcupacaoGeralCalculator::class);
         /*
 
         // Planilhas

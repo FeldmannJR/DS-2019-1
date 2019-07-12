@@ -19,6 +19,11 @@ abstract class IndicatorCalculator
         return true;
     }
 
+    public function convert($value)
+    {
+        return null;
+    }
+
     /**
      * Calcula o indicador de uma unidade especifica se a unidade for null
      * ele calcula o geral
@@ -27,4 +32,6 @@ abstract class IndicatorCalculator
      * @return double|double[] valor do indicador calculado ou map por unidade onde a key é o id da unidade e o valor é o numero calculado
      */
     abstract public function calculateIndicator(Indicator $indicator, Carbon $timeToCalculate = null);
+
+
 }

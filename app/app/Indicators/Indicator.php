@@ -122,9 +122,12 @@ class Indicator extends Model
     {
         $value = $this->getLastValue($unit);
         if ($value === null) {
-            return 'Sem entrada';
+            return 'Sem dados';
         } else {
-            return number_format($value, 2);
+            $format = $this->getCalculator()->convert($value);
+            if ($format === null)
+                return number_format($value, 2);
+            return $format;
         }
     }
 
@@ -194,7 +197,7 @@ class Indicator extends Model
         if ($this->isPerUnit()) {
             foreach (Unit::getDisplayUnits() as $unit) {
                 $array['data'][] = $this->getDisplayLastValue($unit);
-                $array['units'][] = $unit->name;
+                $array['units'][] = $unit->code;
 
             }
         } else {

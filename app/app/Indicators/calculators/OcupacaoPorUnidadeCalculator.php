@@ -12,7 +12,10 @@ use Carbon\Carbon;
 
 class OcupacaoPorUnidadeCalculator extends IndicatorSQLCalculator
 {
-    
+    public function convert($value)
+    {
+        return (number_format($value,2) * 100);
+    }
 
     /**
      * Calcula o indicador de uma unidade especifica se a unidade for null
