@@ -171,7 +171,7 @@ export default {
       },
       graphs: {
         bar: "Barras",
-        pie: "Pizza",
+        pie: "Setores",
         doughnut: "Rosca",
         none: "Nenhum"
       },

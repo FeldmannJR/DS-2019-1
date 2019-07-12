@@ -53,11 +53,11 @@ $he-green: #3C8376;
             }
 
             h2 {
-                font-size: $scale * 10vh;
+                font-size: $scale * 8vh;
             }
 
             h3 {
-                font-size: $scale * 4vh;
+                font-size: $scale * 3.5vh;
             }
         }
 
@@ -143,32 +143,40 @@ $he-green: #3C8376;
             justify-content: space-evenly;
 
             .chart {
-                width: 60%;
-            }
-
-            .legend {
-                width: 100%;
+                width: 70%;
+                height: 70%;
                 display: flex;
-                flex-wrap: wrap;
-                justify-content: space-evenly;
+                flex-direction: column;
+                justify-content: space-between;
 
-                .label {
+                .legend {
                     display: flex;
-                    align-items: center;
-                    padding: 0 1vh;
+                    flex-wrap: wrap;
+                    justify-content: space-evenly;
 
-                    [label] {
-                        height: auto;
-                        border-radius: 100%;
-                        margin-right: $scale * 1vh;
+                    .label {
+                        display: flex;
+                        align-items: center;
+                        padding: 0 ($scale * 1vh);
+
+                        [label] {
+                            width: $scale * 5vh;
+                            height: $scale * 5vh;
+                            border-radius: 100%;
+                            margin-right: $scale * 1vh;
+                        }
                     }
                 }
             }
 
+
             &[stretched="true"] {
                 flex-direction: row-reverse;
+                justify-content: center;
 
                 .chart {
+                    flex-direction: row-reverse;
+                    align-items: center;
                     width: 45%;
                 }
 
