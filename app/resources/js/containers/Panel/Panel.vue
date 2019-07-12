@@ -10,7 +10,7 @@
     <Slider
       v-if="presentation.length > 0"
       :key="index"
-      :indicators="presentation[index].slide"
+      :indicators="sortedPresentation[index].slide"
       :scale="scale || 1"
       :container="container || 'panelContainer'"
     />
@@ -23,7 +23,15 @@ import IndicatorFixed from "../../components/IndicatorFixed";
 import Slider from "../../components/Slider";
 
 export default {
-  props: ["fixed", "presentation", "scale", "container", "index", "stop"],
+  props: [
+    "fixed",
+    "presentation",
+    "indicators",
+    "scale",
+    "container",
+    "index",
+    "stop"
+  ],
   components: {
     IndicatorFixed,
     Slider
@@ -51,6 +59,20 @@ export default {
     this.index = this.index || 0;
 
     if (this.sortedPresentation.length > 0) {
+      this.sortedPresentation = this.sortedPresentation.map(p => {
+        return {
+          timer: p.timer,
+          order: p.order,
+          slide: p.slide.map(row => {
+            return row.map(i => {
+              return this.indicators.filter(ind => {
+                return ind.id == i;
+              })[0];
+            });
+          })
+        };
+      });
+
       setTimeout(
         this.changeSlide,
         this.sortedPresentation[this.index].timer * 1000

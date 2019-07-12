@@ -42,7 +42,7 @@ public function generatePDF()
     ];
 
     $data = ['title' => $indicators[0]['name']];
-    $pdf = \PDF::loadView('report.export', $data);
+    $pdf = \PDF::loadView('report.report', $data);
         return $pdf->download('relatório.pdf');
     }
 }
