@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Indicators\Indicator;
+use App\Presentation\Slide;
 use Illuminate\Http\Request;
 
 class SettingsController extends Controller
@@ -83,7 +85,7 @@ class SettingsController extends Controller
                     [
                         '1', '2'
                     ],
-                    [ '3', '4' ]
+                    ['3', '4']
                 ]
             ],
             [
@@ -96,7 +98,8 @@ class SettingsController extends Controller
                 ]
             ]
         ];
-
+        $presentation = Slide::getPresentation();
+        $indicators = Indicator::all()->toArray();
         return view('settings.index', ['presentation' => $presentation, 'fixed' => $fixed, 'indicators' => $indicators]);
     }
 }

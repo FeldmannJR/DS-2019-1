@@ -15,10 +15,13 @@ class CreateSlideIndicatorsTable extends Migration
     {
         Schema::create('slide_indicators', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->smallInteger('slot');
+            $table->smallInteger('x');
+            $table->smallInteger('y');
             $table->integer('indicator_id');
             $table->integer('slide_id');
             $table->timestamps();
+
+            $table->unique(['x', 'y', 'slide_id']);
 
             $table->foreign('indicator_id')
                 ->references('id')

@@ -3,9 +3,7 @@
 namespace App\Presentation;
 
 use App\Indicators\Indicator;
-use App\Presentation\PresentationService;
 use App\Presentation\SlideIndicator;
-use App\Presentation\templates\Template;
 use Illuminate\Database\Eloquent\Model;
 
 class Slide extends Model
@@ -19,55 +17,51 @@ class Slide extends Model
 
 
     /**
-     * @param $slot Id do slot modificado
+     * @param $y
      * @param array $indicators Id dos indicadores
      * @return bool Se foi feito com sucesso a modificao
      */
-    public function setSlot($slot, array $indicators)
+    public function setIndicators($y, array $indicators)
     {
-        $slots = count($this->getTemplate()->getSlots());
-        if ($slot >= $slots) {
-            return false;
-        }
-        if (count($indicators) > $slots) {
-            return false;
-        }
 
-        $this->indicators()->delete();
         $slide_indicators = [];
+        $x = 0;
         foreach ($indicators as $indicator) {
-            $slide_indicators[] = SlideIndicator::make(['slot' => $slot, 'indicator_id' => $indicator]);
+            if (!is_object($indicator)) {
+                return "Indicador não é objeto!";
+            }
+            if (!isset($indicator->id)) {
+                return "Id do indicador não presente!";
+            }
+            $slide_indicators[] = SlideIndicator::make(['x' => $x, 'y' => $y, 'indicator_id' => $indicator->id]);
+            $x++;
         }
         $this->indicators()->saveMany($slide_indicators);
         return true;
     }
 
-    public function getTemplate(): Template
+    public static function getPresentation()
     {
-        $service = resolve(PresentationService::class);
-        return $service->getTemplates()[$this->template];
+        return Slide::orderBy('order', 'asc')->get()->toArray();
     }
 
     public function toArray()
     {
         $slots = [];
-        $slide_indicators = $this->indicators;
-        foreach ($slide_indicators as $ind) {
-            $slot = $ind->slot;
+        $indicators = $this->indicators()->orderBy('x', 'asc')->get()->all();
 
-            if (!array_key_exists($slot, $slots)) {
-                $slots[$slot] = [];
+        foreach ($indicators as $indicator) {
+            $y = $indicator->y;
+            if (!array_key_exists($y, $slots)) {
+                $slots[$y] = [];
             }
-            $slots[$slot][] = $ind->indicator_id;
-
+            $slots[$y][] = $indicator->id;
         }
 
         return [
-            'id' => $this->id,
             'order' => $this->order,
-            'template' => $this->template,
-            'screen_time' => $this->screen_time,
-            'slots' => $slots,
+            'timer' => $this->time,
+            'slide' => $slots,
         ];
     }
 }

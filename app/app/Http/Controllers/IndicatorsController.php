@@ -97,6 +97,25 @@ class IndicatorsController extends Controller
     }
 
 
+    public function update(Request $request)
+    {
+        $data = $request->validate([
+            'id' => 'required|exists:indicators',
+            'display_name' => 'required_without:display_type|string',
+            'display_type' => 'required_without:display_name|string'
+        ]);
+        $indicator = Indicator::find($data['id']);
+        if (array_key_exists('display_name', $data)) {
+            $indicator->display_name = $data['display_name'];
+        }
+        if (array_key_exists('display_type', $data)) {
+            $indicator->display_type = $data['display_type'];
+        }
+        $indicator->save();
+        return response()->json(['success' => true, 'indicator' => $indicator->toArray()]);
+
+    }
+
     /**
      * @param bool $all Se vai retornar todas as unidades ou somente as que são mostradas
      * @return array

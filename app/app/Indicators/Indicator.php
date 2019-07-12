@@ -73,7 +73,7 @@ class Indicator extends Model
             return null;
         }
         // Verifica se esse indicador possui valores por unidade
-        if ($this->per_unit) {
+        if ($this->isPerUnit()) {
             $allUnits = Unit::getAllUnits();
             // Percorre todas as unidades que foram calculadas
             foreach ($value as $unit_id => $unit_value) {
@@ -165,6 +165,42 @@ class Indicator extends Model
     public function isPerUnit(): bool
     {
         return $this->per_unit;
+    }
+
+    public function toArray()
+    {
+        $display_type = $this->display_type;
+
+        $array = [
+            'id' => $this->id,
+            'name' => $this->name,
+            'text' => $this->display_name ?: $this->name,
+        ];
+        if ($display_type !== null) {
+            if ($display_type === 'doughnut' || $display_type == 'bar' || $display_type === 'pie') {
+                $array['type'] = 'statistic';
+                $array['graph'] = $display_type;
+            } else {
+                $array['type'] = $display_type;
+            }
+        } else {
+            if ($this->isPerUnit()) {
+                $array['type'] = 'multiple';
+                $array['graph'] = 'none';
+            } else {
+                $array['type'] = 'numeric';
+            }
+        }
+        if ($this->isPerUnit()) {
+            foreach (Unit::getDisplayUnits() as $unit) {
+                $array['data'][] = $this->getDisplayLastValue($unit);
+                $array['units'][] = $unit->name;
+
+            }
+        } else {
+            $array['value'] = $this->getDisplayLastValue();
+        }
+        return $array;
     }
 
 }

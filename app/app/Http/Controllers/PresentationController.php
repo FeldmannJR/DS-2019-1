@@ -4,25 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Presentation\PresentationService;
 use App\Presentation\Slide;
+use App\Presentation\SlideIndicator;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class PresentationController extends Controller
 {
 
-
-
-    /** @var PresentationService */
-    private $presentation;
-
-    /**
-     * PresentationController constructor.
-     * @param PresentationService $service
-     */
-    public function __construct(PresentationService $service)
-    {
-        $this->presentation = $service;
-    }
 
     public function getTemplates()
     {
@@ -36,16 +24,57 @@ class PresentationController extends Controller
 
     public function createSlide(Request $request)
     {
+        return Slide::create();
+    }
+
+    public function savePresentation(Request $request)
+    {
         $data = $request->validate([
-                'template' => [
-                    'required',
-                    Rule::in($this->presentation->getKeys())
-                ]
-            ]
-        );
-        $template = $this->presentation->getTemplates()[$data['template']];
-        return $this->presentation->createSlide($template);
-        //template
+            'presentation' => 'required|json'
+        ]);
+        $pre = json_decode($data['presentation']);
+
+        // :(
+        Slide::truncate();
+        SlideIndicator::truncate();
+
+        $error = false;
+        foreach ($pre as $slide) {
+            if (!is_object($slide)) {
+                $error = "Slide não é um objeto";
+                break;
+            }
+            if (!isset($slide->timer, $slide->order)) {
+                $error = "Slide não tem as propriedades necessárias!";
+                break;
+            }
+            $time = $slide->timer;
+            $order = $slide->order;
+            $s = Slide::create(['time' => $time, 'order' => $order]);
+            $indicators = $slide->slide;
+            if (is_array($indicators)) {
+                $y = 0;
+                foreach ($indicators as $row) {
+                    $success = $s->setIndicators($y, $row);
+                    if ($success !== true) {
+                        $error = $success;
+                        break 2;
+                    }
+                    $y++;
+                }
+            }
+        }
+        if ($error !== false) {
+            throw  \Illuminate\Validation\ValidationException::withMessages([
+                'presentation' => [$error]
+            ]);
+        }
+        return response()->json(['success' => 'true', 'presentation' => Slide::getPresentation()]);
+    }
+
+    public function getPresentation()
+    {
+        return Slide::getPresentation();
     }
 
     public function deleteSlide(Request $request)
@@ -61,28 +90,20 @@ class PresentationController extends Controller
     {
         $data = $request->validate([
             'id' => 'required|exists:slides,id',
-            'slot' => 'required|integer',
             'indicators' => 'required|array',
             'indicators.*' => 'integer|exists:indicators,id'
         ]);
         $indicators = $data['indicators'];
 
         $slide = Slide::find($data['id']);
-        $slots = $slide->getTemplate()->getSlots();
 
-        if (!array_key_exists($data['slot'], $slots)) {
-            throw  \Illuminate\Validation\ValidationException::withMessages([
-                'slot' => ['Slot inválido para o slide recebido!']
-            ]);
-        }
-        $slot = $slots[$data['slot']];
         $received_size = count($indicators);
-        if ($slot->getSize() < $received_size) {
+        if ($received_size >= 4) {
             throw  \Illuminate\Validation\ValidationException::withMessages([
                 'indicators' => ['Recebido tamanho maior do que esperado!']
             ]);
         }
-        $success = $slide->setSlot($data['slot'], $indicators);
+        $success = $slide->setIndicators($data['slot'], $indicators);
         return response()->json(['success' => $success], $success ? 200 : 403);
 
     }
