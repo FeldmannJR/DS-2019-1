@@ -8,6 +8,7 @@
       />
     </div>
     <Slider
+      v-if="presentation.length > 0"
       :key="index"
       :indicators="presentation[index].slide"
       :scale="scale || 1"
@@ -49,10 +50,12 @@ export default {
   created() {
     this.index = this.index || 0;
 
-    setTimeout(
-      this.changeSlide,
-      this.sortedPresentation[this.index].timer * 1000
-    );
+    if (this.sortedPresentation.length > 0) {
+      setTimeout(
+        this.changeSlide,
+        this.sortedPresentation[this.index].timer * 1000
+      );
+    }
   }
 };
 </script>
