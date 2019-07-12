@@ -170,7 +170,28 @@ class Indicator extends Model
         return $this->per_unit;
     }
 
-    public function toArray()
+    public static function getFixed()
+    {
+        $fixed = Indicator::all()->whereIn('name', ['Taxa de Ocupação Geral', 'Número de leitos desocupados', 'Número de pacientes internados', 'Número de altas'])->all();
+        $re = [];
+        foreach ($fixed as $f) {
+            $re[] = $f->toArray();
+        }
+        return $re;
+    }
+
+    public static function getToDisplay()
+    {
+        $fixed = Indicator::all()->all();
+        $re = [];
+        foreach ($fixed as $f) {
+            $re[$f->id] = $f->toArray();
+        }
+        return $re;
+    }
+
+    public
+    function toArray()
     {
         $display_type = $this->display_type;
 

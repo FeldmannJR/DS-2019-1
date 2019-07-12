@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Enums\Symbols;
 
+use App\Indicators\Indicator;
+use App\Presentation\Slide;
 use Illuminate\Http\Request;
 
 class PanelController extends Controller
@@ -66,13 +68,13 @@ class PanelController extends Controller
                         ],
                         [
 
-                                "id" => '4',
-                                "type" => "statistic",
-                                "name" => "Texto Indicador4",
-                                "text" => "Texto Indicador4",
-                                "graph" => "pie",
-                                "data" => [30, 25, 10],
-                                "units" => ["Red", "Yellow", "Blue"]
+                            "id" => '4',
+                            "type" => "statistic",
+                            "name" => "Texto Indicador4",
+                            "text" => "Texto Indicador4",
+                            "graph" => "pie",
+                            "data" => [30, 25, 10],
+                            "units" => ["Red", "Yellow", "Blue"]
                         ]
                     ],
                 ]
@@ -90,7 +92,7 @@ class PanelController extends Controller
                             "graph" => "none",
                             "data" => [1, 2, 3, 4, 5, 6],
                             "units" => ["Label1", "Label2", "Label3", "Label4", "Label5", "Label6"]
-                       ],
+                        ],
                     ],
                 ]
             ],
@@ -113,7 +115,8 @@ class PanelController extends Controller
                 ]
             ]
         ];
-
-        return view('panel.index', ['presentation' => $presentation, 'fixed' => $fixed]);
+        $presentation = Slide::getPresentation();
+        $indicators = Indicator::all()->toArray();
+        return view('panel.index', ['presentation' => $presentation, 'fixed' => $fixed, 'indicators' => $indicators]);
     }
 }
