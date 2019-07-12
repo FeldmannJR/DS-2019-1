@@ -6,11 +6,8 @@ use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\SpreadsheetController;
 use App\IndicatorHistory;
-use App\Indicators\Custom\MediaPermanenciaGeralCalculator;
+
 use App\Indicators\Indicator;
-use App\Indicators\IndicatorOld;
-use App\Indicators\CalculateIndicatorSimpleSQL;
-use App\Indicators\IndicatorOldSpreadsheet;
 use Illuminate\Http\Request;
 use App\Enums\UpdateType;
 use App\Unit;
@@ -33,7 +30,6 @@ class IndicatorsController extends Controller
     public function __construct(IndicatorsService $service)
     {
         $this->indicatorsService = $service;
-        $this->middleware('role:' . UserRole::Screen);
     }
 
     /**

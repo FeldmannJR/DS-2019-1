@@ -40,44 +40,55 @@ Route::middleware(\App\Http\Middleware\ForceJson::class)->group(function () {
 
         });
 
+        Route::prefix('/indicators/')->group(function () {
+            Route::get('/values', 'IndicatorsController@getLastValues')->middleware('role:' . UserRole::Screen);
+            Route::post('/update', 'IndicatorsController@update')->middleware('role:' . UserRole::Admin);
+            Route::get('/units/{all?}', 'IndicatorsController@getUnits');
+            Route::get('/', 'IndicatorsController@getIndicators');
+        });
     });
 
-    Route::prefix('/indicators/')->group(function () {
-        Route::get('/values', 'IndicatorsController@getLastValues')->middleware('role:' . UserRole::Screen);
-        Route::post('/update', 'IndicatorsController@update')->middleware('role:' . UserRole::Admin);
-        Route::get('/units/{all?}', 'IndicatorsController@getUnits');
-        Route::get('/', 'IndicatorsController@getIndicators');
-    });
-});
-
-Route::prefix('/planilhas')->middleware('role:' . UserRole::Admin)->group(function () {
-    Route::get('/', 'SpreadsheetController@index');
-    Route::get('/gcallback', 'SpreadsheetController@googleCallback');
-    Route::get('/login', 'SpreadsheetController@googleLogin');
-    Route::get('/logout', 'SpreadsheetController@googleLogout');
-    Route::post('/pickFile', 'SpreadsheetController@pickFile');
-    Route::get('/downloadFromDrive', 'SpreadsheetController@downloadFromDriveWithRedirects');
-    Route::get('/download', 'SpreadsheetController@downloadLast');
 });
 
 
-Route::get('/', "IndicatorsController@index");
-Route::get('/calculateAll', "IndicatorsController@calculateAndSaveAll");
-Route::get("/addunits", "Indicators\IndicatorsController@addUnits");
-Route::get("/teste", "Indicators\IndicatorsController@calculateIndicador");
-Route::get("/units", "Indicators\IndicatorsController@showUnits");
 
 
-Auth::routes(['register' => false, 'reset' => false, 'verify' => false]);
 
-Route::get('/home', 'HomeController@index')->name('home');
+
+Route::middleware(\App\Http\Middleware\RedirectIfAuthenticated::class)->group(function () {
+    Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
+    Route::post('login', 'Auth\LoginController@login');
+
+
+});
+Route::get('logout', 'Auth\LoginController@logout')
+    ->name('logout')
+    ->middleware(\App\Http\Middleware\Authenticate::class);
+
 
 // Front
-Route::get('panel', ['as' => 'panel.index', 'uses' => 'PanelController@index']);
-Route::get('slider', ['as' => 'slider.index', 'uses' => 'SliderController@index']);
 
+Route::middleware('role:' . UserRole::Screen)->group(function () {
+    Route::get('/', "IndicatorsController@index");
+    Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('panel', ['as' => 'panel.index', 'uses' => 'PanelController@index']);
+    Route::get('slider', ['as' => 'slider.index', 'uses' => 'SliderController@index']);
+});
 Route::middleware('role:' . UserRole::Admin)->group(function () {
     Route::get('settings', ['as' => 'settings.index', 'uses' => 'SettingsController@index']);
+    Route::prefix('/planilhas')->group(function () {
+        Route::get('/', 'SpreadsheetController@index');
+        Route::get('/gcallback', 'SpreadsheetController@googleCallback');
+        Route::get('/login', 'SpreadsheetController@googleLogin');
+        Route::get('/logout', 'SpreadsheetController@googleLogout');
+        Route::post('/pickFile', 'SpreadsheetController@pickFile');
+        Route::get('/downloadFromDrive', 'SpreadsheetController@downloadFromDriveWithRedirects');
+        Route::get('/download', 'SpreadsheetController@downloadLast');
+    });
 });
-Route::get('report', ['as' => 'report.index', 'uses' => 'ReportController@index']);
-Route::get('maintenance', ['as' => 'maintenance.index', 'uses' => 'MaintenanceController@index']);
+Route::middleware('role:' . UserRole::Statistics)->group(function () {
+    Route::get('report', ['as' => 'report.index', 'uses' => 'ReportController@index']);
+});
+Route::middleware('role:' . UserRole::Root)->group(function () {
+    Route::get('maintenance', ['as' => 'maintenance.index', 'uses' => 'MaintenanceController@index']);
+});
