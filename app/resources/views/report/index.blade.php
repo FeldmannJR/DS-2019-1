@@ -1,5 +1,5 @@
 @extends('layouts/app')
 
 @section('content')
-  <Report :indicators="{{json_encode($indicators)}}">
+  <Report :indicators='@json($indicators)'></Report>
 @endsection
