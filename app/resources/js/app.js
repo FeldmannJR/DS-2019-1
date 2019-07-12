@@ -9,7 +9,12 @@ require("./bootstrap");
 window.Vue = require('vue');
 window.Vuetify = require('vuetify');
 
-Vue.use(Vuetify);
+Vue.use(Vuetify, {
+    theme: {
+        primary: "#344669",
+        secondary: "#3C8376"
+    }
+});
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -35,8 +40,6 @@ Vue.component('he-navbar', require('./components/HeNavbar.vue').default);
 
 const app = new Vue({
     el: "#app",
-    primary: "#344669",
-    secondary: "#3C8376"
 });
 
 // Atribui estilo de fonte padrao para o Chart.js

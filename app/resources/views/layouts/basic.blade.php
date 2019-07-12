@@ -22,10 +22,10 @@
     <!-- Styles -->
     <style>
         html, body {
+            padding-top: 3vh;
             background-color: white;
             color: #636b6f;
             font-family: 'Nunito', sans-serif;
-            font-weight: 200;
             margin: 0;
         }
 
