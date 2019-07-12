@@ -12,18 +12,6 @@ class PresentationController extends Controller
 {
 
 
-    /** @var PresentationService */
-    private $presentation;
-
-    /**
-     * PresentationController constructor.
-     * @param PresentationService $service
-     */
-    public function __construct(PresentationService $service)
-    {
-        $this->presentation = $service;
-    }
-
     public function getTemplates()
     {
         return $this->presentation->getTemplates();
@@ -78,7 +66,7 @@ class PresentationController extends Controller
         }
         if ($error !== false) {
             throw  \Illuminate\Validation\ValidationException::withMessages([
-                'error' => [$error]
+                'presentation' => [$error]
             ]);
         }
         return response()->json(['success' => 'true', 'presentation' => Slide::getPresentation()]);

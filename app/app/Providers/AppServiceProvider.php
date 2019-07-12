@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use App\Indicators\IndicatorsService;
 use App\Indicators\Spreadsheets\SpreadsheetDriveService;
-use App\Presentation\PresentationService;
 use App\Rules\NonRoot;
 
 use Illuminate\Support\ServiceProvider;
@@ -23,9 +22,6 @@ class AppServiceProvider extends ServiceProvider
         });
         $this->app->singleton(IndicatorsService::class, function () {
             return new IndicatorsService();
-        });
-        $this->app->singleton(PresentationService::class, function () {
-            return new PresentationService();
         });
 
     }

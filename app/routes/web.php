@@ -27,13 +27,14 @@ Route::middleware(\App\Http\Middleware\ForceJson::class)->group(function () {
 
 
     Route::prefix('/presentation/')->middleware('role:' . UserRole::Screen)->group(function () {
-        Route::get('/templates', 'PresentationController@getTemplates');
+        Route::post('/save', 'PresentationController@savePresentation');
+
         Route::prefix('slide')->group(function () {
             Route::get('/', 'PresentationController@getSlides');
             Route::middleware('role:' . UserRole::Statistics)->group(function () {
                 Route::get('/create', 'PresentationController@createSlide');
                 Route::get('/indicators', 'PresentationController@setIndicators');
-                Route::get('/delete', 'PresentationController@deleteSlide');
+                Route::delete('/', 'PresentationController@deleteSlide');
                 Route::get('/order', 'PresentationController@setOrder');
             });
 
@@ -73,6 +74,9 @@ Route::get('/home', 'HomeController@index')->name('home');
 // Front
 Route::get('panel', ['as' => 'panel.index', 'uses' => 'PanelController@index']);
 Route::get('slider', ['as' => 'slider.index', 'uses' => 'SliderController@index']);
-Route::get('settings', ['as' => 'settings.index', 'uses' => 'SettingsController@index']);
+
+Route::middleware('role:' . UserRole::Admin)->group(function () {
+    Route::get('settings', ['as' => 'settings.index', 'uses' => 'SettingsController@index']);
+});
 Route::get('report', ['as' => 'report.index', 'uses' => 'ReportController@index']);
 Route::get('maintenance', ['as' => 'maintenance.index', 'uses' => 'MaintenanceController@index']);
