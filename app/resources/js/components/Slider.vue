@@ -27,9 +27,9 @@ export default {
     setSizes() {
       this.setSize("." + this.container + " h1", 40);
       this.setSize("." + this.container + " h2", 10);
-      this.setSize("." + this.container + " h3", 4);
-      this.setSize("." + this.container + " [label]", 5, "vh", "width");
-      this.setSize("." + this.container + " [label]", 5, "vh", "height");
+      this.setSize("." + this.container + " h3", 3);
+      this.setSize("." + this.container + " [label]", 3, "vh", "width");
+      this.setSize("." + this.container + " [label]", 3, "vh", "height");
     },
     // Altera um atributo CSS, utilizando metade do valor passado se multiple for verdadeiro
     setSize(selector, size, metric = "vh", attribute = "fontSize", vm = this) {

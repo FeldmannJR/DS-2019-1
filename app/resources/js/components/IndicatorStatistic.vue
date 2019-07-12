@@ -42,11 +42,13 @@ export default {
       plugins: {
         // Plugin datalabels utilizado para exibir os valores em cima dos graficos
         datalabels: {
+          anchor: "end",
+          align: "start",
           color: "white",
           textShadowColor: "black",
           textShadowBlur: 4 * scale,
           font: {
-            size: (window.innerWidth / 30) * scale
+            size: (window.innerWidth / 45) * scale
           }
         }
       },
@@ -77,7 +79,18 @@ export default {
       id: [this.container, this.indicator.id].join("_"),
       options: options,
       // Esquema padrao de cores para diferenciar os dados
-      colors: ["#344669", "#3C8376", "#3ec940", "#dde02c", "#dd9c2c", "#af3838"]
+      colors: [
+        "#344669",
+        "#3C8376",
+        "#3ec940",
+        "#dde02c",
+        "#dd9c2c",
+        "#af3838",
+        "#ff0000",
+        "#89531e",
+        "#92d12e",
+        "#36d8d3"
+      ]
     };
   },
   computed: {

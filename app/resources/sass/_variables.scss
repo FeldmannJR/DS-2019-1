@@ -83,9 +83,9 @@ $he-green: #3C8376;
         .indicatorMultiple {
             justify-content: center;
             padding: 0 5%;
-            $text: $scale * 15vh;
-            $unitValue: $scale * 15vh;
-            $unitName: $scale * 6vh;
+            $text: $scale * 10vh;
+            $unitValue: $scale * 10vh;
+            $unitName: $scale * 4vh;
             $padding-h: $scale * 6vh;
             $margin-t: $scale * 5vh;
 
@@ -101,6 +101,7 @@ $he-green: #3C8376;
                 align-items: center;
 
                 .unit {
+                    width: 12.5%;
                     text-align: center;
                     margin-top: $margin-t;
                     padding: 0 $padding-h;
@@ -148,11 +149,13 @@ $he-green: #3C8376;
             .legend {
                 width: 100%;
                 display: flex;
+                flex-wrap: wrap;
                 justify-content: space-evenly;
 
                 .label {
                     display: flex;
                     align-items: center;
+                    padding: 0 1vh;
 
                     [label] {
                         height: auto;
