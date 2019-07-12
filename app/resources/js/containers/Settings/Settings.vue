@@ -106,7 +106,7 @@
                         prepend-icon="swap_vert"
                         @input="formatOrder"
                 ></v-select>
-                <v-btn class="btnSave" :disabled="!updatedPresentation || saving" :loading="saving"
+                <v-btn class="btnSave" :disabled="!updatedPresentation || saving" :loading="savingPresentation"
                        @click="savePresentation">
                     <v-icon>save</v-icon>
                     Salvar
@@ -134,10 +134,10 @@
                         ></v-select>
                     </v-form>
                 </div>
-                <div class="save" :disabled="!updatedIndicator(localIndicators.indexOf(indicator))">
+                <div class="save" :disabled="!updatedIndicator(localIndicators.indexOf(indicator)) || savingIndicator">
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
-                            <v-icon
+                            <v-icon color="primary"
                                     :disabled="!updatedIndicator(localIndicators.indexOf(indicator))"
                                     v-on="on"
                                     @click="saveIndicator(localIndicators.indexOf(indicator))"
@@ -171,7 +171,8 @@
             });
 
             return {
-                saving: false,
+                savingPresentation: false,
+                savingIndicator: false,
                 currentSlide: 0,
                 slideListPagination: {
                     page: 1,
@@ -245,17 +246,17 @@
             },
             savePresentation() {
                 let jsonString = JSON.stringify(this.sortedPresentation);
-                this.saving = true;
-                axios.post('/presentation/save', {presentation: jsonString}).then(this.successSave).catch(this.errorSave);
+                this.savingPresentation = true;
+                axios.post('/presentation/save', {presentation: jsonString}).then(this.successSavePresentation).catch(this.errorSavePresentation);
             },
-            successSave(response) {
+            successSavePresentation(response) {
                 let presentation = response.data.presentation;
                 console.log(presentation);
                 // azar
                 this.originalPresentation = JSON.parse(JSON.stringify(presentation));
-                this.saving = false;
+                this.savingPresentation = false;
             },
-            errorSave(error) {
+            errorSavePresentation(error) {
                 if (error.response) {
                     let data = error.response.data;
                     if (typeof data.errors !== 'undefined') {
@@ -264,11 +265,11 @@
                             // Mostrar isso em algum lugar
                             //field = qual o campo que n validou nesse caso só tem presentation
                             //errors[field] = retorna uma array de strings com os erros
-                            console.log("ERROR: "+field +" - "+ errors[field]);
+                            console.log("ERROR: " + field + " - " + errors[field]);
                         }
                     }
                 }
-                this.saving = false;
+                this.savingPresentation = false;
             },
             rearrangeSlide(id, index) {
                 const indicator = this.localIndicators.filter(i => {
@@ -373,9 +374,41 @@
                 );
             },
             saveIndicator(index) {
-                this.originalIndicators[index] = JSON.parse(
-                    JSON.stringify(this.localIndicators[index])
-                );
+                this.savingIndicator = true;
+                let indicator = this.localIndicators[index];
+                let type = (typeof indicator.graph === 'undefined' || indicator.graph === "none") ? indicator.type : indicator.graph;
+                axios.post('/indicators/update', {
+                    id: indicator.id,
+                    display_name: indicator.text,
+                    display_type: type
+                }).then(this.successSaveIndicator(index)).catch(this.errorSaveIndicator(index));
+            },
+            successSaveIndicator(index) {
+                // Ja tá setando em cima igual
+                return (response) => {
+                    this.savingIndicator = false;
+                    this.originalIndicators[index] = JSON.parse(
+                        JSON.stringify(this.localIndicators[index])
+                    );
+                };
+            },
+            errorSaveIndicator(index) {
+
+                return (error) => {
+                    if (error.response) {
+                        let data = error.response.data;
+                        if (typeof data.errors !== 'undefined') {
+                            let errors = data.errors;
+                            for (let field in errors) {
+                                // Mostrar isso em algum lugar
+                                //field = qual o campo que n validou
+                                //errors[field] = retorna uma array de strings com os erros
+                                console.log("ERROR: " + field + " - " + errors[field]);
+                            }
+                        }
+                    }
+                    this.savingIndicator = false;
+                }
             }
         },
         created() {

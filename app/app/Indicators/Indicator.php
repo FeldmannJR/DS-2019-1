@@ -177,7 +177,7 @@ class Indicator extends Model
             'text' => $this->display_name ?: $this->name,
         ];
         if ($display_type !== null) {
-            if ($display_type === 'donut' || $display_type == 'bar' || $display_type === 'pie') {
+            if ($display_type === 'doughnut' || $display_type == 'bar' || $display_type === 'pie') {
                 $array['type'] = 'statistic';
                 $array['graph'] = $display_type;
             } else {
