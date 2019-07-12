@@ -23,7 +23,6 @@
     <!-- Styles -->
     <style>
         html, body {
-            padding-top: 3vh;
             background-color: white;
             color: #636b6f;
             font-family: 'Nunito', sans-serif;
@@ -31,6 +30,18 @@
         }
 
         .v-select__slot {
+            cursor: pointer;
+        }
+
+        .v-btn__content {
+            font-weight: 1000;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        a {
+            color: unset !important;
+            outline: none;
+            text-decoration: none;
             cursor: pointer;
         }
 

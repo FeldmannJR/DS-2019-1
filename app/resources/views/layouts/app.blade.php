@@ -7,6 +7,11 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
+    <style>
+        body {
+            padding-top: 3vh;
+        }
+        </style>
 @endsection
 @section('body')
 
