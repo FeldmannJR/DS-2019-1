@@ -8,6 +8,7 @@
       />
     </div>
     <Slider
+      v-if="presentation.length > 0"
       :key="index"
       :indicators="presentation[index].slide"
       :scale="scale || 1"

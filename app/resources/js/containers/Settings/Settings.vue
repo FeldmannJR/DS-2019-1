@@ -349,19 +349,23 @@ export default {
     }
   },
   created() {
-    this.sortedPresentation = this.sortedPresentation.map(p => {
-      return {
-        timer: p.timer,
-        order: p.order,
-        slide: p.slide.map(row => {
-          return row.map(i => {
-            return this.localIndicators.filter(ind => {
-              return ind.id == i;
-            })[0];
-          });
-        })
-      };
-    });
+    if (this.sortedPresentation.length > 0) {
+      this.sortedPresentation = this.sortedPresentation.map(p => {
+        return {
+          timer: p.timer,
+          order: p.order,
+          slide: p.slide.map(row => {
+            return row.map(i => {
+              return this.localIndicators.filter(ind => {
+                return ind.id == i;
+              })[0];
+            });
+          })
+        };
+      });
+    } else {
+      this.addSlide();
+    }
 
     this.originalPresentation = this.sortedPresentation.map(p => ({ ...p }));
   }
