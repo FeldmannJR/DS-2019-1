@@ -2,7 +2,7 @@
   <div :class="container" class="slider">
     <!-- Painel deve receber de 1-4 indicadores divididos em 2 arrays -->
     <div v-for="row in indicators" class="row" :key="indicators.indexOf(row)">
-      <div v-for="indicator in row" class="frame" :key="row.indexOf(indicator)">
+      <div v-for="indicator in row" class="frame" :key="indicator.id">
         <IndicatorPanel
           :indicator="indicator"
           :multiple="multiple"
@@ -26,10 +26,10 @@ export default {
     // Ajusta tamanhos de headers, icones, legendas e posicionamento de indicadores numericos
     setSizes() {
       this.setSize("." + this.container + " h1", 40);
-      this.setSize("." + this.container + " h2", 10);
-      this.setSize("." + this.container + " h3", 3);
-      this.setSize("." + this.container + " [label]", 3, "vh", "width");
-      this.setSize("." + this.container + " [label]", 3, "vh", "height");
+      this.setSize("." + this.container + " h2", 8);
+      this.setSize("." + this.container + " h3", 2.5);
+      this.setSize("." + this.container + " [label]", 2, "vh", "width");
+      this.setSize("." + this.container + " [label]", 2, "vh", "height");
     },
     // Altera um atributo CSS, utilizando metade do valor passado se multiple for verdadeiro
     setSize(selector, size, metric = "vh", attribute = "fontSize", vm = this) {

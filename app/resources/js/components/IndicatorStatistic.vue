@@ -10,14 +10,14 @@
         :datasets="datasets"
         :options="options"
       />
-    </div>
-    <!-- Legenda -->
-    <div class="legend">
-      <div class="label" v-for="label in indicator.units" :key="label">
-        <!-- Circulo com cor respectiva ao valor no grafico -->
-        <div label :style="{ backgroundColor: colors[indicator.units.indexOf(label)] }" />
-        <!-- Rotulo -->
-        <h3>{{label}}</h3>
+      <!-- Legenda -->
+      <div class="legend">
+        <div class="label" v-for="label in indicator.units" :key="label">
+          <!-- Circulo com cor respectiva ao valor no grafico -->
+          <div label :style="{ backgroundColor: colors[indicator.units.indexOf(label)] }" />
+          <!-- Rotulo -->
+          <h3>{{label}}</h3>
+        </div>
       </div>
     </div>
   </div>
@@ -31,13 +31,17 @@ export default {
   },
   props: ["indicator", "stretched", "scale", "container"],
   data() {
-    const scale = this.scale || 1;
+    const scale = this.scale || 1,
+      fontSize = this.container == "panelContainer" ? 1.2 : 3;
 
     // Configuracoes opcionais do chart
     var options = {
       // Oculta legenda nativa do chart
       legend: {
         display: false
+      },
+      tooltips: {
+        enabled: false
       },
       plugins: {
         // Plugin datalabels utilizado para exibir os valores em cima dos graficos
@@ -48,7 +52,7 @@ export default {
           textShadowColor: "black",
           textShadowBlur: 4 * scale,
           font: {
-            size: (window.innerWidth / 45) * scale
+            size: ((window.innerWidth * fontSize) / 100) * scale
           }
         }
       },
@@ -112,14 +116,6 @@ export default {
           }
         ];
       }
-    }
-  },
-  mounted() {
-    if (this.container == "indicator") {
-      document.querySelectorAll("#" + this.id + " [label]").forEach(label => {
-        label.style["width"] = 5 * this.scale + "vh";
-        label.style["height"] = 5 * this.scale + "vh";
-      });
     }
   }
 };
