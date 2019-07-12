@@ -104,7 +104,7 @@
         ></v-select>
         <v-btn
           class="btnSave"
-          :disabled="!updatedPresentation || saving"
+          :disabled="!updatedPresentation || savingPresentation"
           :loading="savingPresentation"
           @click="savePresentation"
         >
@@ -256,9 +256,9 @@ export default {
     },
     successSavePresentation(response) {
       let presentation = response.data.presentation;
-      console.log(presentation);
-      // azar
-      this.originalPresentation = JSON.parse(JSON.stringify(presentation));
+      this.originalPresentation = JSON.parse(
+        JSON.stringify(this.sortedPresentation)
+      );
       this.savingPresentation = false;
     },
     errorSavePresentation(error) {
