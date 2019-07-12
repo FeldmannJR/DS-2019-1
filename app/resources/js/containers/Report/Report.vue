@@ -13,7 +13,9 @@
       </div>
     </div>
 
-    <v-btn id="generateReport" class="heButton">Gerar Relatório</v-btn>
+    <a href="/report/export">
+      <v-btn id="generateReport" class="heButton">Gerar Relatório</v-btn>
+    </a>
   </div>
 </template>
 
@@ -26,8 +28,8 @@ export default {
     return {
       startDate: new Date().toISOString().substr(0, 10),
       endDate: new Date().toISOString().substr(0, 10),
-      indicators2: this.indicators,
+      indicators2: this.indicators
     };
-  },
+  }
 };
 </script>

@@ -38,6 +38,13 @@
             font-family: 'Nunito', sans-serif;
         }
 
+        a {
+            color: unset !important;
+            outline: none;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
         .heButton {
             background-color: #636b6f !important;
             color: white !important;

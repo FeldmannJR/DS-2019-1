@@ -84,6 +84,7 @@ Route::middleware('role:' . UserRole::Admin)->group(function () {
 });
 Route::middleware('role:' . UserRole::Statistics)->group(function () {
     Route::get('report', ['as' => 'report.index', 'uses' => 'ReportController@index']);
+    Route::get('report/export','ReportController@generatePDF');
 });
 Route::middleware('role:' . UserRole::Root)->group(function () {
     Route::get('maintenance', ['as' => 'maintenance.index', 'uses' => 'MaintenanceController@index']);
