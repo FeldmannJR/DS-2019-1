@@ -100,6 +100,7 @@ class SettingsController extends Controller
         ];
         $presentation = Slide::getPresentation();
         $indicators = Indicator::all()->toArray();
+        $fixed = Indicator::getFixed();
         return view('settings.index', ['presentation' => $presentation, 'fixed' => $fixed, 'indicators' => $indicators]);
     }
 }
