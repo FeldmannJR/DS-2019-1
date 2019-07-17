@@ -1,7 +1,8 @@
 # Desenvolvimento-de-Software-2019-1
 Repositório utilizado para o desenvolvimento do projeto para a disciplina de Desenvolvimento de Software
-## Contribuidores
-Arthur 
+## Membros Ativos
+- Arthur Siqueira e Silva - Front (https://github.com/ArthurSiqueiraS)
+- Carlos André Feldmann Júnior - Back (https://feldmann.dev)
 
 # Docker Compose
 Com o docker compose fica mais facil de criar multiplos containers e conectar todos com uma network, para isso é criado o docker-compose.yml com instruções de criação dos containers
@@ -22,9 +23,6 @@ docker-compose rm
 ```
 
 # Configurações Iniciais
-## Permissões
-Só dar docker-compose up 
-
 
 ## Comandos
 - Baixar dependencias
@@ -60,25 +58,3 @@ http://localhost:80
 Para acessar o pgadmin é só acessar o http://localhost:8081
 ### Postgre
 Porta 54320 aberta para o host
-
-### Onde estão as coisas?
-
-#### Rotas
-As rotas basicamente dizem qual url chama qual função, para as nossas rotas estamos utilizando o arquivo `routes/web.php` para definir quais funções chamar!
-
-
-#### Indicadores
-A estrutura do banco dos indicadores se encontra nos arquivos dentro da pasta app/Indicators 
-- `ModelIndicators` logica de pegar/salvar do banco os indicadores
-- `Indicator` classe pai de todos os indicadores, contem todos os atributos base do indicador(nome,id,update_type...) e a lógica para salvar e pegar o ultimo valor
-- `IndicatorSpreadsheet` classe pai de todos os indicadores que usam planilhas, contendo lógica para pegar as informações necessárias
-- `IndicatorSql` classe pai de todos os indicadores que usam o banco de dados, ela fornece uma conexão para o banco de dados!
-- `IndicatorSimpleSql` Indicadores que são resolvidos com uma query
-
-Os indicadores são criados no seeder(`database/seeders/IndicatorTableSeeder`), quando é executa o comando ``db:seed`` são adicionados todos os indicadores no banco.
-
-O `IndicatorsController` chama as views com os indicadores puxados do banco!
-
-#### Views
-As views estão localizadas dentro de `resources/views/`
-
