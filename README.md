@@ -1,5 +1,7 @@
 # Desenvolvimento-de-Software-2019-1
 Repositório utilizado para o desenvolvimento do projeto para a disciplina de Desenvolvimento de Software
+## Contribuidores
+Arthur 
 
 # Docker Compose
 Com o docker compose fica mais facil de criar multiplos containers e conectar todos com uma network, para isso é criado o docker-compose.yml com instruções de criação dos containers
@@ -17,14 +19,11 @@ docker-compose start
 docker-compose stop
 # Para remover os containers
 docker-compose rm
-# Para entrar em um terminal dentro do container com o php
-./container
 ```
 
 # Configurações Iniciais
 ## Permissões
 Só dar docker-compose up 
-
 
 
 ## Comandos
@@ -37,8 +36,7 @@ Só dar docker-compose up
 - Instalar as dependencias do node
 ``./npm install``
 - Watch changes in assets
-``./watch
-``
+``./watch``
 ## PgAdmin
 - Importar dump do HE, instruções no ava
 
